@@ -6,7 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class BasketDrug {
@@ -18,7 +17,7 @@ public class BasketDrug {
     @JoinColumn(name = "basket_id")
     private Basket basket;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "drug_id")
     private Drug drug;
 

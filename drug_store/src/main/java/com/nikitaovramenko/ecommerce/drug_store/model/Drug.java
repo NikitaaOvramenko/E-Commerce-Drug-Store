@@ -1,5 +1,6 @@
 package com.nikitaovramenko.ecommerce.drug_store.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -8,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Drug {
@@ -27,6 +29,9 @@ public class Drug {
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
+
+    @OneToMany(mappedBy = "drug")
+    private List<BasketDrug> basketDrugs = new ArrayList<>();
 
     public Drug() {
     }
@@ -81,20 +86,28 @@ public class Drug {
         this.img = img;
     }
 
-    public Type getTypes() {
+    public Type getType() {
         return type;
     }
 
-    public void setTypes(Type type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
-    public Brand getBrands() {
+    public Brand getBrand() {
         return brand;
     }
 
-    public void setBrands(Brand brand) {
+    public void setBrand(Brand brand) {
         this.brand = brand;
+    }
+
+    public List<BasketDrug> getBasketDrugs() {
+        return basketDrugs;
+    }
+
+    public void setBasketDrugs(List<BasketDrug> basketDrugs) {
+        this.basketDrugs = basketDrugs;
     }
 
 }
