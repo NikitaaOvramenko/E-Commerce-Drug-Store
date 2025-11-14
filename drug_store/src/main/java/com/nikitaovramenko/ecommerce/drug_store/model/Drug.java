@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 
 @Entity
 public class Drug {
@@ -32,6 +33,12 @@ public class Drug {
 
     @OneToMany(mappedBy = "drug")
     private List<BasketDrug> basketDrugs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "drug", cascade = CascadeType.ALL)
+    private List<DrugInfo> drugInfos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "drug", cascade = CascadeType.ALL)
+    private List<Rating> ratings = new ArrayList<>();
 
     public Drug() {
     }
@@ -108,6 +115,14 @@ public class Drug {
 
     public void setBasketDrugs(List<BasketDrug> basketDrugs) {
         this.basketDrugs = basketDrugs;
+    }
+
+    public List<DrugInfo> getDrugInfos() {
+        return drugInfos;
+    }
+
+    public void setDrugInfos(List<DrugInfo> drugInfos) {
+        this.drugInfos = drugInfos;
     }
 
 }

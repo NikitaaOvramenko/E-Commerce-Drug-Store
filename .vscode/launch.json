@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-DrugStoreApplication<drug_store>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.nikitaovramenko.ecommerce.drug_store.DrugStoreApplication",
+            "projectName": "drug_store",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
