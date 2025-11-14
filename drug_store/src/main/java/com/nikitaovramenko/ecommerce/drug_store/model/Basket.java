@@ -1,15 +1,63 @@
 package com.nikitaovramenko.ecommerce.drug_store.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
-public record Basket(
-        @Id @GeneratedValue(strategy = GenerationType.AUTO) Integer id,
+public class Basket {
 
-        @JoinColumn(name = "user_id") User user) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
+    private List<BasketDrug> basketDrugs = new ArrayList<>();
+
+    public Basket() {
+    }
+
+    public Basket(Long id, User user, List<BasketDrug> basketDrugs) {
+        this.id = id;
+        this.user = user;
+        this.basketDrugs = basketDrugs;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<BasketDrug> getBasketDrugs() {
+        return basketDrugs;
+    }
+
+    public void setBasketDrugs(List<BasketDrug> basketDrugs) {
+        this.basketDrugs = basketDrugs;
+    }
 
 }
