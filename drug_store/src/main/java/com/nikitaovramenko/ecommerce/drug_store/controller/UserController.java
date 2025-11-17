@@ -1,0 +1,51 @@
+package com.nikitaovramenko.ecommerce.drug_store.controller;
+
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.nikitaovramenko.ecommerce.drug_store.dto.LoginRequest;
+import com.nikitaovramenko.ecommerce.drug_store.dto.UserDto;
+import com.nikitaovramenko.ecommerce.drug_store.mapper.UserMapper;
+import com.nikitaovramenko.ecommerce.drug_store.model.User;
+import com.nikitaovramenko.ecommerce.drug_store.service.AuthService;
+import com.nikitaovramenko.ecommerce.drug_store.service.UserService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@RestController
+@RequestMapping("/auth")
+public class UserController {
+
+    private final UserService userService;
+    private final AuthService authService;
+
+    public UserController(UserService userService, AuthService authService) {
+        this.userService = userService;
+        this.authService = authService;
+    }
+
+    @PostMapping("/register")
+    public User registerUser(@RequestBody User user) {
+        return userService.registerUser(user);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserDto> login(@RequestBody LoginRequest request) {
+
+        Boolean check = authService.authentication(request.getEmail(), request.getPassword());
+
+        if (check) {
+            User user = userService.findUserByEmail(request.getEmail());
+            UserDto userDto = UserMapper.toDto(user);
+            return ResponseEntity.ok(userDto);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+}
