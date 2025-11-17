@@ -53,6 +53,15 @@ public class Drug {
         this.brand = brand;
     }
 
+    public Drug(String name, Double price, Integer stock, String img, Type type, Brand brand) {
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+        this.img = img;
+        this.type = type;
+        this.brand = brand;
+    }
+
     public Long getId() {
         return id;
     }

@@ -3,6 +3,9 @@ package com.nikitaovramenko.ecommerce.drug_store.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +15,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 @Entity
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,6 +24,7 @@ public class Type {
     private String name;
 
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Drug> drugs = new ArrayList<>();
 
     @ManyToMany(mappedBy = "types")
