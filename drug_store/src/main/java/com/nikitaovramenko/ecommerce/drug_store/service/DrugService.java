@@ -17,19 +17,21 @@ public class DrugService {
     private final DrugRepository drugRepository;
     private final BrandService brandService;
     private final TypeService typeService;
+    private final DrugMapper drugMapper;
 
-    public DrugService(DrugRepository drugRepository, BrandService brandService, TypeService typeService) {
+    public DrugService(DrugRepository drugRepository, BrandService brandService, TypeService typeService,
+            DrugMapper drugMapper) {
         this.drugRepository = drugRepository;
         this.brandService = brandService;
         this.typeService = typeService;
+        this.drugMapper = drugMapper;
     }
 
     public Drug createDrug(DrugDto dto) {
 
         Type type = typeService.findType(dto.getTypeId());
         Brand brand = brandService.findBrand(dto.getBrandId());
-        Drug drug = DrugMapper.toDrug(dto, type, brand);
-
+        Drug drug = drugMapper.toDrug(dto, type, brand);
         Drug saved = drugRepository.save(drug);
 
         return saved;

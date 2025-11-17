@@ -20,15 +20,17 @@ public class UserController {
 
     private final UserService userService;
     private final AuthService authService;
+    private final UserMapper userMapper;
 
-    public UserController(UserService userService, AuthService authService) {
+    public UserController(UserService userService, AuthService authService, UserMapper userMapper) {
         this.userService = userService;
         this.authService = authService;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.registerUser(user);
+    public ResponseEntity<UserDto> registerUser(@RequestBody User user) {
+        return ResponseEntity.ok(userMapper.toDto(userService.registerUser(user)));
     }
 
     @PostMapping("/login")
@@ -38,7 +40,7 @@ public class UserController {
 
         if (check) {
             User user = userService.findUserByEmail(request.getEmail());
-            UserDto userDto = UserMapper.toDto(user);
+            UserDto userDto = userMapper.toDto(user);
             return ResponseEntity.ok(userDto);
         }
 

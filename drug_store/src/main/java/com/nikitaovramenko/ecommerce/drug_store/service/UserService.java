@@ -16,14 +16,12 @@ import jakarta.transaction.Transactional;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final BasketService basketService;
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, BasketService basketService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.basketService = basketService;
     }
 
     @Transactional

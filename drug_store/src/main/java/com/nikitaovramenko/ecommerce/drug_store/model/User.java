@@ -3,6 +3,8 @@ package com.nikitaovramenko.ecommerce.drug_store.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +25,7 @@ public class User {
     private Long id;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Basket basket;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -40,6 +43,14 @@ public class User {
 
     public User(Long id, Basket basket, List<Rating> ratings, String email, String password, Role role) {
         this.id = id;
+        this.basket = basket;
+        this.ratings = ratings;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    public User(Basket basket, List<Rating> ratings, String email, String password, Role role) {
         this.basket = basket;
         this.ratings = ratings;
         this.email = email;

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.nikitaovramenko.ecommerce.drug_store.dto.TypeDto;
+import com.nikitaovramenko.ecommerce.drug_store.mapper.TypeMapper;
 import com.nikitaovramenko.ecommerce.drug_store.model.Type;
 import com.nikitaovramenko.ecommerce.drug_store.service.TypeService;
 
@@ -20,14 +22,17 @@ import java.util.List;
 public class TypeController {
 
     private final TypeService typeService;
+    private final TypeMapper typeMapper;
 
-    public TypeController(TypeService typeService) {
+    public TypeController(TypeService typeService, TypeMapper typeMapper) {
         this.typeService = typeService;
+        this.typeMapper = typeMapper;
     }
 
     @PostMapping("/type/create")
-    public Type createType(@RequestBody Type type) {
-        return typeService.createType(type);
+    public ResponseEntity<TypeDto> createType(@RequestBody TypeDto typeDto) {
+        Type type = typeService.createType(typeDto);
+        return ResponseEntity.ok(typeMapper.toDtoWithNames(type));
     }
 
     @DeleteMapping("/type/{id}")

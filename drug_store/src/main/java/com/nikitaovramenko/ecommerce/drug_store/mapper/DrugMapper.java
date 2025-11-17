@@ -10,7 +10,7 @@ import com.nikitaovramenko.ecommerce.drug_store.model.Type;
 @Component
 public class DrugMapper {
 
-    public static Drug toDrug(DrugDto drugDto, Type type, Brand brand) {
+    public Drug toDrug(DrugDto drugDto, Type type, Brand brand) {
         String name = drugDto.getName();
         Double price = drugDto.getPrice();
         Integer stock = drugDto.getStock();

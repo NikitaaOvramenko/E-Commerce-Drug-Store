@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.nikitaovramenko.ecommerce.drug_store.dto.BrandDto;
+import com.nikitaovramenko.ecommerce.drug_store.mapper.BrandMapper;
 import com.nikitaovramenko.ecommerce.drug_store.model.Brand;
 import com.nikitaovramenko.ecommerce.drug_store.service.BrandService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -20,14 +23,17 @@ import java.util.List;
 public class BrandController {
 
     private final BrandService brandService;
+    private final BrandMapper brandMapper;
 
-    public BrandController(BrandService brandService) {
+    public BrandController(BrandService brandService, BrandMapper brandMapper) {
         this.brandService = brandService;
+        this.brandMapper = brandMapper;
     }
 
     @PostMapping("/brand/create")
-    public Brand createBrand(@RequestBody Brand brand) {
-        return brandService.createBrand(brand);
+    public ResponseEntity<BrandDto> createBrand(@RequestBody BrandDto brandDto) {
+        Brand brand = brandService.createBrand(brandDto);
+        return ResponseEntity.ok(brandMapper.toDtoWithNames(brand));
     }
 
     @DeleteMapping("/brand/{id}")
