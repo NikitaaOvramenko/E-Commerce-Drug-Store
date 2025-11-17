@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nikitaovramenko.ecommerce.drug_store.model.Basket;
 import com.nikitaovramenko.ecommerce.drug_store.model.User;
 import com.nikitaovramenko.ecommerce.drug_store.repository.UserRepository;
 
@@ -15,11 +16,14 @@ import jakarta.transaction.Transactional;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final BasketService basketService;
+
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, BasketService basketService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.basketService = basketService;
     }
 
     @Transactional
@@ -31,7 +35,12 @@ public class UserService implements UserDetailsService {
     public User registerUser(User user) {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        User saved = userRepository.save(user);
+        Basket basket = new Basket();
+        user.setBasket(basket);
+        basket.setUser(user);
+
+        return saved;
     }
 
     @Transactional
