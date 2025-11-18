@@ -13,7 +13,6 @@ import com.nikitaovramenko.ecommerce.drug_store.mapper.BrandMapper;
 import com.nikitaovramenko.ecommerce.drug_store.model.Brand;
 import com.nikitaovramenko.ecommerce.drug_store.service.BrandService;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

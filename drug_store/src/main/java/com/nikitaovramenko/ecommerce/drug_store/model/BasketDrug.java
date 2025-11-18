@@ -21,13 +21,16 @@ public class BasketDrug {
     @JoinColumn(name = "drug_id")
     private Drug drug;
 
+    private Integer quantity;
+
     public BasketDrug() {
     }
 
-    public BasketDrug(Long id, Basket basket, Drug drug) {
+    public BasketDrug(Long id, Basket basket, Drug drug, Integer quantity) {
         this.id = id;
         this.basket = basket;
         this.drug = drug;
+        this.quantity = quantity;
     }
 
     public Long getId() {
@@ -52,6 +55,14 @@ public class BasketDrug {
 
     public void setDrug(Drug drug) {
         this.drug = drug;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
 }

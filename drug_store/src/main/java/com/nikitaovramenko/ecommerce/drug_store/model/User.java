@@ -11,8 +11,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 
@@ -31,8 +34,12 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Rating> ratings = new ArrayList<>();
 
+    @Email
+    @NotBlank
+    @Column(unique = true)
     private String email;
 
+    @NotBlank
     private String password;
 
     @Enumerated(EnumType.STRING)

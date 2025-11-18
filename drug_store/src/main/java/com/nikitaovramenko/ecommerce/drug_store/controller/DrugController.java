@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.net.http.HttpClient;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,17 +32,20 @@ public class DrugController {
     private final DrugService drugService;
     private final TypeService typeService;
     private final BrandService brandService;
+    private final DrugMapper drugMapper;
 
-    public DrugController(DrugService drugService, TypeService typeService, BrandService brandService) {
+    public DrugController(DrugService drugService, TypeService typeService, BrandService brandService,
+            DrugMapper drugMapper) {
         this.drugService = drugService;
         this.typeService = typeService;
         this.brandService = brandService;
+        this.drugMapper = drugMapper;
     }
 
     @PostMapping("/drug/create")
-    public Drug createDrug(@RequestBody DrugDto drug) {
-
-        return drugService.createDrug(drug);
+    public ResponseEntity<DrugDto> createDrug(@RequestBody DrugDto dto) {
+        Drug drug = drugService.createDrug(dto);
+        return ResponseEntity.ok(drugMapper.toDto(drug));
     }
 
     @DeleteMapping("/drug/{id}")

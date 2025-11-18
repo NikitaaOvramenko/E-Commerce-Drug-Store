@@ -27,13 +27,9 @@ public class BrandService {
 
     public Brand createBrand(BrandDto brandDto) {
         Brand brand = brandMapper.toBrand(brandDto);
-        List<Long> typeIds = brandDto.getTypeIds();
-        if (typeIds != null && !typeIds.isEmpty()) {
-            List<Type> types = typeIds.stream()
-                    .map(id -> typeRepository.getReferenceById(id))
-                    .collect(Collectors.toList());
-            brand.setTypes(types);
-        }
+        List<Type> types = brandDto.getTypeIds().stream().map(id -> typeRepository.getReferenceById(id))
+                .collect(Collectors.toList());
+        brand.setTypes(types);
         return brandRepository.save(brand);
     }
 

@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.nikitaovramenko.ecommerce.drug_store.dto.TypeDto;
-import com.nikitaovramenko.ecommerce.drug_store.model.Brand;
 import com.nikitaovramenko.ecommerce.drug_store.model.Type;
 
 @Component

@@ -126,12 +126,30 @@ public class Drug {
         this.basketDrugs = basketDrugs;
     }
 
+    public void addBasketDrug(BasketDrug bd) {
+        basketDrugs.add(bd);
+        bd.setDrug(this);
+    }
+
+    public void removeBasketDrug(BasketDrug bd) {
+        basketDrugs.remove(bd);
+        bd.setDrug(null);
+    }
+
     public List<DrugInfo> getDrugInfos() {
         return drugInfos;
     }
 
     public void setDrugInfos(List<DrugInfo> drugInfos) {
         this.drugInfos = drugInfos;
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<Rating> ratings) {
+        this.ratings = ratings;
     }
 
 }

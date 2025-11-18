@@ -8,7 +8,6 @@ import com.nikitaovramenko.ecommerce.drug_store.model.Drug;
 import com.nikitaovramenko.ecommerce.drug_store.model.Type;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface DrugRepository extends JpaRepository<Drug, Long> {

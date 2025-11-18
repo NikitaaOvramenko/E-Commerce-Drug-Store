@@ -1,20 +1,33 @@
 package com.nikitaovramenko.ecommerce.drug_store.dto;
 
 public class DrugDto {
+    private Long id;
     private String name;
     private Double price;
     private Integer stock;
     private String img;
     private Long typeId;
     private Long brandId;
+    private String typeName;
+    private String brandName;
 
-    public DrugDto(String name, Double price, Integer stock, String img, Long typeId, Long brandId) {
-        this.name = name;
-        this.price = price;
-        this.stock = stock;
-        this.img = img;
-        this.typeId = typeId;
-        this.brandId = brandId;
+    public DrugDto() {
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     public String getName() {
@@ -63,6 +76,14 @@ public class DrugDto {
 
     public void setBrandId(Long brandId) {
         this.brandId = brandId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

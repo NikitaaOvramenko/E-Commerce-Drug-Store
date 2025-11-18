@@ -1,5 +1,6 @@
 package com.nikitaovramenko.ecommerce.drug_store.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import com.nikitaovramenko.ecommerce.drug_store.dto.DrugDto;
 import com.nikitaovramenko.ecommerce.drug_store.mapper.DrugMapper;
 import com.nikitaovramenko.ecommerce.drug_store.model.Brand;
 import com.nikitaovramenko.ecommerce.drug_store.model.Drug;
+import com.nikitaovramenko.ecommerce.drug_store.model.Rating;
 import com.nikitaovramenko.ecommerce.drug_store.model.Type;
 import com.nikitaovramenko.ecommerce.drug_store.repository.DrugRepository;
 
@@ -18,20 +20,25 @@ public class DrugService {
     private final BrandService brandService;
     private final TypeService typeService;
     private final DrugMapper drugMapper;
+    private final RatingService ratingService;
 
     public DrugService(DrugRepository drugRepository, BrandService brandService, TypeService typeService,
-            DrugMapper drugMapper) {
+            DrugMapper drugMapper, RatingService ratingService) {
         this.drugRepository = drugRepository;
         this.brandService = brandService;
         this.typeService = typeService;
         this.drugMapper = drugMapper;
+        this.ratingService = ratingService;
     }
 
     public Drug createDrug(DrugDto dto) {
 
+        List<Rating> ratings = new ArrayList<>();
+
         Type type = typeService.findType(dto.getTypeId());
         Brand brand = brandService.findBrand(dto.getBrandId());
-        Drug drug = drugMapper.toDrug(dto, type, brand);
+        Drug drug = drugMapper.toDrug(dto, type, brand, ratings);
+
         Drug saved = drugRepository.save(drug);
 
         return saved;
