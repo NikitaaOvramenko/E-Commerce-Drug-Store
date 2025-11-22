@@ -33,11 +33,12 @@ public class UserService implements UserDetailsService {
     public User registerUser(User user) {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User saved = userRepository.save(user);
+        // create and attach basket before saving so it's persisted together with the
+        // user
         Basket basket = new Basket();
         user.setBasket(basket);
         basket.setUser(user);
-
+        User saved = userRepository.save(user);
         return saved;
     }
 
@@ -49,7 +50,6 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
-        ;
     }
 
     @Override

@@ -6,9 +6,9 @@ import com.nikitaovramenko.ecommerce.drug_store.model.BasketDrug;
 
 public class UserDto {
     private String email;
-    private List<BasketDrug> basketItems;
+    private List<BasketDrugDto> basketItems;
 
-    public UserDto(String email, List<BasketDrug> basketItems) {
+    public UserDto(String email, List<BasketDrugDto> basketItems) {
         this.email = email;
         this.basketItems = basketItems;
     }
@@ -21,11 +21,11 @@ public class UserDto {
         this.email = email;
     }
 
-    public List<BasketDrug> getBasketItems() {
+    public List<BasketDrugDto> getBasketItems() {
         return basketItems;
     }
 
-    public void setBasketItems(List<BasketDrug> basketItems) {
+    public void setBasketItems(List<BasketDrugDto> basketItems) {
         this.basketItems = basketItems;
     }
 
