@@ -36,7 +36,7 @@ public class BrandService {
                     .collect(Collectors.toList());
             brand.setTypes(types);
         }
-        return brandMapper.toDto(brandRepository.save(brand));
+        return brandMapper.toDtoWithNames(brandRepository.save(brand));
     }
 
     @Transactional
@@ -57,17 +57,17 @@ public class BrandService {
                     .collect(Collectors.toList());
             existing.setTypes(types);
         }
-        return brandMapper.toDto(brandRepository.save(existing));
+        return brandMapper.toDtoWithNames(brandRepository.save(existing));
     }
 
     @Transactional
     public BrandDto findBrand(Long id) {
-        return brandMapper.toDto(brandRepository.getReferenceById(id));
+        return brandMapper.toDtoWithNames(brandRepository.getReferenceById(id));
     }
 
     @Transactional
     public List<BrandDto> findAllBrands() {
-        return brandRepository.findAll().stream().map(brandMapper::toDto).toList();
+        return brandRepository.findAll().stream().map(brandMapper::toDtoWithNames).toList();
     }
 
 }

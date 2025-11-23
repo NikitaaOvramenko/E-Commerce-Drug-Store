@@ -34,7 +34,7 @@ public class TypeService {
         List<Brand> brands = typeDto.getBrandIds().stream().map(id -> brandRepository.getReferenceById(id))
                 .collect(Collectors.toList());
         type.setBrands(brands);
-        return typeMapper.toDto(typeRepository.save(type));
+        return typeMapper.toDtoWithNames(typeRepository.save(type));
     }
 
     @Transactional
@@ -54,17 +54,17 @@ public class TypeService {
                     .collect(Collectors.toList());
             existing.setBrands(brands);
         }
-        return typeMapper.toDto(typeRepository.save(existing));
+        return typeMapper.toDtoWithNames(typeRepository.save(existing));
     }
 
     @Transactional
     public TypeDto findType(Long id) {
-        return typeMapper.toDto(typeRepository.getReferenceById(id));
+        return typeMapper.toDtoWithNames(typeRepository.getReferenceById(id));
     }
 
     @Transactional
     public List<TypeDto> findAllTypes() {
-        return typeRepository.findAll().stream().map(typeMapper::toDto).toList();
+        return typeRepository.findAll().stream().map(typeMapper::toDtoWithNames).toList();
     }
 
 }

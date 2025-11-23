@@ -23,11 +23,9 @@ import java.util.List;
 public class BrandController {
 
     private final BrandService brandService;
-    private final BrandMapper brandMapper;
 
-    public BrandController(BrandService brandService, BrandMapper brandMapper) {
+    public BrandController(BrandService brandService) {
         this.brandService = brandService;
-        this.brandMapper = brandMapper;
     }
 
     @PostMapping("/brand/create")

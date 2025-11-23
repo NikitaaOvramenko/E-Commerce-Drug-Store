@@ -1,5 +1,6 @@
 {
     "configurations": [
+
         {
             "type": "java",
             "name": "Spring Boot-DrugStoreApplication<drug_store>",
@@ -8,6 +9,10 @@
             "mainClass": "com.nikitaovramenko.ecommerce.drug_store.DrugStoreApplication",
             "projectName": "drug_store",
             "args": "",
+            "env": {
+                "SENDER_EMAIL":"ovramenko.nikitka@gmail.com",
+                "SENDER_PASSWORD":"As123456789900@"
+            },
             "envFile": "${workspaceFolder}/.env"
         }
     ]
