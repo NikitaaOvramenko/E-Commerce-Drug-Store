@@ -13,7 +13,7 @@ import com.nikitaovramenko.ecommerce.drug_store.model.Type;
 @Component
 public class DrugMapper {
 
-    public Drug toDrug(DrugDto drugDto, Type type, Brand brand, List<Rating> ratings) {
+    public Drug toDrug(DrugDto drugDto) {
 
         Drug drug = new Drug();
 
@@ -21,9 +21,7 @@ public class DrugMapper {
         drug.setPrice(drugDto.getPrice());
         drug.setStock(drugDto.getStock());
         drug.setImg(drugDto.getImg());
-        drug.setBrand(brand);
-        drug.setType(type);
-        drug.setRatings(ratings);
+
         return drug;
     }
 

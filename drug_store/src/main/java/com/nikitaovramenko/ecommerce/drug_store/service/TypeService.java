@@ -29,12 +29,12 @@ public class TypeService {
     }
 
     @Transactional
-    public Type createType(TypeDto typeDto) {
+    public TypeDto createType(TypeDto typeDto) {
         Type type = typeMapper.toType(typeDto);
         List<Brand> brands = typeDto.getBrandIds().stream().map(id -> brandRepository.getReferenceById(id))
                 .collect(Collectors.toList());
         type.setBrands(brands);
-        return typeRepository.save(type);
+        return typeMapper.toDto(typeRepository.save(type));
     }
 
     @Transactional
@@ -43,13 +43,28 @@ public class TypeService {
     }
 
     @Transactional
-    public Type findType(Long id) {
-        return typeRepository.getReferenceById(id);
+    public TypeDto updateType(Long id, TypeDto typeDto) {
+        Type existing = typeRepository.getReferenceById(id);
+        if (typeDto.getName() != null) {
+            existing.setName(typeDto.getName());
+        }
+        List<Long> brandIds = typeDto.getBrandIds();
+        if (brandIds != null) {
+            List<Brand> brands = brandIds.stream().map(bid -> brandRepository.getReferenceById(bid))
+                    .collect(Collectors.toList());
+            existing.setBrands(brands);
+        }
+        return typeMapper.toDto(typeRepository.save(existing));
     }
 
     @Transactional
-    public List<Type> findAllTypes() {
-        return typeRepository.findAll();
+    public TypeDto findType(Long id) {
+        return typeMapper.toDto(typeRepository.getReferenceById(id));
+    }
+
+    @Transactional
+    public List<TypeDto> findAllTypes() {
+        return typeRepository.findAll().stream().map(typeMapper::toDto).toList();
     }
 
 }

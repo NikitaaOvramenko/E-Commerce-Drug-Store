@@ -5,66 +5,86 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.nikitaovramenko.ecommerce.drug_store.dto.BrandDto;
 import com.nikitaovramenko.ecommerce.drug_store.dto.DrugDto;
+import com.nikitaovramenko.ecommerce.drug_store.dto.TypeDto;
 import com.nikitaovramenko.ecommerce.drug_store.mapper.DrugMapper;
 import com.nikitaovramenko.ecommerce.drug_store.model.Brand;
 import com.nikitaovramenko.ecommerce.drug_store.model.Drug;
 import com.nikitaovramenko.ecommerce.drug_store.model.Rating;
 import com.nikitaovramenko.ecommerce.drug_store.model.Type;
+import com.nikitaovramenko.ecommerce.drug_store.repository.BrandRepository;
 import com.nikitaovramenko.ecommerce.drug_store.repository.DrugRepository;
+import com.nikitaovramenko.ecommerce.drug_store.repository.TypeRepository;
 
 @Service
 public class DrugService {
 
     private final DrugRepository drugRepository;
-    private final BrandService brandService;
-    private final TypeService typeService;
+    private final TypeRepository typeRepository;
+    private final BrandRepository brandRepository;
     private final DrugMapper drugMapper;
     private final RatingService ratingService;
 
-    public DrugService(DrugRepository drugRepository, BrandService brandService, TypeService typeService,
+    public DrugService(DrugRepository drugRepository, TypeRepository typeRepository, BrandRepository brandRepository,
             DrugMapper drugMapper, RatingService ratingService) {
         this.drugRepository = drugRepository;
-        this.brandService = brandService;
-        this.typeService = typeService;
         this.drugMapper = drugMapper;
         this.ratingService = ratingService;
+        this.typeRepository = typeRepository;
+        this.brandRepository = brandRepository;
     }
 
-    public Drug createDrug(DrugDto dto) {
+    public DrugDto createDrug(DrugDto dto) {
 
         List<Rating> ratings = new ArrayList<>();
 
-        Type type = typeService.findType(dto.getTypeId());
-        Brand brand = brandService.findBrand(dto.getBrandId());
-        Drug drug = drugMapper.toDrug(dto, type, brand, ratings);
+        Type type = typeRepository.getReferenceById(dto.getTypeId());
+        Brand brand = brandRepository.getReferenceById(dto.getBrandId());
+
+        Drug drug = drugMapper.toDrug(dto);
+
+        drug.setRatings(ratings);
+        drug.setType(type);
+        drug.setBrand(brand);
 
         Drug saved = drugRepository.save(drug);
 
-        return saved;
+        return drugMapper.toDto(saved);
     }
 
     public void deleteDrug(Long id) {
         drugRepository.deleteById(id);
     }
 
-    public Drug findDrug(Long id) {
+    public DrugDto findDrug(Long id) {
         Drug found = drugRepository.getReferenceById(id);
+        return drugMapper.toDto(found);
+    }
+
+    public DrugDto updateDrug(Long id, DrugDto dto) {
+        Drug existing = drugRepository.getReferenceById(id);
+        return drugMapper.toDto(drugRepository.save(existing));
+    }
+
+    public List<DrugDto> findDrugsByType(TypeDto typeDto) {
+        Type type = typeRepository.getReferenceById(typeDto.getId());
+        List<DrugDto> found = drugRepository.findByType(type).stream().map(drugMapper::toDto).toList();
         return found;
     }
 
-    public List<Drug> findDrugsByType(Type type) {
-        List<Drug> found = drugRepository.findByType(type);
+    public List<DrugDto> findDrugsByBrand(BrandDto brandDto) {
+        Brand brand = brandRepository.getReferenceById(brandDto.getId());
+        List<DrugDto> found = drugRepository.findByBrand(brand).stream().map(drugMapper::toDto).toList();
+        ;
         return found;
     }
 
-    public List<Drug> findDrugsByBrand(Brand brand) {
-        List<Drug> found = drugRepository.findByBrand(brand);
-        return found;
-    }
-
-    public List<Drug> findDrugsByTypeAndBrand(Type type, Brand brand) {
-        List<Drug> found = drugRepository.findByTypeAndBrand(type, brand);
+    public List<DrugDto> findDrugsByTypeAndBrand(TypeDto typeDto, BrandDto brandDto) {
+        Type type = typeRepository.getReferenceById(typeDto.getId());
+        Brand brand = brandRepository.getReferenceById(brandDto.getId());
+        List<DrugDto> found = drugRepository.findByTypeAndBrand(type, brand).stream().map(drugMapper::toDto).toList();
+        ;
         return found;
     }
 

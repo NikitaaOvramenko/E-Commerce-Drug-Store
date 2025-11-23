@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nikitaovramenko.ecommerce.drug_store.dto.BasketDto;
+import com.nikitaovramenko.ecommerce.drug_store.dto.DrugDto;
 import com.nikitaovramenko.ecommerce.drug_store.model.Basket;
 import com.nikitaovramenko.ecommerce.drug_store.model.Drug;
 import com.nikitaovramenko.ecommerce.drug_store.service.BasketService;
@@ -29,8 +30,8 @@ public class BasketController {
     public ResponseEntity<String> addToBasket(@RequestBody BasketDto basketDto) {
 
         Basket basket = basketService.findBasket(basketDto.getBasketId());
-        Drug drug = drugService.findDrug(basketDto.getDrugId());
-        basketService.addToBasket(basket, drug);
+        DrugDto drug = drugService.findDrug(basketDto.getDrugId());
+        basketService.addToBasket(basket, drug.getId());
 
         return ResponseEntity.ok("Drug Added !");
 

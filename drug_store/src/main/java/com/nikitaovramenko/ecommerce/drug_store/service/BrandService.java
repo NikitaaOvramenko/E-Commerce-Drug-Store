@@ -12,6 +12,8 @@ import com.nikitaovramenko.ecommerce.drug_store.model.Type;
 import com.nikitaovramenko.ecommerce.drug_store.repository.BrandRepository;
 import com.nikitaovramenko.ecommerce.drug_store.repository.TypeRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class BrandService {
 
@@ -25,24 +27,47 @@ public class BrandService {
         this.typeRepository = typeRepository;
     }
 
-    public Brand createBrand(BrandDto brandDto) {
+    @Transactional
+    public BrandDto createBrand(BrandDto brandDto) {
         Brand brand = brandMapper.toBrand(brandDto);
-        List<Type> types = brandDto.getTypeIds().stream().map(id -> typeRepository.getReferenceById(id))
-                .collect(Collectors.toList());
-        brand.setTypes(types);
-        return brandRepository.save(brand);
+        List<Long> typeIds = brandDto.getTypeIds();
+        if (typeIds != null && !typeIds.isEmpty()) {
+            List<Type> types = typeIds.stream().map(id -> typeRepository.getReferenceById(id))
+                    .collect(Collectors.toList());
+            brand.setTypes(types);
+        }
+        return brandMapper.toDto(brandRepository.save(brand));
     }
 
+    @Transactional
     public void deleteBrand(Long id) {
         brandRepository.deleteById(id);
     }
 
-    public Brand findBrand(Long id) {
-        return brandRepository.getReferenceById(id);
+    @Transactional
+    public BrandDto updateBrand(Long id, BrandDto brandDto) {
+        Brand existing = brandRepository.getReferenceById(id);
+        if (brandDto.getName() != null) {
+            existing.setName(brandDto.getName());
+        }
+        List<Long> typeIds = brandDto.getTypeIds();
+        if (typeIds != null) {
+            List<Type> types = typeIds.stream()
+                    .map(tid -> typeRepository.getReferenceById(tid))
+                    .collect(Collectors.toList());
+            existing.setTypes(types);
+        }
+        return brandMapper.toDto(brandRepository.save(existing));
     }
 
-    public List<Brand> findAllBrands() {
-        return brandRepository.findAll();
+    @Transactional
+    public BrandDto findBrand(Long id) {
+        return brandMapper.toDto(brandRepository.getReferenceById(id));
+    }
+
+    @Transactional
+    public List<BrandDto> findAllBrands() {
+        return brandRepository.findAll().stream().map(brandMapper::toDto).toList();
     }
 
 }

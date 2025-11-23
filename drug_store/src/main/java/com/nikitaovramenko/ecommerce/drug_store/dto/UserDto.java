@@ -2,8 +2,6 @@ package com.nikitaovramenko.ecommerce.drug_store.dto;
 
 import java.util.List;
 
-import com.nikitaovramenko.ecommerce.drug_store.model.BasketDrug;
-
 public class UserDto {
     private String email;
     private List<BasketDrugDto> basketItems;

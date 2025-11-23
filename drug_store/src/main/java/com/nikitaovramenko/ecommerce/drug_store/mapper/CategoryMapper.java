@@ -13,13 +13,22 @@ public class CategoryMapper {
         this.drugMapper = drugMapper;
     }
 
-    public CategoryDto tDto(Category category) {
+    public Category toCategory(CategoryDto categoryDto) {
+        Category category = new Category();
+        category.setId(categoryDto.id());
+        category.setName(categoryDto.name());
+
+        return category;
+
+    }
+
+    public CategoryDto toDto(Category category) {
 
         return new CategoryDto(
                 category.getId(),
                 category.getName(),
                 category.getDrugs().stream()
-                        .map(d -> drugMapper.toDto(d))
+                        .map(d -> d.getId())
                         .toList());
     }
 }

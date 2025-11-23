@@ -1,7 +1,5 @@
 package com.nikitaovramenko.ecommerce.drug_store.mapper;
 
-import java.util.stream.Collector;
-
 import org.springframework.stereotype.Component;
 
 import com.nikitaovramenko.ecommerce.drug_store.dto.UserDto;

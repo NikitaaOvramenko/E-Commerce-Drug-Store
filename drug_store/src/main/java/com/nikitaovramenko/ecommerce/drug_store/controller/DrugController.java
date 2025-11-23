@@ -3,7 +3,9 @@ package com.nikitaovramenko.ecommerce.drug_store.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nikitaovramenko.ecommerce.drug_store.dto.BrandDto;
 import com.nikitaovramenko.ecommerce.drug_store.dto.DrugDto;
+import com.nikitaovramenko.ecommerce.drug_store.dto.TypeDto;
 import com.nikitaovramenko.ecommerce.drug_store.mapper.DrugMapper;
 import com.nikitaovramenko.ecommerce.drug_store.model.Brand;
 import com.nikitaovramenko.ecommerce.drug_store.model.Drug;
@@ -22,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api")
@@ -30,20 +33,17 @@ public class DrugController {
     private final DrugService drugService;
     private final TypeService typeService;
     private final BrandService brandService;
-    private final DrugMapper drugMapper;
 
-    public DrugController(DrugService drugService, TypeService typeService, BrandService brandService,
-            DrugMapper drugMapper) {
+    public DrugController(DrugService drugService, TypeService typeService, BrandService brandService) {
         this.drugService = drugService;
         this.typeService = typeService;
         this.brandService = brandService;
-        this.drugMapper = drugMapper;
     }
 
     @PostMapping("/drug/create")
     public ResponseEntity<DrugDto> createDrug(@RequestBody DrugDto dto) {
-        Drug drug = drugService.createDrug(dto);
-        return ResponseEntity.ok(drugMapper.toDto(drug));
+        DrugDto drug = drugService.createDrug(dto);
+        return ResponseEntity.ok(drug);
     }
 
     @DeleteMapping("/drug/{id}")
@@ -53,32 +53,38 @@ public class DrugController {
     }
 
     @GetMapping("/drug/{id}")
-    public Drug findById(@PathVariable Long id) {
-        return drugService.findDrug(id);
+    public ResponseEntity<DrugDto> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(drugService.findDrug(id));
+    }
+
+    @PutMapping("/drug/{id}")
+    public ResponseEntity<DrugDto> updateDrug(@PathVariable Long id, @RequestBody DrugDto dto) {
+        DrugDto updated = drugService.updateDrug(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     @GetMapping("/drug/type/{id}")
-    public List<Drug> findAllByTypeId(@PathVariable Long id) {
-        Type type = typeService.findType(id);
+    public List<DrugDto> findAllByTypeId(@PathVariable Long id) {
+        TypeDto type = typeService.findType(id);
         return drugService.findDrugsByType(type);
     }
 
     @GetMapping("/drug/brand/{id}")
-    public List<Drug> findAllByBrandId(@PathVariable Long id) {
-        Brand brand = brandService.findBrand(id);
+    public List<DrugDto> findAllByBrandId(@PathVariable Long id) {
+        BrandDto brand = brandService.findBrand(id);
         return drugService.findDrugsByBrand(brand);
     }
 
     @GetMapping("/search")
-    public List<Drug> findAllByTypeAndBrand(@RequestParam Long typeId, @RequestParam Long brandId) throws Exception {
+    public List<DrugDto> findAllByTypeAndBrand(@RequestParam Long typeId, @RequestParam Long brandId) throws Exception {
 
-        Type type = typeService.findType(typeId);
+        TypeDto type = typeService.findType(typeId);
 
         if (type == null) {
             throw new Exception("type not found");
         }
 
-        Brand brand = brandService.findBrand(brandId);
+        BrandDto brand = brandService.findBrand(brandId);
 
         if (brand == null) {
             throw new Exception("brand not found");

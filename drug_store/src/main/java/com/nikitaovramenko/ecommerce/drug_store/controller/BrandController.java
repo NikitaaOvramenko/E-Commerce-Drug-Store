@@ -3,6 +3,7 @@ package com.nikitaovramenko.ecommerce.drug_store.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,8 +32,8 @@ public class BrandController {
 
     @PostMapping("/brand/create")
     public ResponseEntity<BrandDto> createBrand(@RequestBody BrandDto brandDto) {
-        Brand brand = brandService.createBrand(brandDto);
-        return ResponseEntity.ok(brandMapper.toDtoWithNames(brand));
+        BrandDto brand = brandService.createBrand(brandDto);
+        return ResponseEntity.ok(brand);
     }
 
     @DeleteMapping("/brand/{id}")
@@ -42,13 +43,19 @@ public class BrandController {
     }
 
     @GetMapping("/brand/{id}")
-    public Brand findById(@PathVariable Long id) {
+    public BrandDto findById(@PathVariable Long id) {
         return brandService.findBrand(id);
     }
 
     @GetMapping("/brand")
-    public List<Brand> findAll() {
+    public List<BrandDto> findAll() {
         return brandService.findAllBrands();
+    }
+
+    @PutMapping("/brand/{id}")
+    public ResponseEntity<BrandDto> updateBrand(@PathVariable Long id, @RequestBody BrandDto dto) {
+        BrandDto updated = brandService.updateBrand(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
 }

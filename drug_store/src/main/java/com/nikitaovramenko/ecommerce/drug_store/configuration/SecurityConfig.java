@@ -37,17 +37,17 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers("/h2-console/**").permitAll() // Allow all methods for H2 Console
-                        .requestMatchers(HttpMethod.POST, "/api/type/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/type/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/brand/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/brand/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/drug/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/drug/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/category/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/category/**").hasRole("ADMIN")
+                        // .requestMatchers(HttpMethod.POST, "/api/type/**").hasRole("ADMIN")
+                        // .requestMatchers(HttpMethod.DELETE, "/api/type/**").hasRole("ADMIN")
+                        // .requestMatchers(HttpMethod.POST, "/api/brand/**").hasRole("ADMIN")
+                        // .requestMatchers(HttpMethod.DELETE, "/api/brand/**").hasRole("ADMIN")
+                        // .requestMatchers(HttpMethod.POST, "/api/drug/**").hasRole("ADMIN")
+                        // .requestMatchers(HttpMethod.DELETE, "/api/drug/**").hasRole("ADMIN")
+                        // .requestMatchers(HttpMethod.POST, "/api/category/**").hasRole("ADMIN")
+                        // .requestMatchers(HttpMethod.DELETE, "/api/category/**").hasRole("ADMIN")
 
-                        .anyRequest().hasRole("USER"))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().permitAll());
+        // .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
         return http.build();
     }
