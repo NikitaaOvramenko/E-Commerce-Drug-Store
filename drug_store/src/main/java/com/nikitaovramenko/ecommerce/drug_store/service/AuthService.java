@@ -16,10 +16,12 @@ public class AuthService {
     }
 
     public Boolean authentication(String email, String password) {
+
         UserDetails userDetails = userService.loadUserByUsername(email);
         if (passwordEncoder.matches(password, userDetails.getPassword())) {
             return true;
         }
+
         return false;
     }
 

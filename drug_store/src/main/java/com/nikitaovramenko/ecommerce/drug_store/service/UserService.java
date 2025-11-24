@@ -32,9 +32,8 @@ public class UserService implements UserDetailsService {
     @Transactional
     public User registerUser(User user) {
 
+        user.setEmailVerified(false);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        // create and attach basket before saving so it's persisted together with the
-        // user
         Basket basket = new Basket();
         user.setBasket(basket);
         basket.setUser(user);

@@ -61,7 +61,6 @@ public class BasketService {
         basketDrug.setBasket(basket);
         basketDrug.setDrug(drug);
         basketDrug.setQuantity(1);
-
         basket.getBasketDrugs().add(basketDrug);
 
     }

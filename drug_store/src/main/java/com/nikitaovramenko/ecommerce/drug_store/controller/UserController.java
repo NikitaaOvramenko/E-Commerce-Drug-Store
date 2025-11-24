@@ -48,6 +48,10 @@ public class UserController {
 
         if (check) {
             User user = userService.findUserByEmail(request.getEmail());
+
+            if (!user.getEmailVerified()) {
+                return ResponseEntity.badRequest().build();
+            }
             UserDto userDto = userMapper.toDto(user);
             String token = jwtService.generateToken(user.getEmail(), new HashMap<>());
             LoginResponse loginResponse = new LoginResponse(userDto, token);

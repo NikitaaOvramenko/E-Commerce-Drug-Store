@@ -45,16 +45,31 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "user")
+    private List<EmailVerify> emailVerifies = new ArrayList<>();
+
+    private Boolean emailVerified;
+
     public User() {
     }
 
-    public User(Long id, Basket basket, List<Rating> ratings, String email, String password, Role role) {
+    public User(Long id, Basket basket, List<Rating> ratings, String email, String password, Role role,
+            Boolean emailVerified) {
         this.id = id;
         this.basket = basket;
         this.ratings = ratings;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.emailVerified = emailVerified;
+    }
+
+    public List<EmailVerify> getEmailVerifies() {
+        return emailVerifies;
+    }
+
+    public void setEmailVerifies(List<EmailVerify> emailVerifies) {
+        this.emailVerifies = emailVerifies;
     }
 
     public User(Basket basket, List<Rating> ratings, String email, String password, Role role) {
@@ -111,5 +126,13 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 }
