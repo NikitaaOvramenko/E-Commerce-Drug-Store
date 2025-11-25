@@ -15,6 +15,8 @@ import com.nikitaovramenko.ecommerce.drug_store.model.User;
 import com.nikitaovramenko.ecommerce.drug_store.repository.EmailVerifyRepository;
 import com.nikitaovramenko.ecommerce.drug_store.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class EmailVerificationService {
 
@@ -32,6 +34,7 @@ public class EmailVerificationService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public void sendVerify(EmailVerifyDto emailVerifyDto) {
         String uuid = UUID.randomUUID().toString();
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
@@ -55,6 +58,8 @@ public class EmailVerificationService {
         emailVerifyRepository.save(emailVerify);
 
     }
+
+    @Transactional
 
     public Boolean verify(String uuid) {
 

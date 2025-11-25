@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nikitaovramenko.ecommerce.drug_store.enums.Role;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -49,6 +50,9 @@ public class User {
     private List<EmailVerify> emailVerifies = new ArrayList<>();
 
     private Boolean emailVerified;
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
 
     public User() {
     }

@@ -4,6 +4,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -13,8 +14,8 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
-
-    private final String SECRET_KEY = "your_super_secret_key_which_is_long_enough_1234567890";
+    @Value("${my.app.jwt-key}")
+    private String SECRET_KEY;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
