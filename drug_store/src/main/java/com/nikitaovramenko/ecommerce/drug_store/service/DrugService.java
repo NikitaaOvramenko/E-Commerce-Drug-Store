@@ -3,6 +3,8 @@ package com.nikitaovramenko.ecommerce.drug_store.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.nikitaovramenko.ecommerce.drug_store.dto.BrandDto;
@@ -51,6 +53,18 @@ public class DrugService {
         Drug saved = drugRepository.save(drug);
 
         return drugMapper.toDto(saved);
+    }
+
+    public Page<Drug> findAll(Pageable pageable) {
+        return drugRepository.findAll(pageable);
+    }
+
+    public Page<Drug> findAllByType(Type type, Pageable pageable) {
+        return drugRepository.findAllByType(type, pageable);
+    }
+
+    public Page<Drug> findAllByBrand(Brand brand, Pageable pageable) {
+        return drugRepository.findAllByBrand(brand, pageable);
     }
 
     public void deleteDrug(Long id) {

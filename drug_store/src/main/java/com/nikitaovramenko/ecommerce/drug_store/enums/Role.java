@@ -1,4 +1,4 @@
-package com.nikitaovramenko.ecommerce.drug_store.model;
+package com.nikitaovramenko.ecommerce.drug_store.enums;
 
 public enum Role {
     ADMIN,
