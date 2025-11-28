@@ -75,25 +75,6 @@ public class DrugController {
         return drugService.findDrugsByBrand(brand);
     }
 
-    @GetMapping("/search")
-    public List<DrugDto> findAllByTypeAndBrand(@RequestParam Long typeId, @RequestParam Long brandId) throws Exception {
-
-        TypeDto type = typeService.findType(typeId);
-
-        if (type == null) {
-            throw new Exception("type not found");
-        }
-
-        BrandDto brand = brandService.findBrand(brandId);
-
-        if (brand == null) {
-            throw new Exception("brand not found");
-        }
-
-        return drugService.findDrugsByTypeAndBrand(type, brand);
-
-    }
-
     @GetMapping("/drug")
     public Page<DrugDto> getAllDrugs(
             @RequestParam(defaultValue = "0") int page,
