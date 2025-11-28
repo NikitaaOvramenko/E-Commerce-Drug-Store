@@ -6,10 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nikitaovramenko.ecommerce.drug_store.dto.BrandDto;
 import com.nikitaovramenko.ecommerce.drug_store.dto.DrugDto;
 import com.nikitaovramenko.ecommerce.drug_store.dto.TypeDto;
-import com.nikitaovramenko.ecommerce.drug_store.mapper.DrugMapper;
-import com.nikitaovramenko.ecommerce.drug_store.model.Brand;
-import com.nikitaovramenko.ecommerce.drug_store.model.Drug;
-import com.nikitaovramenko.ecommerce.drug_store.model.Type;
 import com.nikitaovramenko.ecommerce.drug_store.service.BrandService;
 import com.nikitaovramenko.ecommerce.drug_store.service.DrugService;
 import com.nikitaovramenko.ecommerce.drug_store.service.TypeService;
@@ -99,14 +95,29 @@ public class DrugController {
     }
 
     @GetMapping("/drug")
-    public Page<Drug> getAllDrugs(
+    public Page<DrugDto> getAllDrugs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "true") Boolean ascending) {
+            @RequestParam(defaultValue = "true") Boolean ascending,
+            @RequestParam(defaultValue = "0") Long typeId,
+            @RequestParam(defaultValue = "0") Long brandId) {
 
         Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
         Pageable pageable = PageRequest.of(page, size, sort);
+
+        if (typeId != 0 && brandId != 0) {
+            return drugService.findAllByBrandAndType(brandId, typeId, pageable);
+        }
+
+        if (typeId != 0) {
+            return drugService.findAllByType(typeId, pageable);
+        }
+
+        if (brandId != 0) {
+            return drugService.findAllByBrand(brandId, pageable);
+        }
 
         return drugService.findAll(pageable);
     }

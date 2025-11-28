@@ -22,5 +22,7 @@ public interface DrugRepository extends JpaRepository<Drug, Long> {
 
     public Page<Drug> findAllByType(Type type, Pageable pageable);
 
+    public Page<Drug> findAllByTypeAndBrand(Type type, Brand brand, Pageable pageable);
+
     public Page<Drug> findAllByBrand(Brand brand, Pageable pageable);
 }

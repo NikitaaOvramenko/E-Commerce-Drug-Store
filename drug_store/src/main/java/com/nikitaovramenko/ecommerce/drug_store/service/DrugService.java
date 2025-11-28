@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -55,16 +56,27 @@ public class DrugService {
         return drugMapper.toDto(saved);
     }
 
-    public Page<Drug> findAll(Pageable pageable) {
-        return drugRepository.findAll(pageable);
+    public Page<DrugDto> findAll(Pageable pageable) {
+        Page<DrugDto> drugs = drugRepository.findAll(pageable).map(drugMapper::toDto);
+        return drugs;
     }
 
-    public Page<Drug> findAllByType(Type type, Pageable pageable) {
-        return drugRepository.findAllByType(type, pageable);
+    public Page<DrugDto> findAllByType(Long typeId, Pageable pageable) {
+        Type type = typeRepository.getReferenceById(typeId);
+        return drugRepository.findAllByType(type, pageable).map(drugMapper::toDto);
     }
 
-    public Page<Drug> findAllByBrand(Brand brand, Pageable pageable) {
-        return drugRepository.findAllByBrand(brand, pageable);
+    public Page<DrugDto> findAllByBrand(Long brandId, Pageable pageable) {
+        Brand brand = brandRepository.getReferenceById(brandId);
+        return drugRepository.findAllByBrand(brand, pageable).map(drugMapper::toDto);
+
+    }
+
+    public Page<DrugDto> findAllByBrandAndType(Long brandId, Long typeId, Pageable pageable) {
+        Type type = typeRepository.getReferenceById(typeId);
+        Brand brand = brandRepository.getReferenceById(brandId);
+        return drugRepository.findAllByTypeAndBrand(type, brand, pageable).map(drugMapper::toDto);
+
     }
 
     public void deleteDrug(Long id) {
