@@ -12,6 +12,8 @@ import com.nikitaovramenko.ecommerce.drug_store.model.User;
 import com.nikitaovramenko.ecommerce.drug_store.service.AuthService;
 import com.nikitaovramenko.ecommerce.drug_store.service.JwtService;
 import com.nikitaovramenko.ecommerce.drug_store.service.UserService;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.HashMap;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/auth")
 public class UserController {
