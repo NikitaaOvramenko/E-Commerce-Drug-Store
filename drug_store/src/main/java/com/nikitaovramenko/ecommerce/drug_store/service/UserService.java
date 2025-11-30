@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nikitaovramenko.ecommerce.drug_store.exception.user_exception.UserAlreadyExistsException;
 import com.nikitaovramenko.ecommerce.drug_store.model.Basket;
 import com.nikitaovramenko.ecommerce.drug_store.model.User;
 import com.nikitaovramenko.ecommerce.drug_store.repository.UserRepository;
@@ -31,6 +32,12 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public User registerUser(User user) {
+
+        User exist = userRepository.findByEmail(user.getEmail());
+
+        if (exist != null) {
+            throw new UserAlreadyExistsException("User with this email already exists !");
+        }
 
         user.setEmailVerified(false);
         user.setPassword(passwordEncoder.encode(user.getPassword()));

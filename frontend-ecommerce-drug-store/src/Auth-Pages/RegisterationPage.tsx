@@ -12,13 +12,15 @@ export default function RegistrationPage() {
   const [submissionCheck, setSubmissionCheck] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
     setFun: React.Dispatch<React.SetStateAction<string>>
   ) => {
     setFun(e.target.value);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -31,23 +33,18 @@ export default function RegistrationPage() {
       role: "USER",
     };
 
-    // ✔ Password match check
-    if (data.password !== passConf) {
-      setErrorCheck(true);
-      setError("Passwords do not match.");
+    if (data.password != passConf) {
       return;
     }
 
     try {
-      const res = await axios.post("http://localhost:8080/auth/register", data);
-
-      console.log(res.data);
-      setSubmissionCheck(true);
-      form.reset();
-    } catch (err: any) {
+      axios.post("http://localhost:8080/auth/register", data).then((res) => {
+        console.log(res.data);
+        form.reset();
+      });
+    } catch (error) {
       setErrorCheck(true);
-      setError(err.response?.data || "Server error");
-      console.log(err);
+      console.log(error);
     }
   };
 
@@ -59,78 +56,86 @@ export default function RegistrationPage() {
             Create your account
           </h2>
         </div>
-
-        {/* FORM */}
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div className="rounded-md shadow-sm -space-y-px">
-            {/* Email */}
             <div>
+              <label htmlFor="email" className="sr-only">
+                Email address
+              </label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
             </div>
-
-            {/* Password */}
             <div>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
               <input
                 onChange={(e) => handleChange(e, setPassword)}
                 id="password"
                 name="password"
                 type="password"
+                autoComplete="new-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
             </div>
 
-            {/* Confirm Password */}
             <div>
+              <label htmlFor="password-confirmation" className="sr-only">
+                Password Confirmation
+              </label>
               <input
                 onChange={(e) => handleChange(e, setPasswordConf)}
                 id="password-confirm"
                 name="password-confirm"
                 type="password"
+                autoComplete="new-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border"
-                placeholder="Confirm Password"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Confirm-Password"
               />
             </div>
-
-            {passwordConf !== "" && password !== passwordConf && (
-              <Alert severity="error">Passwords do not match!</Alert>
+            {passwordConf != "" && password != passwordConf && (
+              <Alert severity="error">not the same password!</Alert>
             )}
           </div>
 
-          {/* Terms */}
-          <div className="flex items-center">
-            <input
-              id="terms"
-              name="terms"
-              type="checkbox"
-              required
-              className="h-4 w-4"
-            />
-            <label htmlFor="terms" className="ml-2 text-sm text-gray-900">
-              I agree to the Terms & Conditions
-            </label>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="terms"
+                name="terms"
+                type="checkbox"
+                required
+                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              />
+              <label
+                htmlFor="terms"
+                className="ml-2 block text-sm text-gray-900"
+              >
+                I agree to the Terms & Conditions
+              </label>
+            </div>
           </div>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            className="group relative w-full py-2 px-4 text-white bg-indigo-600 rounded-md"
-          >
-            Sign Up
-          </button>
+          <div>
+            <button
+              type="submit"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Sign Up
+            </button>
+          </div>
         </form>
 
-        {/* Link + Error */}
         <div className="text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}
@@ -141,11 +146,7 @@ export default function RegistrationPage() {
               Sign in
             </Link>
           </p>
-
-          {errorCheck && <Alert severity="error">{error}</Alert>}
-          {submissionCheck && (
-            <Alert severity="success">Registration successful!</Alert>
-          )}
+          {errorCheck && <Alert severity="error"></Alert>}
         </div>
       </div>
     </div>

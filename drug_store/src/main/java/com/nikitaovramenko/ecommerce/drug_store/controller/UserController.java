@@ -13,6 +13,8 @@ import com.nikitaovramenko.ecommerce.drug_store.service.AuthService;
 import com.nikitaovramenko.ecommerce.drug_store.service.JwtService;
 import com.nikitaovramenko.ecommerce.drug_store.service.UserService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -40,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> registerUser(@RequestBody User user) {
+    public ResponseEntity<UserDto> registerUser(@Valid @RequestBody User user) {
         return ResponseEntity.ok(userMapper.toDto(userService.registerUser(user)));
     }
 
