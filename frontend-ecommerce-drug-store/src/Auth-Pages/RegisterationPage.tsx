@@ -20,7 +20,7 @@ export default function RegistrationPage() {
     setFun(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -38,11 +38,15 @@ export default function RegistrationPage() {
     }
 
     try {
-      axios.post("http://localhost:8080/auth/register", data).then((res) => {
-        console.log(res.data);
-        form.reset();
-      });
+      const res = await axios.post("http://localhost:8080/auth/register", data);
+      console.log(res.data);
+      form.reset();
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          setError(error.response.data.message);
+        }
+      }
       setErrorCheck(true);
       console.log(error);
     }
@@ -146,7 +150,7 @@ export default function RegistrationPage() {
               Sign in
             </Link>
           </p>
-          {errorCheck && <Alert severity="error"></Alert>}
+          {errorCheck && <Alert severity="error"> {error} </Alert>}
         </div>
       </div>
     </div>
