@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nikitaovramenko.ecommerce.drug_store.dto.LoginRequest;
 import com.nikitaovramenko.ecommerce.drug_store.dto.LoginResponse;
 import com.nikitaovramenko.ecommerce.drug_store.dto.UserDto;
+import com.nikitaovramenko.ecommerce.drug_store.exception.user_exception.UserNotVerifiedException;
 import com.nikitaovramenko.ecommerce.drug_store.mapper.UserMapper;
 import com.nikitaovramenko.ecommerce.drug_store.model.User;
 import com.nikitaovramenko.ecommerce.drug_store.service.AuthService;
@@ -55,7 +56,7 @@ public class UserController {
             User user = userService.findUserByEmail(request.getEmail());
 
             if (!user.getEmailVerified()) {
-                return ResponseEntity.badRequest().build();
+                throw new UserNotVerifiedException("Email is not verified !");
             }
             UserDto userDto = userMapper.toDto(user);
             String token = jwtService.generateToken(user.getEmail(), new HashMap<>());

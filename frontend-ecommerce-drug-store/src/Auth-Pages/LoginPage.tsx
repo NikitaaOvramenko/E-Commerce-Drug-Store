@@ -1,9 +1,14 @@
 // SignUp.jsx
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Alert from "@mui/material/Alert";
+import { useState } from "react";
 
 export default function LoginPage() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [errorCheck, setErrorCheck] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -13,13 +18,31 @@ export default function LoginPage() {
       password: formData.get("password"),
     };
 
+    const confirmationData = {
+      to: formData.get("email"),
+    };
+
     try {
-      axios.post("http://localhost:8080/auth/login", data).then((res) => {
-        console.log(res.data);
-        form.reset();
-      });
+      const res = await axios.post("http://localhost:8080/auth/login", data);
+      console.log(res.data);
+      form.reset();
     } catch (error) {
-      console.log(error);
+      setErrorCheck(true);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          console.log(error);
+
+          if (error.response.data.message == "Email is not verified !") {
+            const confirmationEmail = await axios.post(
+              "http://localhost:8080/api/send_verify",
+              confirmationData
+            );
+
+            console.log(confirmationEmail.data);
+          }
+          setError(error.response.data.message);
+        }
+      }
     }
   };
 
@@ -84,6 +107,8 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
+
+        {errorCheck && <Alert severity="error">{error}</Alert>}
       </div>
     </div>
   );

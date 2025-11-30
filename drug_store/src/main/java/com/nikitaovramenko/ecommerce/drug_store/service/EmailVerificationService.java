@@ -81,6 +81,7 @@ public class EmailVerificationService {
 
         if (emailVerify.getIs_expired() == true) {
             emailVerifyRepository.delete(emailVerify);
+
             return false;
         }
 

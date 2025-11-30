@@ -4,6 +4,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nikitaovramenko.ecommerce.drug_store.exception.user_exception.UserWrongPasswordException;
+
 @Service
 public class AuthService {
 
@@ -22,7 +24,8 @@ public class AuthService {
             return true;
         }
 
-        return false;
+        throw new UserWrongPasswordException("Incorrect Password !");
+
     }
 
 }

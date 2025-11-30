@@ -3,13 +3,14 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function RegistrationPage() {
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
   const [errorCheck, setErrorCheck] = useState(false);
   const [error, setError] = useState("");
-  const [submissionCheck, setSubmissionCheck] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -33,6 +34,10 @@ export default function RegistrationPage() {
       role: "USER",
     };
 
+    const confirmationData = {
+      to: formData.get("email"),
+    };
+
     if (data.password != passConf) {
       return;
     }
@@ -40,15 +45,22 @@ export default function RegistrationPage() {
     try {
       const res = await axios.post("http://localhost:8080/auth/register", data);
       console.log(res.data);
+
+      const emailConfirmation = await axios.post(
+        "http://localhost:8080/api/send_verify",
+        confirmationData
+      );
+      console.log(emailConfirmation.data);
       form.reset();
+      navigate("/login");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response) {
           setError(error.response.data.message);
+          setErrorCheck(true);
+          console.log(error);
         }
       }
-      setErrorCheck(true);
-      console.log(error);
     }
   };
 
