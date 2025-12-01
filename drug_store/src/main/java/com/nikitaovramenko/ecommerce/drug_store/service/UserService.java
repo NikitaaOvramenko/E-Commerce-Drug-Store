@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nikitaovramenko.ecommerce.drug_store.exception.user_exception.UserAlreadyExistsException;
+import com.nikitaovramenko.ecommerce.drug_store.exception.user_exception.UserNotFoundException;
 import com.nikitaovramenko.ecommerce.drug_store.model.Basket;
 import com.nikitaovramenko.ecommerce.drug_store.model.User;
 import com.nikitaovramenko.ecommerce.drug_store.repository.UserRepository;
@@ -27,7 +28,12 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User Not Found !");
+        }
+        return user;
     }
 
     @Transactional
@@ -61,10 +67,6 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = findUserByEmail(email);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("user not found: " + email);
-        }
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())

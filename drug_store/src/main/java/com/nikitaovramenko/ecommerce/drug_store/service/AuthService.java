@@ -4,6 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nikitaovramenko.ecommerce.drug_store.exception.user_exception.UserNotFoundException;
 import com.nikitaovramenko.ecommerce.drug_store.exception.user_exception.UserWrongPasswordException;
 
 @Service
@@ -20,6 +21,11 @@ public class AuthService {
     public Boolean authentication(String email, String password) {
 
         UserDetails userDetails = userService.loadUserByUsername(email);
+
+        if (userDetails == null) {
+            throw new UserNotFoundException("User Not Found !");
+        }
+
         if (passwordEncoder.matches(password, userDetails.getPassword())) {
             return true;
         }
