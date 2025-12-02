@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* Full-screen root */
+html, body {
+ 
+}
+
+
+
+

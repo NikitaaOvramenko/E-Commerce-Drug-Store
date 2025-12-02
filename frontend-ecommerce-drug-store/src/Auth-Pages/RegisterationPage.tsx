@@ -1,5 +1,6 @@
 // SignUp.jsx
 import axios from "axios";
+import LiquidGlass from "liquid-glass-react";
 import { Link } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import { useState } from "react";
