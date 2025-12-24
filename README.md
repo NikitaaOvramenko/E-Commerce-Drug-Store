@@ -1,107 +1,80 @@
 # E-Commerce Drug Store
 
-A robust, full-stack e-commerce platform designed for the pharmaceutical industry. This system enables users to browse, search, and purchase medical products securely, managing the entire lifecycle from product selection to order fulfillment.
+A full-stack e-commerce platform architected for the pharmaceutical industry, focusing on data integrity, inventory management, and secure transaction processing.
 
 ![Domain Model](online-store-diagram.drawio.png)
 
-## Overview
+## System Overview
 
-The **E-Commerce Drug Store** is a production-grade application solving the challenge of digital pharmaceutical sales. Unlike generic e-commerce platforms, this system is designed with specific attention to data integrity, inventory management, and secure transaction processing required for medical products.
+This application addresses the specific requirements of an online drug store, where product tracking and historical order accuracy are critical. It provides a robust backend API for managing a complex catalog of pharmaceutical products and a responsive frontend dashboard for customer interaction.
 
-### Core Responsibilities
+### Core Capabilities
 
-- **Product Catalog Management**: Structured inventory with Categories, Brands, Types, and detailed Drug information.
-- **Secure Authentication**: JWT-based stateless authentication and authorization.
-- **Shopping Basket**: Persistent user sessions for managing potential purchases.
-- **Order Processing**: Transactional order creation and lifecycle management.
-- **Payment Handling**: Extensible payment processing architecture.
-- **User Feedback**: Rating system for products.
+- **Secure Authentication**: Stateless JWT-based authentication and authorization.
+- **Catalog Management**: Hierarchical inventory system (Types, Brands, Categories, Drugs).
+- **Session Management**: Persistent shopping basket logic.
+- **Order Processing**: Transactional lifecycle management from basket to fulfillment.
+- **Payment Architecture**: Extensible design for integration with payment gateways (e.g., Stripe).
 
 ## Domain Model & Data Design
 
-The database schema is designed for **3rd Normal Form (3NF)** to ensure data integrity and reduce redundancy. The core workflow follows the **User → Basket → Order → Payment** lifecycle.
+The database schema is designed in **3rd Normal Form (3NF)** to ensure data consistency and eliminate redundancy. The system follows a strict `User -> Basket -> Order -> Payment` lifecycle, visible in the referenced ER diagram.
 
-### Key Entity Relationships
+### Key Design Decisions
 
-1.  **User & Identity**:
+1.  **Basket & Order Lifecycle**:
 
-    - Users are the central entity, linked to Baskets, Orders, and Ratings.
-    - Security is handled via `Role` enums stored with the User entity.
+    - **Pre-Purchase**: The `Basket` entity maintains a 1:1 relationship with `User`. Items are stored in `BasketDrug`, a join table that holds the specific `quantity` for that session.
+    - **Transactional Snapshot**: When an order is placed, items are effectively "moved" to the `Order` entity. Crucially, we use a separate join table, `OrderDrug`, to snapshot the **price at the moment of purchase**. This ensures that subsequent price changes in the product catalog do not corrupt historical financial records.
 
-2.  **The Basket (Pre-Purchase State)**:
+2.  **Normalization vs. Performance**:
 
-    - MODELED AS: `Basket` (1:1 with User) and `BasketDrug` (Join Table).
-    - **Why a Join Table?**: `BasketDrug` explicitly models the _relationship_ between a Basket and a Drug, allowing us to store metadata like `quantity` specific to that instance of the item in the cart without modifying the core Drug entity.
+    - Product data is highly normalized across `Drug`, `DrugInfo`, `Brand`, `Type`, and `Category` tables. This structure prevents data anomalies (e.g., inconsistent brand names) and allows for flexible filtering and reporting, a necessary trade-off against join complexity.
 
-3.  **The Order (Transactional State)**:
+3.  **Transactional Boundaries**:
+    - **Basket Operations**: Atomic updates to prevent race conditions during inventory checks.
+    - **Order Creation**: A compound transaction that validates stock, deducts inventory, archives the basket state into an order, and creates the initial payment record.
 
-    - MODELED AS: `Order` (1:N with User) and `OrderDrug` (Join Table).
-    - **Snapshotting**: When an Order is placed, items move from `BasketDrug` to `OrderDrug`. Crucially, `OrderDrug` captures the `price_at_purchase`. This ensures that future price changes in the catalog do not corrupt historical order records—a critical requirement for financial auditing.
+## Architecture
 
-4.  **Payment & Fulfillment**:
-    - `Payment` is 1:1 with `Order`, enforcing a strict transactional boundary. An order exists independently of payment status, allowing for retries or asynchronous payment processing.
-    - `OrderAddress` is snapshot at the time of order to preserve shipping context.
+The system follows a **Layered Architecture** to enforce separation of concerns.
 
-### Transactional Boundaries
+### Backend (Spring Boot)
 
-- **Basket Operations**: Atomic updates to cart contents.
-- **Order Placement**: A complex transaction that:
-  1.  Validates stock levels.
-  2.  Creates the Order record.
-  3.  Transfers items from Basket to Order.
-  4.  Decrements inventory.
-  5.  Clears the Basket.
-  6.  All within a single database transaction to prevent inventory drift.
+- **Controller Layer**: Exposes RESTful endpoints, handles DTO mapping, and manages HTTP responses.
+- **Service Layer**: Encapsulates business logic (e.g., stock validation, price calculation).
+- **Repository Layer**: Manages data persistence using Spring Data JPA.
+- **Security**: Custom `JwtFilter` integrated into the Spring Security chain for stateless request validation.
 
-## Architecture & Request Flow
+### Frontend (React)
 
-The project follows a **Layered Architecture** to separate concerns and improve maintainability.
-
-### Backend (Java / Spring Boot)
-
-- **Controller Layer**: Handles HTTP requests, validation, and API versioning.
-- **Service Layer**: Contains core business logic (e.g., "Check stock before adding to cart").
-- **Repository Layer**: Abstraction over Data Access using Spring Data JPA.
-- **Security**: Spring Security filter chain with JWT for stateless auth.
-
-### Frontend (React / TypeScript)
-
-- **Component-Based UI**: Built with React 19 and Tailwind CSS.
-- **State Management**: React Hooks for local state; efficient API integration.
+- **Design System**: Dashboard-style layout implemented with Tailwind CSS.
+- **State Management**: React Hooks for local component state; centralized auth context.
 - **Routing**: Client-side routing via React Router DOM.
 
-### Request Lifecycle
+## Technology Stack
 
-1.  **Client**: React app sends a `POST /api/orders` request with JWT.
-2.  **Security**: `JwtFilter` validates the token and sets the SecurityContext.
-3.  **Controller**: `OrderController` receives the DTO and validates input.
-4.  **Service**: `OrderService` executes business rules (stock check, price calculation).
-5.  **Data**: `OrderRepository` persists the entities to PostgreSQL.
-6.  **Response**: JSON Confirmation returned to client.
+- **Backend**: Java 17, Spring Boot 3.5.7, Spring Security 6, JJWT 0.11.5
+- **Database**: PostgreSQL (Production), H2 (Development/Test)
+- **Frontend**: TypeScript 5.9, React 19, Vite 7, Tailwind CSS 4, Axios
+- **Tools**: Maven, Postman (API Testing)
 
-## Tech Stack
+## Implementation Status
+
+The project is currently in active development.
 
 ### Backend
 
-- **Language**: Java 17
-- **Framework**: Spring Boot 3.5.7
-- **Database**: PostgreSQL (Production), H2 (Test)
-- **Security**: Spring Security 6, JJWT 0.11.5
-- **Testing**: JUnit 5, Mockito
+- ✅ **Authentication**: Registration, Login, and JWT Token generation.
+- ✅ **Catalog**: CRUD operations for Drugs, Brands, and Categories.
+- ✅ **Basket**: Logic for adding/removing items and quantity management.
+- ⚠️ **Order & Payment**: Domain model designed and entities created; business logic pending implementation.
 
 ### Frontend
 
-- **Language**: TypeScript 5.9
-- **Framework**: React 19
-- **Build Tool**: Vite 7
-- **Styling**: Tailwind CSS 4, Material UI 7
-- **HTTP**: Axios
-
-## Engineering Decisions & Trade-offs
-
-- **Stateless Auth (JWT)**: Chosen over session-based auth to allow easier horizontal scaling of backend services. The trade-off is the complexity of token revocation strategies.
-- **Join Tables for Line Items**: Used `BasketDrug` and `OrderDrug` entities instead of `ElementCollection` or JSON blobs. This allows for efficient SQL querying on "most popular items" and enforces foreign key constraints at the database level.
-- **DTO Projection**: Strict separation between JPA Entities and API DTOs prevents accidental leakage of internal data (like password hashes or internal timestamps) and decouples the API contract from the DB schema.
+- ✅ **Authentication**: Fully functional Login and Registration pages with error handling.
+- ✅ **Layout**: Responsive Dashboard shell implementation.
+- ⚠️ **Core Features**: Product browsing and checkout flows are currently under construction.
 
 ## Setup & Development
 
@@ -109,38 +82,21 @@ The project follows a **Layered Architecture** to separate concerns and improve 
 
 - Java 17+
 - Node.js 20+
-- PostgreSQL (Optional, defaults to H2 for local dev)
 
 ### Backend Setup
 
-1.  Navigate to `drug_store`:
-    ```bash
-    cd drug_store
-    ```
-2.  Run the application:
-    ```bash
-    ./mvnw spring-boot:run
-    ```
-3.  API will be available at `http://localhost:8080`.
+1.  Navigate to the backend directory: `cd drug_store`
+2.  Start the application: `./mvnw spring-boot:run`
+3.  The API will accept requests at `http://localhost:8080`.
 
 ### Frontend Setup
 
-1.  Navigate to `frontend-ecommerce-drug-store`:
-    ```bash
-    cd frontend-ecommerce-drug-store
-    ```
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
-3.  Start development server:
-    ```bash
-    npm run dev
-    ```
-4.  UI will be available at `http://localhost:5173`.
+1.  Navigate to the frontend directory: `cd frontend-ecommerce-drug-store`
+2.  Install dependencies: `npm install`
+3.  Start the development server: `npm run dev`
+4.  Access the UI at `http://localhost:5173`.
 
-## Future Improvements
+## Engineering Trade-offs
 
-- **Payment Gateway Integration**: Integration with Stripe for real-time payment processing.
-- **Admin Dashboard**: Comprehensive analytics and inventory management UI.
-- **Search Optimization**: Implementation of Full-Text Search (e.g., Elasticsearch) for the product catalog.
+- **Stateless Auth (JWT)**: We chose JWTs over server-side sessions to enable horizontal scalability of backend services. The trade-off is the complexity of implementing token revocation strategies.
+- **Join Tables for Line Items**: Using explicit entities (`OrderDrug`) instead of JSON columns allows for efficient SQL aggregation (e.g., "Top selling drugs this month") at the database level, which is critical for e-commerce reporting.
