@@ -54,6 +54,7 @@ public class BasketService {
 
         if (exists != null) {
             exists.setQuantity(exists.getQuantity() + 1);
+            basketRepository.save(basket);
             return;
         }
 
@@ -62,12 +63,41 @@ public class BasketService {
         basketDrug.setDrug(drug);
         basketDrug.setQuantity(1);
         basket.getBasketDrugs().add(basketDrug);
+        basketRepository.save(basket);
 
     }
 
     @Transactional
+    public void removeFromBasket(Basket basket, Long drugId) {
+        basket.getBasketDrugs().removeIf(bd -> bd.getDrug().getId().equals(drugId));
+        basketRepository.save(basket);
+    }
+
+    @Transactional
+    public void updateQuantity(Basket basket, Long drugId, int quantity) {
+        BasketDrug exists = basket.getBasketDrugs().stream()
+                .filter(b -> b.getDrug().getId().equals(drugId))
+                .findFirst().orElse(null);
+
+        if (exists != null) {
+            if (quantity <= 0) {
+                basket.getBasketDrugs().remove(exists);
+            } else {
+                exists.setQuantity(quantity);
+            }
+            basketRepository.save(basket);
+        }
+    }
+
+    @Transactional
+    public void clearBasket(Basket basket) {
+        basket.getBasketDrugs().clear();
+        basketRepository.save(basket);
+    }
+
+    @Transactional
     public Basket findBasket(Long id) {
-        return basketRepository.getReferenceById(id);
+        return basketRepository.findById(id).orElseThrow(() -> new RuntimeException("Basket not found"));
     }
 
 }

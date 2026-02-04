@@ -23,7 +23,7 @@ public class Basket {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BasketDrug> basketDrugs = new ArrayList<>();
 
     public Basket() {

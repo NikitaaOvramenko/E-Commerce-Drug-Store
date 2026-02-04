@@ -1,5 +1,7 @@
 package com.nikitaovramenko.ecommerce.drug_store.mapper;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.nikitaovramenko.ecommerce.drug_store.dto.UserDto;
@@ -16,7 +18,10 @@ public class UserMapper {
 
     public UserDto toDto(User user) {
         UserDto userDto = new UserDto(user.getEmail(),
-                user.getBasket().getBasketDrugs().stream().map(b -> basketDrugMapper.toDto(b)).toList());
+                user.getBasket() != null ? user.getBasket().getId() : null,
+                user.getBasket() != null
+                        ? user.getBasket().getBasketDrugs().stream().map(b -> basketDrugMapper.toDto(b)).toList()
+                        : List.of());
         return userDto;
 
     }

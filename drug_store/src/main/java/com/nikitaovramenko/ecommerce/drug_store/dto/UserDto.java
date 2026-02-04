@@ -4,11 +4,21 @@ import java.util.List;
 
 public class UserDto {
     private String email;
+    private Long basketId;
     private List<BasketDrugDto> basketItems;
 
-    public UserDto(String email, List<BasketDrugDto> basketItems) {
+    public UserDto(String email, Long basketId, List<BasketDrugDto> basketItems) {
         this.email = email;
+        this.basketId = basketId;
         this.basketItems = basketItems;
+    }
+
+    public Long getBasketId() {
+        return basketId;
+    }
+
+    public void setBasketId(Long basketId) {
+        this.basketId = basketId;
     }
 
     public String getEmail() {

@@ -1,4 +1,4 @@
-import type { Drug } from './drug.types';
+import type { Drug } from "./drug.types";
 
 export interface BasketItem {
   drug: Drug;
@@ -8,6 +8,12 @@ export interface BasketItem {
 export interface AddToBasketRequest {
   basketId: number;
   drugId: number;
+}
+
+// Matches the backend BasketDrugDto
+export interface BasketDrugDto {
+  drugDto: Drug;
+  quantity: number;
 }
 
 export interface Basket {
