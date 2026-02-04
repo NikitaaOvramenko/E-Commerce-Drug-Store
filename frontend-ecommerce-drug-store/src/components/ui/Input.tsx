@@ -7,29 +7,66 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ error, icon, rightIcon, className = "", ...props }, ref) => {
+  ({ error, icon, rightIcon, style, ...props }, ref) => {
     return (
-      <div className="relative">
+      <div style={{ position: 'relative' }}>
         {icon && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+          <div
+            style={{
+              position: 'absolute',
+              left: '16px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: '#9ca3af',
+              pointerEvents: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             {icon}
           </div>
         )}
         <input
           ref={ref}
-          className={`
-            w-full px-4 py-3 bg-gray-900 border rounded-xl text-white placeholder-gray-500
-            focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
-            transition-all duration-200
-            ${icon ? "pl-10" : ""}
-            ${rightIcon ? "pr-10" : ""}
-            ${error ? "border-red-500 focus:ring-red-500" : "border-gray-700 hover:border-gray-600"}
-            ${className}
-          `}
+          style={{
+            width: '100%',
+            paddingTop: '14px',
+            paddingBottom: '14px',
+            paddingLeft: icon ? '48px' : '16px',
+            paddingRight: rightIcon ? '48px' : '16px',
+            backgroundColor: '#1a1a1a',
+            border: `2px solid ${error ? '#ef4444' : '#27272a'}`,
+            borderRadius: '12px',
+            color: '#ffffff',
+            fontSize: '16px',
+            outline: 'none',
+            transition: 'border-color 0.2s',
+            ...style,
+          }}
+          onFocus={(e) => {
+            e.target.style.borderColor = error ? '#ef4444' : '#22c55e';
+            props.onFocus?.(e);
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = error ? '#ef4444' : '#27272a';
+            props.onBlur?.(e);
+          }}
           {...props}
         />
         {rightIcon && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+          <div
+            style={{
+              position: 'absolute',
+              right: '16px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: '#9ca3af',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             {rightIcon}
           </div>
         )}

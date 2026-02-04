@@ -1,6 +1,13 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
-import type { User, LoginRequest } from '../api/types/auth.types';
-import { authApi } from '../api/endpoints/auth.api';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  type ReactNode,
+} from "react";
+import type { User, LoginRequest } from "../api/types/auth.types";
+import { authApi } from "../api/endpoints/auth.api";
 
 interface AuthContextType {
   user: User | null;
@@ -24,16 +31,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Check for existing session on mount
   useEffect(() => {
-    const storedToken = localStorage.getItem('jwt_token');
-    const storedUser = localStorage.getItem('user_data');
+    const storedToken = localStorage.getItem("jwt_token");
+    const storedUser = localStorage.getItem("user_data");
 
     if (storedToken && storedUser) {
       try {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
       } catch {
-        localStorage.removeItem('jwt_token');
-        localStorage.removeItem('user_data');
+        localStorage.removeItem("jwt_token");
+        localStorage.removeItem("user_data");
       }
     }
     setIsLoading(false);
@@ -49,18 +56,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(response.token);
       setUser(response.userDto);
 
-      localStorage.setItem('jwt_token', response.token);
-      localStorage.setItem('user_data', JSON.stringify(response.userDto));
+      localStorage.setItem("jwt_token", response.token);
+      localStorage.setItem("user_data", JSON.stringify(response.userDto));
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
-      const message = error.response?.data?.message || 'Login failed';
+      const message = error.response?.data?.message || "Login failed";
       setError(message);
 
       // If email not verified, trigger re-send
-      if (message === 'Email is not verified !') {
+      if (message === "Email is not verified !") {
         try {
           await authApi.sendVerification(credentials.email);
-          setError('Email not verified. A new verification email has been sent.');
+          setError(
+            "Email not verified. A new verification email has been sent.",
+          );
         } catch {
           // Ignore verification send error
         }
@@ -77,11 +86,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null);
 
     try {
-      await authApi.register({ email, password, role: 'USER' });
+      await authApi.register({ email, password, role: "USER" });
       await authApi.sendVerification(email);
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
-      setError(error.response?.data?.message || 'Registration failed');
+      setError(error.response?.data?.message || "Registration failed");
       throw err;
     } finally {
       setIsLoading(false);
@@ -91,8 +100,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem('jwt_token');
-    localStorage.removeItem('user_data');
+    localStorage.removeItem("jwt_token");
+    localStorage.removeItem("user_data");
   }, []);
 
   const clearError = useCallback(() => setError(null), []);
@@ -116,10 +125,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
+    throw new Error("useAuth must be used within AuthProvider");
   }
   return context;
 }

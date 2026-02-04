@@ -48,10 +48,14 @@ export default function RegisterPage() {
       <div className="w-full max-w-sm space-y-8">
         {/* Logo */}
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-green-500/10 mb-4">
-            <span className="text-3xl">💊</span>
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-[#1a2e1a] mb-6">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 4C20 4 17 7 17 11V18H31V11C31 7 28 4 24 4Z" fill="#ff6b9d"/>
+              <path d="M17 18V37C17 41 20 44 24 44C28 44 31 41 31 37V18H17Z" fill="#ffb347"/>
+              <circle cx="24" cy="11" r="3" fill="#fff" fillOpacity="0.6"/>
+            </svg>
           </div>
-          <h1 className="text-2xl font-bold text-white">Create Account</h1>
+          <h1 className="text-3xl font-bold text-white">Create Account</h1>
           <p className="mt-2 text-gray-400">Sign up to get started</p>
         </div>
 
@@ -63,18 +67,16 @@ export default function RegisterPage() {
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <Input
-              type="email"
-              placeholder="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-              icon={<Mail size={18} />}
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Input
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
+            icon={<Mail size={20} />}
+          />
 
           <div>
             <Input
@@ -84,7 +86,7 @@ export default function RegisterPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="new-password"
-              icon={<Lock size={18} />}
+              icon={<Lock size={20} />}
               error={password !== '' && !passwordValid}
               rightIcon={
                 <button
@@ -92,12 +94,12 @@ export default function RegisterPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="p-1 hover:text-white transition-colors"
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               }
             />
             {password !== '' && !passwordValid && (
-              <p className="mt-1.5 text-xs text-red-400">Password must be at least 6 characters</p>
+              <p className="mt-2 text-xs text-red-400">Password must be at least 6 characters</p>
             )}
           </div>
 
@@ -109,16 +111,16 @@ export default function RegisterPage() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               autoComplete="new-password"
-              icon={<Lock size={18} />}
+              icon={<Lock size={20} />}
               error={confirmPassword !== '' && !passwordsMatch}
             />
             {confirmPassword !== '' && !passwordsMatch && (
-              <p className="mt-1.5 text-xs text-red-400">Passwords do not match</p>
+              <p className="mt-2 text-xs text-red-400">Passwords do not match</p>
             )}
           </div>
 
           {/* Terms Checkbox */}
-          <label className="flex items-start gap-3 cursor-pointer group">
+          <label className="flex items-start gap-3 cursor-pointer group pt-2">
             <div className="relative flex-shrink-0 mt-0.5">
               <input
                 type="checkbox"
@@ -126,7 +128,7 @@ export default function RegisterPage() {
                 onChange={(e) => setAgreed(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-5 h-5 rounded-md border-2 border-gray-600 bg-gray-800 peer-checked:bg-green-500 peer-checked:border-green-500 transition-colors flex items-center justify-center">
+              <div className="w-5 h-5 rounded-md border-2 border-gray-600 bg-[#1a1a1a] peer-checked:bg-green-500 peer-checked:border-green-500 transition-colors flex items-center justify-center">
                 {agreed && <Check size={14} className="text-black" />}
               </div>
             </div>
@@ -137,23 +139,25 @@ export default function RegisterPage() {
             </span>
           </label>
 
-          <Button
-            type="submit"
-            loading={isLoading}
-            disabled={!agreed || !passwordsMatch || !passwordValid}
-            fullWidth
-            size="lg"
-          >
-            Create Account
-          </Button>
+          <div className="pt-2">
+            <Button
+              type="submit"
+              loading={isLoading}
+              disabled={!agreed || !passwordsMatch || !passwordValid}
+              fullWidth
+              size="lg"
+            >
+              Create Account
+            </Button>
+          </div>
         </form>
 
         {/* Login Link */}
-        <p className="text-center text-gray-400">
+        <p className="text-center text-gray-400 pt-4">
           Already have an account?{' '}
           <Link
             to="/auth/login"
-            className="text-green-500 hover:text-green-400 font-medium transition-colors"
+            className="text-green-500 hover:text-green-400 font-semibold transition-colors"
           >
             Sign in
           </Link>

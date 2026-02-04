@@ -1,5 +1,12 @@
-import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react';
-import WebApp from '@twa-dev/sdk';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  type ReactNode,
+} from "react";
+import WebApp from "@twa-dev/sdk";
 
 interface SafeAreaInset {
   top: number;
@@ -21,7 +28,7 @@ interface TelegramContextType {
   webApp: typeof WebApp;
   user: TelegramUser | null;
   initData: string;
-  colorScheme: 'light' | 'dark';
+  colorScheme: "light" | "dark";
   isReady: boolean;
   isTelegram: boolean;
   safeAreaInset: SafeAreaInset;
@@ -30,7 +37,7 @@ interface TelegramContextType {
   setMainButtonLoading: (loading: boolean) => void;
   showBackButton: (onClick: () => void) => void;
   hideBackButton: () => void;
-  hapticFeedback: (type: 'impact' | 'notification' | 'selection') => void;
+  hapticFeedback: (type: "impact" | "notification" | "selection") => void;
   showAlert: (message: string) => Promise<void>;
   showConfirm: (message: string) => Promise<boolean>;
   openInvoice: (url: string) => Promise<string>;
@@ -41,8 +48,12 @@ const TelegramContext = createContext<TelegramContextType | null>(null);
 
 export function TelegramProvider({ children }: { children: ReactNode }) {
   const [isReady, setIsReady] = useState(false);
-  const [mainButtonCallback, setMainButtonCallback] = useState<(() => void) | null>(null);
-  const [backButtonCallback, setBackButtonCallback] = useState<(() => void) | null>(null);
+  const [mainButtonCallback, setMainButtonCallback] = useState<
+    (() => void) | null
+  >(null);
+  const [backButtonCallback, setBackButtonCallback] = useState<
+    (() => void) | null
+  >(null);
 
   // Check if running inside Telegram
   const isTelegram = Boolean(WebApp.initData);
@@ -52,6 +63,7 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
       WebApp.ready();
       WebApp.expand();
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsReady(true);
   }, [isTelegram]);
 
@@ -82,15 +94,18 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
     right: WebApp.safeAreaInset?.right || 0,
   };
 
-  const showMainButton = useCallback((text: string, onClick: () => void) => {
-    if (!isTelegram) return;
-    WebApp.MainButton.setText(text);
-    WebApp.MainButton.color = '#22c55e';
-    WebApp.MainButton.textColor = '#000000';
-    setMainButtonCallback(() => onClick);
-    WebApp.MainButton.show();
-    WebApp.MainButton.enable();
-  }, [isTelegram]);
+  const showMainButton = useCallback(
+    (text: string, onClick: () => void) => {
+      if (!isTelegram) return;
+      WebApp.MainButton.setText(text);
+      WebApp.MainButton.color = "#22c55e";
+      WebApp.MainButton.textColor = "#000000";
+      setMainButtonCallback(() => onClick);
+      WebApp.MainButton.show();
+      WebApp.MainButton.enable();
+    },
+    [isTelegram],
+  );
 
   const hideMainButton = useCallback(() => {
     if (!isTelegram) return;
@@ -98,22 +113,28 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
     setMainButtonCallback(null);
   }, [isTelegram]);
 
-  const setMainButtonLoading = useCallback((loading: boolean) => {
-    if (!isTelegram) return;
-    if (loading) {
-      WebApp.MainButton.showProgress();
-      WebApp.MainButton.disable();
-    } else {
-      WebApp.MainButton.hideProgress();
-      WebApp.MainButton.enable();
-    }
-  }, [isTelegram]);
+  const setMainButtonLoading = useCallback(
+    (loading: boolean) => {
+      if (!isTelegram) return;
+      if (loading) {
+        WebApp.MainButton.showProgress();
+        WebApp.MainButton.disable();
+      } else {
+        WebApp.MainButton.hideProgress();
+        WebApp.MainButton.enable();
+      }
+    },
+    [isTelegram],
+  );
 
-  const showBackButton = useCallback((onClick: () => void) => {
-    if (!isTelegram) return;
-    setBackButtonCallback(() => onClick);
-    WebApp.BackButton.show();
-  }, [isTelegram]);
+  const showBackButton = useCallback(
+    (onClick: () => void) => {
+      if (!isTelegram) return;
+      setBackButtonCallback(() => onClick);
+      WebApp.BackButton.show();
+    },
+    [isTelegram],
+  );
 
   const hideBackButton = useCallback(() => {
     if (!isTelegram) return;
@@ -121,50 +142,62 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
     setBackButtonCallback(null);
   }, [isTelegram]);
 
-  const hapticFeedback = useCallback((type: 'impact' | 'notification' | 'selection') => {
-    if (!isTelegram) return;
-    try {
-      if (type === 'impact') {
-        WebApp.HapticFeedback.impactOccurred('medium');
-      } else if (type === 'notification') {
-        WebApp.HapticFeedback.notificationOccurred('success');
-      } else {
-        WebApp.HapticFeedback.selectionChanged();
+  const hapticFeedback = useCallback(
+    (type: "impact" | "notification" | "selection") => {
+      if (!isTelegram) return;
+      try {
+        if (type === "impact") {
+          WebApp.HapticFeedback.impactOccurred("medium");
+        } else if (type === "notification") {
+          WebApp.HapticFeedback.notificationOccurred("success");
+        } else {
+          WebApp.HapticFeedback.selectionChanged();
+        }
+      } catch {
+        // Haptic feedback not supported
       }
-    } catch {
-      // Haptic feedback not supported
-    }
-  }, [isTelegram]);
+    },
+    [isTelegram],
+  );
 
-  const showAlert = useCallback((message: string): Promise<void> => {
-    if (!isTelegram) {
-      alert(message);
-      return Promise.resolve();
-    }
-    return new Promise((resolve) => {
-      WebApp.showAlert(message, resolve);
-    });
-  }, [isTelegram]);
-
-  const showConfirm = useCallback((message: string): Promise<boolean> => {
-    if (!isTelegram) {
-      return Promise.resolve(confirm(message));
-    }
-    return new Promise((resolve) => {
-      WebApp.showConfirm(message, resolve);
-    });
-  }, [isTelegram]);
-
-  const openInvoice = useCallback((url: string): Promise<string> => {
-    if (!isTelegram) {
-      return Promise.reject(new Error('Not running in Telegram'));
-    }
-    return new Promise((resolve) => {
-      WebApp.openInvoice(url, (status) => {
-        resolve(status);
+  const showAlert = useCallback(
+    (message: string): Promise<void> => {
+      if (!isTelegram) {
+        alert(message);
+        return Promise.resolve();
+      }
+      return new Promise((resolve) => {
+        WebApp.showAlert(message, resolve);
       });
-    });
-  }, [isTelegram]);
+    },
+    [isTelegram],
+  );
+
+  const showConfirm = useCallback(
+    (message: string): Promise<boolean> => {
+      if (!isTelegram) {
+        return Promise.resolve(confirm(message));
+      }
+      return new Promise((resolve) => {
+        WebApp.showConfirm(message, resolve);
+      });
+    },
+    [isTelegram],
+  );
+
+  const openInvoice = useCallback(
+    (url: string): Promise<string> => {
+      if (!isTelegram) {
+        return Promise.reject(new Error("Not running in Telegram"));
+      }
+      return new Promise((resolve) => {
+        WebApp.openInvoice(url, (status) => {
+          resolve(status);
+        });
+      });
+    },
+    [isTelegram],
+  );
 
   const close = useCallback(() => {
     if (isTelegram) {
@@ -176,7 +209,7 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
     webApp: WebApp,
     user: WebApp.initDataUnsafe?.user || null,
     initData: WebApp.initData,
-    colorScheme: WebApp.colorScheme || 'dark',
+    colorScheme: WebApp.colorScheme || "dark",
     isReady,
     isTelegram,
     safeAreaInset,
@@ -199,10 +232,11 @@ export function TelegramProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useTelegram() {
   const context = useContext(TelegramContext);
   if (!context) {
-    throw new Error('useTelegram must be used within TelegramProvider');
+    throw new Error("useTelegram must be used within TelegramProvider");
   }
   return context;
 }

@@ -1,3 +1,9 @@
 .vscode/
 .claude
 CLAUDE.md
+
+# Environment files (keep secrets safe)
+.env
+.env.local
+.env.production
+!.env.example
