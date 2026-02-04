@@ -1,28 +1,52 @@
-import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import RegistrationPage from "./auth-pages/RegisterationPage";
-import LoginPage from "./auth-pages/LoginPage";
-import AuthLayout from "./layouts/AuthLayout";
-import DashboardLayout from "./layouts/DashboardLayout";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { TelegramProvider } from './context/TelegramContext';
+import { AuthProvider } from './context/AuthContext';
+import { BasketProvider } from './context/BasketContext';
+import { FavoritesProvider } from './context/FavoritesContext';
+
+// Pages
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
+import StorePage from './pages/store/StorePage';
+import CheckoutPage from './pages/checkout/CheckoutPage';
+
+// Components
+import BasketSheet from './components/basket/BasketSheet';
+import ProtectedRoute from './components/shared/ProtectedRoute';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* AUTH PAGES */}
-        <Route path="auth" element={<AuthLayout />}>
-          <Route path="sign_up" element={<RegistrationPage />} />
-          <Route path="login" element={<LoginPage />} />
-        </Route>
+    <TelegramProvider>
+      <AuthProvider>
+        <BasketProvider>
+          <FavoritesProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* Auth Routes (Public) */}
+                <Route path="auth">
+                  <Route path="login" element={<LoginPage />} />
+                  <Route path="sign_up" element={<RegisterPage />} />
+                </Route>
 
-        {/* DASHBOARD */}
-        <Route path="dashboard" element={<DashboardLayout />}>
-          <Route path="store" element={<div>Store Page</div>} />
-          <Route path="basket" element={<div>Basket Page</div>} />
-          <Route path="settings" element={<div>Settings Page</div>} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+                {/* Protected Routes */}
+                <Route element={<ProtectedRoute />}>
+                  <Route path="store" element={<StorePage />} />
+                  <Route path="checkout" element={<CheckoutPage />} />
+                </Route>
+
+                {/* Default Redirects */}
+                <Route path="/" element={<Navigate to="/store" replace />} />
+                <Route path="/dashboard/*" element={<Navigate to="/store" replace />} />
+                <Route path="*" element={<Navigate to="/store" replace />} />
+              </Routes>
+
+              {/* Global Basket Sheet */}
+              <BasketSheet />
+            </BrowserRouter>
+          </FavoritesProvider>
+        </BasketProvider>
+      </AuthProvider>
+    </TelegramProvider>
   );
 }
 
