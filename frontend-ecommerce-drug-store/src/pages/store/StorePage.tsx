@@ -7,6 +7,7 @@ import type {
   Brand,
 } from "../../api/types/drug.types";
 import { useBasket } from "../../context/BasketContext";
+import { useTelegramTheme } from "../../hooks/useTelegramTheme";
 import SafeArea from "../../components/ui/SafeArea";
 import SearchBar from "./components/SearchBar";
 import FilterSheet from "./components/FilterSheet";
@@ -25,12 +26,8 @@ export default function StorePage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const { basketCount } = useBasket();
+  const { bgColor, secondaryBgColor, hintColor } = useTelegramTheme();
 
-  window.Telegram?.WebApp?.ready();
-
-  const theme = window.Telegram?.WebApp?.themeParams;
-
-  const bg = theme?.bg_color || "#000000";
   const hasMore = page < totalPages - 1;
 
   // Load filter options
@@ -103,11 +100,15 @@ export default function StorePage() {
 
   return (
     <SafeArea
-      className={`min-h-screen bg-[${bg}] flex flex-col`}
+      className="min-h-screen flex flex-col"
+      style={{ backgroundColor: bgColor }}
       bottom={false}
     >
       {/* Top Bar */}
-      <div className="sticky top-0 z-20 bg-black/95 backdrop-blur-sm border-b border-gray-800/50">
+      <div
+        className="sticky top-0 z-20 backdrop-blur-sm border-b border-gray-800/50"
+        style={{ backgroundColor: `${secondaryBgColor}ee` }}
+      >
         <div className="px-3 py-3 flex items-center gap-2">
           <SearchBar
             value={searchQuery}
@@ -125,6 +126,8 @@ export default function StorePage() {
           loading={loading}
           hasMore={hasMore && !searchQuery}
           onLoadMore={handleLoadMore}
+          hintColor={hintColor}
+          secondaryBgColor={secondaryBgColor}
         />
       </div>
 

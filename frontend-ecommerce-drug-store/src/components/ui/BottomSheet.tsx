@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useTelegramTheme } from "../../hooks/useTelegramTheme";
 
 interface BottomSheetProps {
   open: boolean;
@@ -20,6 +21,7 @@ export default function BottomSheet({
   const overlayRef = useRef<HTMLDivElement>(null);
   const startY = useRef(0);
   const currentY = useRef(0);
+  const { secondaryBgColor, hintColor } = useTelegramTheme();
 
   useEffect(() => {
     if (open) {
@@ -75,8 +77,8 @@ export default function BottomSheet({
       {/* Sheet */}
       <div
         ref={sheetRef}
-        className="fixed bottom-0 left-0 right-0 bg-gray-900 rounded-t-3xl z-50 transition-transform duration-300 ease-out translate-y-full"
-        style={{ height, maxHeight: "90vh" }}
+        className="fixed bottom-0 left-0 right-0 rounded-t-3xl z-50 transition-transform duration-300 ease-out translate-y-full"
+        style={{ height, maxHeight: "90vh", backgroundColor: secondaryBgColor }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -84,7 +86,10 @@ export default function BottomSheet({
         {/* Handle */}
         {showHandle && (
           <div className="flex justify-center py-3 cursor-grab active:cursor-grabbing">
-            <div className="w-10 h-1 bg-gray-600 rounded-full" />
+            <div
+              className="w-10 h-1 rounded-full"
+              style={{ backgroundColor: hintColor }}
+            />
           </div>
         )}
 

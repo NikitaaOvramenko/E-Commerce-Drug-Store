@@ -1,5 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { Loader2 } from "lucide-react";
+import { useTelegramTheme } from "../../hooks/useTelegramTheme";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "outline" | "ghost";
@@ -17,19 +18,14 @@ export default function Button({
   className = "",
   disabled,
   children,
+  style,
   ...props
 }: ButtonProps) {
-  const baseStyles =
-    "inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]";
+  const { buttonColor, buttonTextColor, secondaryBgColor, textColor, hintColor } =
+    useTelegramTheme();
 
-  const variants = {
-    primary: "bg-green-500 text-black hover:bg-green-400 active:bg-green-600",
-    secondary: "bg-gray-800 text-white hover:bg-gray-700 active:bg-gray-900",
-    outline:
-      "border-2 border-gray-700 text-white hover:bg-gray-800 active:bg-gray-900",
-    ghost:
-      "text-gray-400 hover:text-white hover:bg-gray-800/50 active:bg-gray-800",
-  };
+  const baseStyles =
+    "inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]";
 
   const sizes = {
     sm: "px-3 py-1.5 text-sm gap-1.5",
@@ -37,10 +33,40 @@ export default function Button({
     lg: "px-6 py-3.5 text-lg gap-2.5",
   };
 
+  // Get variant-specific styles
+  const getVariantStyles = () => {
+    switch (variant) {
+      case "primary":
+        return {
+          backgroundColor: buttonColor,
+          color: buttonTextColor,
+        };
+      case "secondary":
+        return {
+          backgroundColor: secondaryBgColor,
+          color: textColor,
+        };
+      case "outline":
+        return {
+          backgroundColor: "transparent",
+          color: textColor,
+          border: `2px solid ${hintColor}`,
+        };
+      case "ghost":
+        return {
+          backgroundColor: "transparent",
+          color: hintColor,
+        };
+      default:
+        return {};
+    }
+  };
+
   return (
     <button
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${fullWidth ? "w-full" : ""} ${className}`}
+      className={`${baseStyles} ${sizes[size]} ${fullWidth ? "w-full" : ""} ${className}`}
       disabled={disabled || loading}
+      style={{ ...getVariantStyles(), ...style }}
       {...props}
     >
       {loading && <Loader2 className="w-4 h-4 animate-spin" />}

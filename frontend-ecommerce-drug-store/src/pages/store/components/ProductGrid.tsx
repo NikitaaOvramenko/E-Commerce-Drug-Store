@@ -7,6 +7,8 @@ interface ProductGridProps {
   loading: boolean;
   hasMore: boolean;
   onLoadMore: () => void;
+  hintColor?: string;
+  secondaryBgColor?: string;
 }
 
 export default function ProductGrid({
@@ -14,6 +16,8 @@ export default function ProductGrid({
   loading,
   hasMore,
   onLoadMore,
+  hintColor = "#6b7280",
+  secondaryBgColor = "#1a1a1a",
 }: ProductGridProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -39,7 +43,7 @@ export default function ProductGrid({
     <div className="p-3">
       {/* Product Count */}
       {drugs.length > 0 && (
-        <p className="text-gray-400 text-sm mb-3">
+        <p className="text-sm mb-3" style={{ color: hintColor }}>
           {drugs.length} Products Found
         </p>
       )}
@@ -47,7 +51,7 @@ export default function ProductGrid({
       {/* 3-Column Grid */}
       <div className="grid grid-cols-3 gap-2.5">
         {drugs.map((drug) => (
-          <ProductCard key={drug.id} drug={drug} />
+          <ProductCard key={drug.id} drug={drug} secondaryBgColor={secondaryBgColor} />
         ))}
       </div>
 
@@ -55,7 +59,11 @@ export default function ProductGrid({
       {loading && (
         <div className="grid grid-cols-3 gap-2.5 mt-2.5">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-gray-900 rounded-2xl animate-pulse">
+            <div
+              key={i}
+              className="rounded-2xl animate-pulse"
+              style={{ backgroundColor: secondaryBgColor }}
+            >
               <div className="aspect-square bg-gray-800 rounded-t-2xl" />
               <div className="p-2.5 space-y-2">
                 <div className="h-3 bg-gray-800 rounded w-10" />
@@ -75,7 +83,7 @@ export default function ProductGrid({
 
       {/* End of List */}
       {!hasMore && drugs.length > 0 && (
-        <p className="text-center text-gray-600 py-6 text-sm">
+        <p className="text-center py-6 text-sm" style={{ color: hintColor }}>
           No more products
         </p>
       )}
@@ -84,8 +92,10 @@ export default function ProductGrid({
       {!loading && drugs.length === 0 && (
         <div className="text-center py-16">
           <div className="text-4xl mb-3">🔍</div>
-          <p className="text-gray-400 text-lg">No products found</p>
-          <p className="text-gray-600 text-sm mt-1">
+          <p className="text-lg" style={{ color: hintColor }}>
+            No products found
+          </p>
+          <p className="text-sm mt-1" style={{ color: hintColor, opacity: 0.7 }}>
             Try adjusting your filters
           </p>
         </div>
