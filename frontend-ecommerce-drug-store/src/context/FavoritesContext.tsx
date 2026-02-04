@@ -1,4 +1,11 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  type ReactNode,
+} from "react";
 
 interface FavoritesContextType {
   favorites: number[];
@@ -11,7 +18,7 @@ interface FavoritesContextType {
 
 const FavoritesContext = createContext<FavoritesContextType | null>(null);
 
-const STORAGE_KEY = 'favorite_drugs';
+const STORAGE_KEY = "favorite_drugs";
 
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -21,6 +28,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setFavorites(JSON.parse(saved));
       } catch {
         // Invalid data
@@ -33,9 +41,12 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
   }, [favorites]);
 
-  const isFavorite = useCallback((drugId: number) => {
-    return favorites.includes(drugId);
-  }, [favorites]);
+  const isFavorite = useCallback(
+    (drugId: number) => {
+      return favorites.includes(drugId);
+    },
+    [favorites],
+  );
 
   const toggleFavorite = useCallback((drugId: number) => {
     setFavorites((prev) => {
@@ -77,10 +88,11 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useFavorites() {
   const context = useContext(FavoritesContext);
   if (!context) {
-    throw new Error('useFavorites must be used within FavoritesProvider');
+    throw new Error("useFavorites must be used within FavoritesProvider");
   }
   return context;
 }

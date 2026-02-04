@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { useTelegram } from '../../context/TelegramContext';
 
 interface SafeAreaProps {
   children: ReactNode;
@@ -18,22 +17,13 @@ export default function SafeArea({
   left = true,
   right = true,
 }: SafeAreaProps) {
-  const { safeAreaInset, isTelegram } = useTelegram();
-
-  const style = isTelegram
-    ? {
-        paddingTop: top ? safeAreaInset.top : 0,
-        paddingBottom: bottom ? safeAreaInset.bottom : 0,
-        paddingLeft: left ? safeAreaInset.left : 0,
-        paddingRight: right ? safeAreaInset.right : 0,
-      }
-    : {
-        // Fallback for browser testing - use env() for native safe areas
-        paddingTop: top ? 'env(safe-area-inset-top, 0px)' : 0,
-        paddingBottom: bottom ? 'env(safe-area-inset-bottom, 0px)' : 0,
-        paddingLeft: left ? 'env(safe-area-inset-left, 0px)' : 0,
-        paddingRight: right ? 'env(safe-area-inset-right, 0px)' : 0,
-      };
+  // Use CSS env() for native safe areas
+  const style = {
+    paddingTop: top ? 'env(safe-area-inset-top, 0px)' : 0,
+    paddingBottom: bottom ? 'env(safe-area-inset-bottom, 0px)' : 0,
+    paddingLeft: left ? 'env(safe-area-inset-left, 0px)' : 0,
+    paddingRight: right ? 'env(safe-area-inset-right, 0px)' : 0,
+  };
 
   return (
     <div className={className} style={style}>

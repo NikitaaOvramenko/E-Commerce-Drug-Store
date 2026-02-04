@@ -2,7 +2,6 @@ import { Heart, Star } from 'lucide-react';
 import type { Drug } from '../../../api/types/drug.types';
 import { useBasket } from '../../../context/BasketContext';
 import { useFavorites } from '../../../context/FavoritesContext';
-import { useTelegram } from '../../../context/TelegramContext';
 
 interface ProductCardProps {
   drug: Drug;
@@ -11,16 +10,13 @@ interface ProductCardProps {
 export default function ProductCard({ drug }: ProductCardProps) {
   const { addToBasket } = useBasket();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { hapticFeedback } = useTelegram();
 
   const handleAdd = () => {
-    hapticFeedback('impact');
     addToBasket(drug);
   };
 
   const handleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    hapticFeedback('selection');
     toggleFavorite(drug.id);
   };
 

@@ -1,8 +1,6 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { useBasket } from '../../context/BasketContext';
-import { useTelegram } from '../../context/TelegramContext';
 import BottomSheet from '../ui/BottomSheet';
 import Button from '../ui/Button';
 
@@ -15,29 +13,14 @@ export default function BasketSheet() {
     updateQuantity,
     removeFromBasket,
   } = useBasket();
-  const { hapticFeedback, showMainButton, hideMainButton, isTelegram } = useTelegram();
   const navigate = useNavigate();
 
-  // Show Telegram Main Button when basket is open with items
-  useEffect(() => {
-    if (isOpen && items.length > 0 && isTelegram) {
-      showMainButton(`Checkout - $${totalPrice.toFixed(2)}`, handleCheckout);
-    }
-    return () => {
-      if (isTelegram) {
-        hideMainButton();
-      }
-    };
-  }, [isOpen, items.length, totalPrice, isTelegram]);
-
   const handleCheckout = () => {
-    hapticFeedback('notification');
     closeBasket();
     navigate('/checkout');
   };
 
   const handleQuantityChange = (drugId: number, delta: number) => {
-    hapticFeedback('selection');
     const item = items.find((i) => i.drug.id === drugId);
     if (item) {
       updateQuantity(drugId, item.quantity + delta);
@@ -45,7 +28,6 @@ export default function BasketSheet() {
   };
 
   const handleRemove = (drugId: number) => {
-    hapticFeedback('impact');
     removeFromBasket(drugId);
   };
 
@@ -142,7 +124,7 @@ export default function BasketSheet() {
           )}
         </div>
 
-        {/* Footer - Only show on non-Telegram or as fallback */}
+        {/* Footer */}
         {items.length > 0 && (
           <div className="p-4 border-t border-gray-800 space-y-3 pb-safe">
             <div className="flex justify-between items-center">
@@ -151,11 +133,9 @@ export default function BasketSheet() {
                 ${totalPrice.toFixed(2)}
               </span>
             </div>
-            {!isTelegram && (
-              <Button fullWidth size="lg" onClick={handleCheckout}>
-                Checkout
-              </Button>
-            )}
+            <Button fullWidth size="lg" onClick={handleCheckout}>
+              Checkout
+            </Button>
           </div>
         )}
       </div>

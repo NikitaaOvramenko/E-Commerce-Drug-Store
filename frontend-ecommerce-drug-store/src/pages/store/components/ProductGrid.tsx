@@ -1,6 +1,6 @@
-import { useRef, useEffect } from 'react';
-import type { Drug } from '../../../api/types/drug.types';
-import ProductCard from './ProductCard';
+import { useRef, useEffect } from "react";
+import type { Drug } from "../../../api/types/drug.types";
+import ProductCard from "./ProductCard";
 
 interface ProductGridProps {
   drugs: Drug[];
@@ -9,7 +9,12 @@ interface ProductGridProps {
   onLoadMore: () => void;
 }
 
-export default function ProductGrid({ drugs, loading, hasMore, onLoadMore }: ProductGridProps) {
+export default function ProductGrid({
+  drugs,
+  loading,
+  hasMore,
+  onLoadMore,
+}: ProductGridProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   // Infinite scroll with Intersection Observer
@@ -20,7 +25,7 @@ export default function ProductGrid({ drugs, loading, hasMore, onLoadMore }: Pro
           onLoadMore();
         }
       },
-      { threshold: 0.1, rootMargin: '100px' }
+      { threshold: 0.1, rootMargin: "100px" },
     );
 
     if (loadMoreRef.current) {
@@ -70,7 +75,9 @@ export default function ProductGrid({ drugs, loading, hasMore, onLoadMore }: Pro
 
       {/* End of List */}
       {!hasMore && drugs.length > 0 && (
-        <p className="text-center text-gray-600 py-6 text-sm">No more products</p>
+        <p className="text-center text-gray-600 py-6 text-sm">
+          No more products
+        </p>
       )}
 
       {/* Empty State */}
@@ -78,7 +85,9 @@ export default function ProductGrid({ drugs, loading, hasMore, onLoadMore }: Pro
         <div className="text-center py-16">
           <div className="text-4xl mb-3">🔍</div>
           <p className="text-gray-400 text-lg">No products found</p>
-          <p className="text-gray-600 text-sm mt-1">Try adjusting your filters</p>
+          <p className="text-gray-600 text-sm mt-1">
+            Try adjusting your filters
+          </p>
         </div>
       )}
     </div>

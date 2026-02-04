@@ -28,15 +28,6 @@
   --color-success: #22c55e;
   --color-error: #ef4444;
   --color-warning: #f59e0b;
-
-  /* Telegram theme vars (overridden by Telegram if running inside) */
-  --tg-theme-bg-color: #000000;
-  --tg-theme-text-color: #ffffff;
-  --tg-theme-hint-color: #6b7280;
-  --tg-theme-link-color: #22c55e;
-  --tg-theme-button-color: #22c55e;
-  --tg-theme-button-text-color: #000000;
-  --tg-theme-secondary-bg-color: #111111;
 }
 
 /* Reset */
@@ -223,9 +214,4 @@ input:-moz-autofill:focus {
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Telegram MainButton spacing - adds padding when MainButton is visible */
-.mb-main-button {
-  margin-bottom: 60px;
 }

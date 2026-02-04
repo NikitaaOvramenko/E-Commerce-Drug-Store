@@ -1,13 +1,17 @@
-import { useState, useEffect, useCallback } from 'react';
-import { drugsApi } from '../../api/endpoints/drugs.api';
-import type { Drug, DrugFilters, DrugType, Brand } from '../../api/types/drug.types';
-import { useTelegram } from '../../context/TelegramContext';
-import { useBasket } from '../../context/BasketContext';
-import SafeArea from '../../components/ui/SafeArea';
-import SearchBar from './components/SearchBar';
-import FilterSheet from './components/FilterSheet';
-import ProductGrid from './components/ProductGrid';
-import BasketButton from '../../components/basket/BasketButton';
+import { useState, useEffect, useCallback } from "react";
+import { drugsApi } from "../../api/endpoints/drugs.api";
+import type {
+  Drug,
+  DrugFilters,
+  DrugType,
+  Brand,
+} from "../../api/types/drug.types";
+import { useBasket } from "../../context/BasketContext";
+import SafeArea from "../../components/ui/SafeArea";
+import SearchBar from "./components/SearchBar";
+import FilterSheet from "./components/FilterSheet";
+import ProductGrid from "./components/ProductGrid";
+import BasketButton from "../../components/basket/BasketButton";
 
 export default function StorePage() {
   const [drugs, setDrugs] = useState<Drug[]>([]);
@@ -18,11 +22,15 @@ export default function StorePage() {
   const [totalPages, setTotalPages] = useState(0);
   const [filters, setFilters] = useState<DrugFilters>({});
   const [showFilters, setShowFilters] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const { hapticFeedback } = useTelegram();
   const { basketCount } = useBasket();
 
+  window.Telegram?.WebApp?.ready();
+
+  const theme = window.Telegram?.WebApp?.themeParams;
+
+  const bg = theme?.bg_color || "#000000";
   const hasMore = page < totalPages - 1;
 
   // Load filter options
@@ -36,7 +44,7 @@ export default function StorePage() {
         setTypes(typesData);
         setBrands(brandsData);
       } catch (error) {
-        console.error('Failed to load filters:', error);
+        console.error("Failed to load filters:", error);
       }
     };
     loadFilters();
@@ -62,12 +70,12 @@ export default function StorePage() {
         setTotalPages(data.totalPages);
         setPage(data.number);
       } catch (error) {
-        console.error('Failed to load drugs:', error);
+        console.error("Failed to load drugs:", error);
       } finally {
         setLoading(false);
       }
     },
-    [filters]
+    [filters],
   );
 
   // Initial load and filter change
@@ -82,7 +90,6 @@ export default function StorePage() {
   };
 
   const handleFilterChange = (newFilters: DrugFilters) => {
-    hapticFeedback('selection');
     setFilters(newFilters);
     setShowFilters(false);
   };
@@ -90,12 +97,15 @@ export default function StorePage() {
   // Filter drugs by search query (client-side)
   const filteredDrugs = searchQuery
     ? drugs.filter((d) =>
-        d.name.toLowerCase().includes(searchQuery.toLowerCase())
+        d.name.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : drugs;
 
   return (
-    <SafeArea className="min-h-screen bg-black flex flex-col" bottom={false}>
+    <SafeArea
+      className={`min-h-screen bg-[${bg}] flex flex-col`}
+      bottom={false}
+    >
       {/* Top Bar */}
       <div className="sticky top-0 z-20 bg-black/95 backdrop-blur-sm border-b border-gray-800/50">
         <div className="px-3 py-3 flex items-center gap-2">

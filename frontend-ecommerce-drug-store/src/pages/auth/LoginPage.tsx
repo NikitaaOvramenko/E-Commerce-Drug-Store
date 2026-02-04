@@ -2,7 +2,6 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { useTelegram } from '../../context/TelegramContext';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 
@@ -11,7 +10,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { login, error, isLoading, clearError } = useAuth();
-  const { hapticFeedback } = useTelegram();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
@@ -20,10 +18,9 @@ export default function LoginPage() {
 
     try {
       await login({ email, password });
-      hapticFeedback('notification');
       navigate('/store');
     } catch {
-      hapticFeedback('impact');
+      // Error is handled by AuthContext
     }
   };
 

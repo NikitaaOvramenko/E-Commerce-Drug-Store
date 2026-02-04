@@ -1,34 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CreditCard, Smartphone } from 'lucide-react';
-import { useTelegram } from '../../context/TelegramContext';
+import { ArrowLeft, CreditCard } from 'lucide-react';
 import { useBasket } from '../../context/BasketContext';
 import SafeArea from '../../components/ui/SafeArea';
 import Button from '../../components/ui/Button';
 
 export default function CheckoutPage() {
-  const {
-    showBackButton,
-    hideBackButton,
-    hapticFeedback,
-    showAlert,
-    // openInvoice will be used when payment backend is ready
-    isTelegram,
-  } = useTelegram();
   const { items, totalPrice, clearBasket } = useBasket();
   const navigate = useNavigate();
   const [processing, setProcessing] = useState(false);
-
-  useEffect(() => {
-    if (isTelegram) {
-      showBackButton(() => navigate(-1));
-    }
-    return () => {
-      if (isTelegram) {
-        hideBackButton();
-      }
-    };
-  }, [isTelegram]);
 
   // Redirect if basket is empty
   useEffect(() => {
@@ -37,33 +17,17 @@ export default function CheckoutPage() {
     }
   }, [items.length, navigate]);
 
-  const handleTelegramPayment = async () => {
+  const handlePayment = async () => {
     setProcessing(true);
-    hapticFeedback('impact');
 
     try {
-      // TODO: Call backend to create invoice when endpoint is ready
-      // const response = await paymentApi.createInvoice({
-      //   items: items.map(item => ({
-      //     drugId: item.drug.id,
-      //     quantity: item.quantity,
-      //     price: item.drug.price,
-      //   })),
-      //   total: totalPrice,
-      // });
-      // const status = await openInvoice(response.invoiceUrl);
-
-      // For now, show coming soon message
-      await showAlert(
-        'Payment integration coming soon! Your order has been saved.'
-      );
-      hapticFeedback('notification');
+      // TODO: Implement payment integration
+      alert('Payment integration coming soon! Your order has been saved.');
       clearBasket();
       navigate('/store');
     } catch (error) {
       console.error('Payment error:', error);
-      await showAlert('Payment failed. Please try again.');
-      hapticFeedback('impact');
+      alert('Payment failed. Please try again.');
     } finally {
       setProcessing(false);
     }
@@ -77,14 +41,12 @@ export default function CheckoutPage() {
     <SafeArea className="min-h-screen bg-black flex flex-col">
       {/* Header */}
       <div className="px-4 py-4 border-b border-gray-800 flex items-center gap-3">
-        {!isTelegram && (
-          <button
-            onClick={() => navigate(-1)}
-            className="p-2 -ml-2 rounded-lg hover:bg-gray-800 transition-colors"
-          >
-            <ArrowLeft size={20} className="text-white" />
-          </button>
-        )}
+        <button
+          onClick={() => navigate(-1)}
+          className="p-2 -ml-2 rounded-lg hover:bg-gray-800 transition-colors"
+        >
+          <ArrowLeft size={20} className="text-white" />
+        </button>
         <h1 className="text-xl font-bold text-white">Checkout</h1>
       </div>
 
@@ -143,24 +105,7 @@ export default function CheckoutPage() {
         <div className="bg-gray-900 rounded-2xl p-4">
           <h2 className="text-white font-semibold mb-4">Payment Method</h2>
 
-          {/* Telegram Payment Option */}
-          {isTelegram && (
-            <div className="p-4 bg-[#0088cc]/10 border border-[#0088cc]/30 rounded-xl mb-3">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#0088cc] flex items-center justify-center">
-                  <Smartphone size={20} className="text-white" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">Telegram Payments</p>
-                  <p className="text-gray-400 text-sm">
-                    Apple Pay, Google Pay & Cards
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Card Option (fallback) */}
+          {/* Card Option */}
           <div className="p-4 bg-gray-800/50 border border-gray-700 rounded-xl">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
@@ -181,12 +126,12 @@ export default function CheckoutPage() {
           fullWidth
           size="lg"
           loading={processing}
-          onClick={handleTelegramPayment}
+          onClick={handlePayment}
         >
-          {isTelegram ? 'Pay with Telegram' : 'Place Order'}
+          Place Order
         </Button>
         <p className="text-center text-gray-500 text-xs mt-3">
-          Secure payment powered by {isTelegram ? 'Telegram' : 'Stripe'}
+          Secure payment powered by Stripe
         </p>
       </div>
     </SafeArea>

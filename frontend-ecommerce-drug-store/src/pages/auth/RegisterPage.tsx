@@ -2,7 +2,6 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, Check } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { useTelegram } from '../../context/TelegramContext';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 
@@ -13,7 +12,6 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const { register, error, isLoading, clearError } = useAuth();
-  const { hapticFeedback, showAlert } = useTelegram();
   const navigate = useNavigate();
 
   const passwordsMatch = password === confirmPassword;
@@ -23,23 +21,16 @@ export default function RegisterPage() {
     e.preventDefault();
     clearError();
 
-    if (!passwordsMatch) {
-      hapticFeedback('impact');
-      return;
-    }
-
-    if (!passwordValid) {
-      hapticFeedback('impact');
+    if (!passwordsMatch || !passwordValid) {
       return;
     }
 
     try {
       await register(email, password);
-      hapticFeedback('notification');
-      await showAlert('Registration successful! Please check your email for verification.');
+      alert('Registration successful! Please check your email for verification.');
       navigate('/auth/login');
     } catch {
-      hapticFeedback('impact');
+      // Error is handled by AuthContext
     }
   };
 
