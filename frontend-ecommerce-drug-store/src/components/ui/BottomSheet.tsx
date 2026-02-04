@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
 interface BottomSheetProps {
@@ -16,29 +16,20 @@ export default function BottomSheet({
   height = "80%",
   showHandle = true,
 }: BottomSheetProps) {
-  const [mounted, setMounted] = useState(false);
-  const [visible, setVisible] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const startY = useRef(0);
   const currentY = useRef(0);
 
   useEffect(() => {
     if (open) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setMounted(true);
       document.body.style.overflow = "hidden";
-      // Trigger animation after mount
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setVisible(true);
-        });
+        if (overlayRef.current) overlayRef.current.style.opacity = "1";
+        if (sheetRef.current) sheetRef.current.style.transform = "translateY(0)";
       });
     } else {
-      setVisible(false);
       document.body.style.overflow = "";
-      // Unmount after animation
-      const timer = setTimeout(() => setMounted(false), 300);
-      return () => clearTimeout(timer);
     }
 
     return () => {
@@ -46,7 +37,6 @@ export default function BottomSheet({
     };
   }, [open]);
 
-  // Handle touch drag to close
   const handleTouchStart = (e: React.TouchEvent) => {
     startY.current = e.touches[0].clientY;
   };
@@ -64,7 +54,6 @@ export default function BottomSheet({
     if (sheetRef.current) {
       sheetRef.current.style.transform = "";
     }
-    // Close if dragged more than 100px
     if (delta > 100) {
       onClose();
     }
@@ -72,24 +61,21 @@ export default function BottomSheet({
     currentY.current = 0;
   };
 
-  if (!mounted) return null;
+  if (!open) return null;
 
   return createPortal(
     <>
       {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300 ${
-          visible ? "opacity-100" : "opacity-0"
-        }`}
+        ref={overlayRef}
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300 opacity-0"
         onClick={onClose}
       />
 
       {/* Sheet */}
       <div
         ref={sheetRef}
-        className={`fixed bottom-0 left-0 right-0 bg-gray-900 rounded-t-3xl z-50 transition-transform duration-300 ease-out ${
-          visible ? "translate-y-0" : "translate-y-full"
-        }`}
+        className="fixed bottom-0 left-0 right-0 bg-gray-900 rounded-t-3xl z-50 transition-transform duration-300 ease-out translate-y-full"
         style={{ height, maxHeight: "90vh" }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}

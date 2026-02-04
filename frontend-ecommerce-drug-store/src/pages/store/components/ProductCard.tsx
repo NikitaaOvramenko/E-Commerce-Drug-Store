@@ -35,9 +35,7 @@ export default function ProductCard({ drug }: ProductCardProps) {
       >
         <Heart
           size={16}
-          className={`transition-colors ${
-            favorite ? 'text-red-500 fill-red-500' : 'text-gray-400'
-          }`}
+          className={favorite ? 'text-red-500 fill-red-500' : 'text-gray-400'}
         />
       </button>
 
@@ -72,7 +70,7 @@ export default function ProductCard({ drug }: ProductCardProps) {
           <span className="text-green-500 font-bold text-sm">${drug.price.toFixed(2)}</span>
           <button
             onClick={handleAdd}
-            className="bg-green-500 hover:bg-green-400 active:bg-green-600 text-black font-semibold px-2.5 py-1 rounded-lg text-xs flex items-center gap-0.5 transition-colors active:scale-95"
+            className="bg-green-500 hover:bg-green-400 active:bg-green-600 text-black font-semibold px-2.5 py-1 rounded-lg text-xs transition-colors active:scale-95"
           >
             Add
           </button>
