@@ -5,6 +5,7 @@ import type {
   DrugFilters,
   DrugType,
   Brand,
+  Category,
 } from "../../api/types/drug.types";
 import { useBasket } from "../../context/BasketContext";
 import { useTelegramTheme } from "../../hooks/useTelegramTheme";
@@ -18,6 +19,7 @@ export default function StorePage() {
   const [drugs, setDrugs] = useState<Drug[]>([]);
   const [types, setTypes] = useState<DrugType[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -34,12 +36,14 @@ export default function StorePage() {
   useEffect(() => {
     const loadFilters = async () => {
       try {
-        const [typesData, brandsData] = await Promise.all([
+        const [typesData, brandsData, categoriesData] = await Promise.all([
           drugsApi.getTypes(),
           drugsApi.getBrands(),
+          drugsApi.getCategories(),
         ]);
         setTypes(typesData);
         setBrands(brandsData);
+        setCategories(categoriesData);
       } catch (error) {
         console.error("Failed to load filters:", error);
       }
@@ -137,6 +141,7 @@ export default function StorePage() {
         onClose={() => setShowFilters(false)}
         types={types}
         brands={brands}
+        categories={categories}
         currentFilters={filters}
         onApply={handleFilterChange}
       />

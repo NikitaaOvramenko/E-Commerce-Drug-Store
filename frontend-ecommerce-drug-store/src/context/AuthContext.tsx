@@ -13,12 +13,34 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   isLoading: boolean;
   error: string | null;
   login: (credentials: LoginRequest) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
+}
+
+// Decode JWT payload to extract role
+function decodeJwtPayload(token: string): { role?: string; sub?: string; exp?: number } {
+  try {
+    const base64Payload = token.split('.')[1];
+    const payload = atob(base64Payload);
+    return JSON.parse(payload);
+  } catch {
+    return {};
+  }
+}
+
+// Get role from JWT token
+function getRoleFromToken(token: string | null): 'USER' | 'ADMIN' | null {
+  if (!token) return null;
+  const payload = decodeJwtPayload(token);
+  if (payload.role === 'ADMIN' || payload.role === 'USER') {
+    return payload.role;
+  }
+  return null;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -106,12 +128,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const clearError = useCallback(() => setError(null), []);
 
+  const isAdmin = getRoleFromToken(token) === 'ADMIN';
+
   return (
     <AuthContext.Provider
       value={{
         user,
         token,
         isAuthenticated: !!token,
+        isAdmin,
         isLoading,
         error,
         login,

@@ -40,19 +40,18 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // disable CSRF for API clients (Postman/JS clients)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll() // Allow all methods for H2 Console
-                        // .requestMatchers(HttpMethod.POST, "/api/type/**").hasRole("ADMIN")
-                        // .requestMatchers(HttpMethod.DELETE, "/api/type/**").hasRole("ADMIN")
-                        // .requestMatchers(HttpMethod.POST, "/api/brand/**").hasRole("ADMIN")
-                        // .requestMatchers(HttpMethod.DELETE, "/api/brand/**").hasRole("ADMIN")
-                        // .requestMatchers(HttpMethod.POST, "/api/drug/**").hasRole("ADMIN")
-                        // .requestMatchers(HttpMethod.DELETE, "/api/drug/**").hasRole("ADMIN")
-                        // .requestMatchers(HttpMethod.POST, "/api/category/**").hasRole("ADMIN")
-                        // .requestMatchers(HttpMethod.DELETE, "/api/category/**").hasRole("ADMIN")
+                        // Public endpoints
+                        .requestMatchers(HttpMethod.POST, "/auth/register", "/auth/login").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
 
-                        .anyRequest().permitAll())
+                        // Admin-only: Create/Delete operations
+                        .requestMatchers(HttpMethod.POST, "/api/type/**", "/api/brand/**", "/api/drug/**", "/api/category/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/type/**", "/api/brand/**", "/api/drug/**", "/api/category/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/type/**", "/api/brand/**", "/api/drug/**", "/api/category/**").hasRole("ADMIN")
+
+                        // All other requests require authentication
+                        .anyRequest().authenticated()
+                )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

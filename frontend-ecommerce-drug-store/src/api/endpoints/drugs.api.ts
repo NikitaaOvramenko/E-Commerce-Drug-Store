@@ -10,6 +10,7 @@ export const drugsApi = {
       ascending: filters.ascending ?? true,
       typeId: filters.typeId ?? 0,
       brandId: filters.brandId ?? 0,
+      categoryId: filters.categoryId ?? 0,
     };
     const response = await apiClient.get<DrugPage>('/api/drug', { params });
     return response.data;

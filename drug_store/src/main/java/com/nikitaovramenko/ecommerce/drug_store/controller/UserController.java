@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nikitaovramenko.ecommerce.drug_store.dto.LoginRequest;
 import com.nikitaovramenko.ecommerce.drug_store.dto.LoginResponse;
 import com.nikitaovramenko.ecommerce.drug_store.dto.UserDto;
+import com.nikitaovramenko.ecommerce.drug_store.enums.Role;
 import com.nikitaovramenko.ecommerce.drug_store.exception.user_exception.UserNotVerifiedException;
 import com.nikitaovramenko.ecommerce.drug_store.mapper.UserMapper;
 import com.nikitaovramenko.ecommerce.drug_store.model.User;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +61,14 @@ public class UserController {
                 throw new UserNotVerifiedException("Email is not verified !");
             }
             UserDto userDto = userMapper.toDto(user);
-            String token = jwtService.generateToken(user.getEmail(), new HashMap<>());
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("role", user.getRole().toString());
+
+            Role userRole = user.getRole();
+            System.out.println(map);
+            String token = jwtService.generateToken(user.getEmail(), map);
             LoginResponse loginResponse = new LoginResponse(userDto, token);
             return ResponseEntity.ok(loginResponse);
         }

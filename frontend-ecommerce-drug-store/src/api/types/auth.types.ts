@@ -3,6 +3,7 @@ import type { Drug } from './drug.types';
 export interface User {
   id?: number;
   email: string;
+  role?: 'USER' | 'ADMIN';
   basketId?: number;
   basketItems: BasketItem[];
 }

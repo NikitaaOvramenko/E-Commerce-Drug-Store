@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nikitaovramenko.ecommerce.drug_store.enums.Role;
 import com.nikitaovramenko.ecommerce.drug_store.exception.user_exception.UserAlreadyExistsException;
 import com.nikitaovramenko.ecommerce.drug_store.exception.user_exception.UserNotFoundException;
 import com.nikitaovramenko.ecommerce.drug_store.model.Basket;
@@ -47,6 +48,9 @@ public class UserService implements UserDetailsService {
 
         user.setEmailVerified(false);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getRole() == null) {
+            user.setRole(Role.USER);
+        }
         Basket basket = new Basket();
         user.setBasket(basket);
         basket.setUser(user);

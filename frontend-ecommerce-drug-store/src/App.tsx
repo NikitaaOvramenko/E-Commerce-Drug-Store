@@ -9,9 +9,20 @@ import RegisterPage from "./pages/auth/RegisterPage";
 import StorePage from "./pages/store/StorePage";
 import CheckoutPage from "./pages/checkout/CheckoutPage";
 
+// Admin Pages
+import AdminDrugsPage from "./pages/admin/AdminDrugsPage";
+import AdminDrugFormPage from "./pages/admin/AdminDrugFormPage";
+import AdminTypesPage from "./pages/admin/AdminTypesPage";
+import AdminBrandsPage from "./pages/admin/AdminBrandsPage";
+import AdminCategoriesPage from "./pages/admin/AdminCategoriesPage";
+
+// Layouts
+import AdminLayout from "./layouts/AdminLayout";
+
 // Components
 import BasketSheet from "./components/basket/BasketSheet";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
+import AdminRoute from "./components/shared/AdminRoute";
 
 function App() {
   window.Telegram?.WebApp?.ready();
@@ -31,6 +42,19 @@ function App() {
               <Route element={<ProtectedRoute />}>
                 <Route path="store" element={<StorePage />} />
                 <Route path="checkout" element={<CheckoutPage />} />
+              </Route>
+
+              {/* Admin Routes */}
+              <Route element={<AdminRoute />}>
+                <Route path="admin" element={<AdminLayout />}>
+                  <Route index element={<Navigate to="/admin/drugs" replace />} />
+                  <Route path="drugs" element={<AdminDrugsPage />} />
+                  <Route path="drugs/new" element={<AdminDrugFormPage />} />
+                  <Route path="drugs/:id" element={<AdminDrugFormPage />} />
+                  <Route path="types" element={<AdminTypesPage />} />
+                  <Route path="brands" element={<AdminBrandsPage />} />
+                  <Route path="categories" element={<AdminCategoriesPage />} />
+                </Route>
               </Route>
 
               {/* Default Redirects */}

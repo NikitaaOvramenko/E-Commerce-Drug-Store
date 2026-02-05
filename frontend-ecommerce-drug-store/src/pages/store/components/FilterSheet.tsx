@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import type { DrugType, Brand, DrugFilters } from "../../../api/types/drug.types";
+import type { DrugType, Brand, Category, DrugFilters } from "../../../api/types/drug.types";
 import { useTelegramTheme } from "../../../hooks/useTelegramTheme";
 import BottomSheet from "../../../components/ui/BottomSheet";
 import Button from "../../../components/ui/Button";
@@ -10,6 +10,7 @@ interface FilterSheetProps {
   onClose: () => void;
   types: DrugType[];
   brands: Brand[];
+  categories: Category[];
   currentFilters: DrugFilters;
   onApply: (filters: DrugFilters) => void;
 }
@@ -19,11 +20,13 @@ export default function FilterSheet({
   onClose,
   types,
   brands,
+  categories,
   currentFilters,
   onApply,
 }: FilterSheetProps) {
   const [selectedType, setSelectedType] = useState(currentFilters.typeId || 0);
   const [selectedBrand, setSelectedBrand] = useState(currentFilters.brandId || 0);
+  const [selectedCategory, setSelectedCategory] = useState(currentFilters.categoryId || 0);
   const [sortBy, setSortBy] = useState(currentFilters.sortBy || "id");
   const [ascending, setAscending] = useState(currentFilters.ascending ?? true);
   const { textColor, hintColor, buttonColor, buttonTextColor, secondaryBgColor } =
@@ -33,6 +36,7 @@ export default function FilterSheet({
   useEffect(() => {
     setSelectedType(currentFilters.typeId || 0);
     setSelectedBrand(currentFilters.brandId || 0);
+    setSelectedCategory(currentFilters.categoryId || 0);
     setSortBy(currentFilters.sortBy || "id");
     setAscending(currentFilters.ascending ?? true);
   }, [currentFilters, open]);
@@ -41,6 +45,7 @@ export default function FilterSheet({
     onApply({
       typeId: selectedType,
       brandId: selectedBrand,
+      categoryId: selectedCategory,
       sortBy,
       ascending,
     });
@@ -49,12 +54,13 @@ export default function FilterSheet({
   const handleReset = () => {
     setSelectedType(0);
     setSelectedBrand(0);
+    setSelectedCategory(0);
     setSortBy("id");
     setAscending(true);
   };
 
   const hasActiveFilters =
-    selectedType !== 0 || selectedBrand !== 0 || sortBy !== "id";
+    selectedType !== 0 || selectedBrand !== 0 || selectedCategory !== 0 || sortBy !== "id";
 
   return (
     <BottomSheet open={open} onClose={onClose} height="auto">
@@ -126,6 +132,38 @@ export default function FilterSheet({
                   label={brand.name}
                   selected={selectedBrand === brand.id}
                   onClick={() => setSelectedBrand(brand.id)}
+                  buttonColor={buttonColor}
+                  buttonTextColor={buttonTextColor}
+                  secondaryBgColor={secondaryBgColor}
+                  textColor={textColor}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Category Filter */}
+        {categories.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-sm font-medium mb-3" style={{ color: hintColor }}>
+              Category
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              <Chip
+                label="All"
+                selected={selectedCategory === 0}
+                onClick={() => setSelectedCategory(0)}
+                buttonColor={buttonColor}
+                buttonTextColor={buttonTextColor}
+                secondaryBgColor={secondaryBgColor}
+                textColor={textColor}
+              />
+              {categories.map((category) => (
+                <Chip
+                  key={category.id}
+                  label={category.name}
+                  selected={selectedCategory === category.id}
+                  onClick={() => setSelectedCategory(category.id)}
                   buttonColor={buttonColor}
                   buttonTextColor={buttonTextColor}
                   secondaryBgColor={secondaryBgColor}
