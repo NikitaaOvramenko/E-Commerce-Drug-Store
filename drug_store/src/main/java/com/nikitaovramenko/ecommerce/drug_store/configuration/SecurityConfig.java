@@ -41,17 +41,24 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorize -> authorize
                         // Public endpoints
-                        .requestMatchers(HttpMethod.POST, "/auth/register", "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register", "/auth/login", "/api/send_verify")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/verify/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
 
                         // Admin-only: Create/Delete operations
-                        .requestMatchers(HttpMethod.POST, "/api/type/**", "/api/brand/**", "/api/drug/**", "/api/category/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/type/**", "/api/brand/**", "/api/drug/**", "/api/category/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/type/**", "/api/brand/**", "/api/drug/**", "/api/category/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/type/**", "/api/brand/**", "/api/drug/**",
+                                "/api/category/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/type/**", "/api/brand/**", "/api/drug/**",
+                                "/api/category/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/type/**", "/api/brand/**", "/api/drug/**",
+                                "/api/category/**")
+                        .hasRole("ADMIN")
 
                         // All other requests require authentication
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

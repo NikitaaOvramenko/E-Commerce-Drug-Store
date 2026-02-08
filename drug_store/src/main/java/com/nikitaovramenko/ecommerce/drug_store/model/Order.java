@@ -48,12 +48,15 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long id, User user, LocalDateTime createdAt, Double totalPrice, OrderStatus orderStatus) {
+    public Order(Long id, User user, LocalDateTime createdAt, Double totalPrice, OrderStatus orderStatus,
+            OrderAddress orderAddress, Payment payment) {
         this.id = id;
         this.user = user;
         this.createdAt = createdAt;
         this.totalPrice = totalPrice;
         this.orderStatus = orderStatus;
+        this.orderAddress = orderAddress;
+        this.payment = payment;
     }
 
     public OrderAddress getOrderAddress() {

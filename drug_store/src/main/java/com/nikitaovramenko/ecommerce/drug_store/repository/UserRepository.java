@@ -8,4 +8,6 @@ import com.nikitaovramenko.ecommerce.drug_store.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
+
+    User findByTgUserId(int id);
 }

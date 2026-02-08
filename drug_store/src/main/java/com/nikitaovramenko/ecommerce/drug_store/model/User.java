@@ -28,6 +28,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(unique = true)
+    private Long tgChatId;
+
+    @Column(unique = true)
+    private Long tgUserId;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private Basket basket;
@@ -58,7 +64,7 @@ public class User {
     }
 
     public User(Long id, Basket basket, List<Rating> ratings, String email, String password, Role role,
-            Boolean emailVerified) {
+            Boolean emailVerified, Long tgChatId, Long tgUserId) {
         this.id = id;
         this.basket = basket;
         this.ratings = ratings;
@@ -66,6 +72,8 @@ public class User {
         this.password = password;
         this.role = role;
         this.emailVerified = emailVerified;
+        this.tgChatId = tgChatId;
+        this.tgUserId = tgUserId;
     }
 
     public List<EmailVerify> getEmailVerifies() {
@@ -76,12 +84,28 @@ public class User {
         this.emailVerifies = emailVerifies;
     }
 
-    public User(Basket basket, List<Rating> ratings, String email, String password, Role role) {
-        this.basket = basket;
-        this.ratings = ratings;
-        this.email = email;
-        this.password = password;
-        this.role = role;
+    public Long getTgChatId() {
+        return tgChatId;
+    }
+
+    public void setTgChatId(Long tgChatId) {
+        this.tgChatId = tgChatId;
+    }
+
+    public Long getTgUserId() {
+        return tgUserId;
+    }
+
+    public void setTgUserId(Long tgUserId) {
+        this.tgUserId = tgUserId;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     public Long getId() {

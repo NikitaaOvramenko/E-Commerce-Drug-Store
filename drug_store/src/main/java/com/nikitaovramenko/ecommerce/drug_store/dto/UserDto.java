@@ -6,11 +6,13 @@ public class UserDto {
     private String email;
     private Long basketId;
     private List<BasketDrugDto> basketItems;
+    private Long tg_chat_id;
 
-    public UserDto(String email, Long basketId, List<BasketDrugDto> basketItems) {
+    public UserDto(String email, Long tg_chat_id, Long basketId, List<BasketDrugDto> basketItems) {
         this.email = email;
         this.basketId = basketId;
         this.basketItems = basketItems;
+        this.tg_chat_id = tg_chat_id;
     }
 
     public Long getBasketId() {
@@ -35,6 +37,14 @@ public class UserDto {
 
     public void setBasketItems(List<BasketDrugDto> basketItems) {
         this.basketItems = basketItems;
+    }
+
+    public Long getTg_chat_id() {
+        return tg_chat_id;
+    }
+
+    public void setTg_chat_id(Long tg_chat_id) {
+        this.tg_chat_id = tg_chat_id;
     }
 
 }

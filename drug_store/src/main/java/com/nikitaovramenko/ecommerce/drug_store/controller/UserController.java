@@ -60,14 +60,16 @@ public class UserController {
             if (!user.getEmailVerified()) {
                 throw new UserNotVerifiedException("Email is not verified !");
             }
+
+            user.setTgChatId(request.getTgChatId());
+            user.setTgUserId(request.getTgUserId());
+
             UserDto userDto = userMapper.toDto(user);
 
             Map<String, Object> map = new HashMap<>();
 
             map.put("role", user.getRole().toString());
 
-            Role userRole = user.getRole();
-            System.out.println(map);
             String token = jwtService.generateToken(user.getEmail(), map);
             LoginResponse loginResponse = new LoginResponse(userDto, token);
             return ResponseEntity.ok(loginResponse);

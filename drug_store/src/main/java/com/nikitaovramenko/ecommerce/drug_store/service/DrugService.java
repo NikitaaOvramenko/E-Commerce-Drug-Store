@@ -90,6 +90,21 @@ public class DrugService {
 
     public DrugDto updateDrug(Long id, DrugDto dto) {
         Drug existing = drugRepository.getReferenceById(id);
+
+        // Update fields from DTO
+        existing.setName(dto.getName());
+        existing.setPrice(dto.getPrice());
+        existing.setStock(dto.getStock());
+        existing.setImg(dto.getImg());
+
+        // Update type and brand if provided
+        if (dto.getTypeId() != null) {
+            existing.setType(typeRepository.getReferenceById(dto.getTypeId()));
+        }
+        if (dto.getBrandId() != null) {
+            existing.setBrand(brandRepository.getReferenceById(dto.getBrandId()));
+        }
+
         return drugMapper.toDto(drugRepository.save(existing));
     }
 
