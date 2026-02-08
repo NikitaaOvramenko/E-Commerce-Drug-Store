@@ -7,7 +7,16 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import type { RowData } from "@tanstack/react-table";
+
+// Extend TableMeta to include removeData
+declare module "@tanstack/react-table" {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface TableMeta<TData extends RowData> {
+    removeData?: (id: number) => void;
+  }
+}
 import { adminDrugsApi } from "../../api/endpoints/admin";
 
 const columnHelper = createColumnHelper<Drug>();
@@ -81,14 +90,13 @@ const column = [
 ];
 
 function AdminDrugsPage() {
-  const [page, setPage] = useState<number>(0);
   const [drugs, setDrugs] = useState<DrugPage>();
   const navigate = useNavigate();
 
   const fetchDrugs = useCallback(async () => {
-    const response: DrugPage = await drugsApi.getAll({ page: page, size: 10 });
+    const response: DrugPage = await drugsApi.getAll({ page: 0, size: 10 });
     setDrugs(response);
-  }, [page]);
+  }, []);
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
