@@ -22,6 +22,7 @@ declare global {
               language_code?: string;
               is_premium?: boolean;
             };
+            
           };
         };
       };

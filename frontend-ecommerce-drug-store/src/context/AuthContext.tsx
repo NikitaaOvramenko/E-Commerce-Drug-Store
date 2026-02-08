@@ -23,9 +23,13 @@ interface AuthContextType {
 }
 
 // Decode JWT payload to extract role
-function decodeJwtPayload(token: string): { role?: string; sub?: string; exp?: number } {
+function decodeJwtPayload(token: string): {
+  role?: string;
+  sub?: string;
+  exp?: number;
+} {
   try {
-    const base64Payload = token.split('.')[1];
+    const base64Payload = token.split(".")[1];
     const payload = atob(base64Payload);
     return JSON.parse(payload);
   } catch {
@@ -34,10 +38,10 @@ function decodeJwtPayload(token: string): { role?: string; sub?: string; exp?: n
 }
 
 // Get role from JWT token
-function getRoleFromToken(token: string | null): 'USER' | 'ADMIN' | null {
+function getRoleFromToken(token: string | null): "USER" | "ADMIN" | null {
   if (!token) return null;
   const payload = decodeJwtPayload(token);
-  if (payload.role === 'ADMIN' || payload.role === 'USER') {
+  if (payload.role === "ADMIN" || payload.role === "USER") {
     return payload.role;
   }
   return null;
@@ -73,8 +77,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null);
 
     try {
-      const response = await authApi.login(credentials);
+      console.log(credentials);
 
+      const response = await authApi.login(credentials);
       setToken(response.token);
       setUser(response.userDto);
 
@@ -128,7 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const clearError = useCallback(() => setError(null), []);
 
-  const isAdmin = getRoleFromToken(token) === 'ADMIN';
+  const isAdmin = getRoleFromToken(token) === "ADMIN";
 
   return (
     <AuthContext.Provider

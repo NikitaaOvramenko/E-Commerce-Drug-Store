@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { LogOut } from "lucide-react";
 import { drugsApi } from "../../api/endpoints/drugs.api";
 import type {
   Drug,
@@ -8,6 +9,7 @@ import type {
   Category,
 } from "../../api/types/drug.types";
 import { useBasket } from "../../context/BasketContext";
+import { useAuth } from "../../context/AuthContext";
 import { useTelegramTheme } from "../../hooks/useTelegramTheme";
 import SafeArea from "../../components/ui/SafeArea";
 import SearchBar from "./components/SearchBar";
@@ -28,6 +30,7 @@ export default function StorePage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const { basketCount } = useBasket();
+  const { logout } = useAuth();
   const { bgColor, secondaryBgColor, hintColor } = useTelegramTheme();
 
   const hasMore = page < totalPages - 1;
@@ -120,6 +123,14 @@ export default function StorePage() {
             onFilterClick={() => setShowFilters(true)}
           />
           <BasketButton count={basketCount} />
+          <button
+            onClick={logout}
+            className="p-2.5 rounded-xl"
+            style={{ backgroundColor: secondaryBgColor }}
+            title="Logout"
+          >
+            <LogOut size={20} style={{ color: "#ef4444" }} />
+          </button>
         </div>
       </div>
 

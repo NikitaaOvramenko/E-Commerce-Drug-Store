@@ -64,6 +64,8 @@ public class UserController {
             user.setTgChatId(request.getTgChatId());
             user.setTgUserId(request.getTgUserId());
 
+            userService.updateUser(user);
+
             UserDto userDto = userMapper.toDto(user);
 
             Map<String, Object> map = new HashMap<>();
