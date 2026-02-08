@@ -28,6 +28,7 @@ export default function LoginPage() {
       await login({ email, password, tgUserId, tgChatId });
       if (email === "admin@admin.com") {
         navigate("/admin");
+        return;
       }
       navigate("/store");
     } catch {

@@ -17,6 +17,10 @@ public class OrderDrug {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @ManyToOne
+    @JoinColumn(name = "drug_id")
+    private Drug drug;
+
     private Integer quantity;
 
     private Double priceAtPurchase;
@@ -45,6 +49,14 @@ public class OrderDrug {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public Drug getDrug() {
+        return drug;
+    }
+
+    public void setDrug(Drug drug) {
+        this.drug = drug;
     }
 
     public Integer getQuantity() {

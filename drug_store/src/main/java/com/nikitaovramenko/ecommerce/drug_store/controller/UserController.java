@@ -61,8 +61,13 @@ public class UserController {
                 throw new UserNotVerifiedException("Email is not verified !");
             }
 
-            user.setTgChatId(request.getTgChatId());
-            user.setTgUserId(request.getTgUserId());
+            // Only update Telegram IDs if they're non-zero (actual Telegram login)
+            if (request.getTgUserId() != null && request.getTgUserId() > 0) {
+                user.setTgUserId(request.getTgUserId());
+            }
+            if (request.getTgChatId() != null && request.getTgChatId() > 0) {
+                user.setTgChatId(request.getTgChatId());
+            }
 
             userService.updateUser(user);
 

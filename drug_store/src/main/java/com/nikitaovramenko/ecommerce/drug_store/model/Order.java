@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nikitaovramenko.ecommerce.drug_store.enums.OrderStatus;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -39,7 +41,7 @@ public class Order {
     @OneToOne(mappedBy = "order")
     private OrderAddress orderAddress;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDrug> orderDrugs = new ArrayList<>();
 
     @OneToOne(mappedBy = "order")

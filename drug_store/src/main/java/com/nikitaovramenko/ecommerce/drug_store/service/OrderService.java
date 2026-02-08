@@ -1,6 +1,5 @@
 package com.nikitaovramenko.ecommerce.drug_store.service;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -9,11 +8,9 @@ import org.springframework.stereotype.Service;
 import com.nikitaovramenko.ecommerce.drug_store.dto.OrderDto;
 import com.nikitaovramenko.ecommerce.drug_store.mapper.OrderMapper;
 import com.nikitaovramenko.ecommerce.drug_store.model.Basket;
-import com.nikitaovramenko.ecommerce.drug_store.model.BasketDrug;
 import com.nikitaovramenko.ecommerce.drug_store.model.Order;
 import com.nikitaovramenko.ecommerce.drug_store.model.OrderDrug;
 import com.nikitaovramenko.ecommerce.drug_store.model.User;
-import com.nikitaovramenko.ecommerce.drug_store.repository.BasketRepository;
 import com.nikitaovramenko.ecommerce.drug_store.repository.OrderRepository;
 import com.nikitaovramenko.ecommerce.drug_store.repository.UserRepository;
 
@@ -29,37 +26,38 @@ public class OrderService {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
         this.userRepository = userRepository;
-
     }
 
     @Transactional
-    public OrderDto checkout(OrderDto dto) {
+    public OrderDto checkout(String email) {
+        // Find user by email (from JWT authentication)
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
 
-        Order order = orderMapper.toEntity(dto);
-
-        order.setLocalDateTime(LocalDateTime.now());
-        User user = userRepository.findByTgUserId(dto.tg_user_id());
-        order.setUser(user);
         Basket basket = user.getBasket();
+        if (basket == null || basket.getBasketDrugs().isEmpty()) {
+            throw new RuntimeException("Basket is empty");
+        }
 
-        List<OrderDrug> orderDrugs = basket.getBasketDrugs().stream().map(drug -> orderMapper.toOrderDrug(drug, order))
+        Order order = new Order();
+        order.setLocalDateTime(LocalDateTime.now());
+        order.setUser(user);
+
+        List<OrderDrug> orderDrugs = basket.getBasketDrugs().stream()
+                .map(drug -> orderMapper.toOrderDrug(drug, order))
                 .toList();
         order.setOrderDrugs(orderDrugs);
 
         double sum = 0;
-        for (int i = 0; i < orderDrugs.size(); i++) {
-            for (int j = 0; j < orderDrugs.get(i).getQuantity(); j++) {
-                sum += orderDrugs.get(i).getPriceAtPurchase();
-            }
+        for (OrderDrug orderDrug : orderDrugs) {
+            sum += orderDrug.getPriceAtPurchase() * orderDrug.getQuantity();
         }
         order.setTotalPrice(sum);
 
         orderRepository.save(order);
 
-        OrderDto orderDto = orderMapper.toDto(order);
-
-        return orderDto;
-
+        return orderMapper.toDto(order);
     }
-
 }
