@@ -12,14 +12,23 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const { login, error, isLoading, clearError } = useAuth();
   const navigate = useNavigate();
-  const { bgColor, textColor, hintColor, linkColor, secondaryBgColor } = useTelegramTheme();
+  const { bgColor, textColor, hintColor, linkColor, secondaryBgColor } =
+    useTelegramTheme();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     clearError();
 
+    // Get Telegram user data
+    const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+    const tgUserId = tgUser?.id || 0;
+    const tgChatId = tgUserId; // In mini apps, chat ID is typically the user ID
+
     try {
-      await login({ email, password });
+      await login({ email, password, tgUserId, tgChatId });
+      if (email === "admin@admin.com") {
+        navigate("/admin");
+      }
       navigate("/store");
     } catch {
       // Error is handled by AuthContext

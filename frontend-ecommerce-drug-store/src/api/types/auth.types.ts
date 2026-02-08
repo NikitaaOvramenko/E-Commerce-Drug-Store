@@ -16,6 +16,8 @@ export interface BasketItem {
 export interface LoginRequest {
   email: string;
   password: string;
+  tgUserId:number
+  tgChatId:number
 }
 
 export interface RegisterRequest {
