@@ -16,9 +16,9 @@ export interface BasketDrugDto {
   quantity: number;
 }
 
-export interface Basket {
-  id: number;
-  items: BasketItem[];
+// Matches the backend BasketDto response
+export interface BasketDto {
+  basketId: number;
   totalPrice: number;
-  totalItems: number;
+  items: BasketDrugDto[];
 }

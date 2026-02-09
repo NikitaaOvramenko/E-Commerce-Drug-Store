@@ -23,16 +23,19 @@ public class Basket {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private double totalPrice;
+
     @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BasketDrug> basketDrugs = new ArrayList<>();
 
     public Basket() {
     }
 
-    public Basket(Long id, User user, List<BasketDrug> basketDrugs) {
+    public Basket(Long id, User user, List<BasketDrug> basketDrugs, double totalPrice) {
         this.id = id;
         this.user = user;
         this.basketDrugs = basketDrugs;
+        this.totalPrice = totalPrice;
     }
 
     public Long getId() {
@@ -57,6 +60,14 @@ public class Basket {
 
     public void setBasketDrugs(List<BasketDrug> basketDrugs) {
         this.basketDrugs = basketDrugs;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
 }

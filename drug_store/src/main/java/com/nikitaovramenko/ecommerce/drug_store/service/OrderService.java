@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.nikitaovramenko.ecommerce.drug_store.dto.OrderDto;
+import com.nikitaovramenko.ecommerce.drug_store.enums.OrderStatus;
 import com.nikitaovramenko.ecommerce.drug_store.mapper.OrderMapper;
 import com.nikitaovramenko.ecommerce.drug_store.model.Basket;
 import com.nikitaovramenko.ecommerce.drug_store.model.Order;
@@ -44,6 +45,7 @@ public class OrderService {
         Order order = new Order();
         order.setLocalDateTime(LocalDateTime.now());
         order.setUser(user);
+        order.setOrderStatus(OrderStatus.CHECKOUT);
 
         List<OrderDrug> orderDrugs = basket.getBasketDrugs().stream()
                 .map(drug -> orderMapper.toOrderDrug(drug, order))

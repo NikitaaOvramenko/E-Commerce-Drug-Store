@@ -1,10 +1,10 @@
 package com.nikitaovramenko.ecommerce.drug_store.enums;
 
 public enum OrderStatus {
-    PENDING,
+    CHECKOUT,
+    PENDING_PAYMENT,
     PAID,
-    PROCESSING,
     SHIPPED,
     DELIVERED,
-    CANCELLED
+    CANCELLED,
 }

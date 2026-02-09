@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,12 +39,15 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable()) // disable CSRF for API clients (Postman/JS clients)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorize -> authorize
                         // Public endpoints
                         .requestMatchers(HttpMethod.POST, "/auth/register", "/auth/login", "/api/send_verify")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/verify/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/verify/**", "/api/drug/**", "/api/brand/**",
+                                "/api/type/**", "/api/category/**")
+                        .permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
 
                         // Admin-only: Create/Delete operations

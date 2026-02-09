@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Drug } from "../api/types/drug.types";
-import type { BasketItem } from "../api/types/basket.types";
+import type { BasketItem, BasketDto } from "../api/types/basket.types";
 import { basketApi } from "../api/endpoints/basket.api";
 import { useAuth } from "./AuthContext";
 
@@ -27,8 +27,23 @@ interface BasketContextType {
 
 const BasketContext = createContext<BasketContextType | null>(null);
 
+function applyResponse(
+  res: BasketDto,
+  setItems: React.Dispatch<React.SetStateAction<BasketItem[]>>,
+  setTotalPrice: React.Dispatch<React.SetStateAction<number>>,
+) {
+  setItems(
+    res.items.map((item) => ({
+      drug: item.drugDto,
+      quantity: item.quantity,
+    })),
+  );
+  setTotalPrice(res.totalPrice);
+}
+
 export function BasketProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<BasketItem[]>([]);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
@@ -39,24 +54,10 @@ export function BasketProvider({ children }: { children: ReactNode }) {
       if (user?.basketId) {
         setIsLoading(true);
         try {
-          const basketItems = await basketApi.getBasket(user.basketId);
-          setItems(
-            basketItems.map((item) => ({
-              drug: item.drugDto,
-              quantity: item.quantity,
-            })),
-          );
+          const res = await basketApi.getBasket(user.basketId);
+          applyResponse(res, setItems, setTotalPrice);
         } catch (error) {
           console.error("Failed to load basket:", error);
-          // Fallback to localStorage if API fails
-          const savedBasket = localStorage.getItem("basket_items");
-          if (savedBasket) {
-            try {
-              setItems(JSON.parse(savedBasket));
-            } catch {
-              // Invalid data
-            }
-          }
         } finally {
           setIsLoading(false);
         }
@@ -66,18 +67,7 @@ export function BasketProvider({ children }: { children: ReactNode }) {
     loadBasket();
   }, [user?.basketId]);
 
-  // Save to localStorage as backup when items change
-  useEffect(() => {
-    if (items.length > 0) {
-      localStorage.setItem("basket_items", JSON.stringify(items));
-    }
-  }, [items]);
-
   const basketCount = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce(
-    (sum, item) => sum + item.drug.price * item.quantity,
-    0,
-  );
 
   const addToBasket = useCallback(
     async (drug: Drug) => {
@@ -91,14 +81,13 @@ export function BasketProvider({ children }: { children: ReactNode }) {
               : item,
           );
         }
-        console.log("drug added to basket !")
         return [...prev, { drug, quantity: 1 }];
       });
 
-      // Sync with backend
       if (user?.basketId) {
         try {
-          await basketApi.addItem(drug.id, user.basketId);
+          const res = await basketApi.addItem(drug.id, user.basketId);
+          applyResponse(res, setItems, setTotalPrice);
         } catch (error) {
           console.error("Failed to add to basket:", error);
           // Revert on failure
@@ -121,31 +110,30 @@ export function BasketProvider({ children }: { children: ReactNode }) {
 
   const removeFromBasket = useCallback(
     async (drugId: number) => {
-      const itemToRemove = items.find((item) => item.drug.id === drugId);
+      const itemsBackup = [...items];
+      const priceBackup = totalPrice;
 
       // Optimistic update
       setItems((prev) => prev.filter((item) => item.drug.id !== drugId));
 
-      // Sync with backend
       if (user?.basketId) {
         try {
-          await basketApi.removeItem(user.basketId, drugId);
+          const res = await basketApi.removeItem(user.basketId, drugId);
+          applyResponse(res, setItems, setTotalPrice);
         } catch (error) {
           console.error("Failed to remove from basket:", error);
-          // Revert on failure
-          if (itemToRemove) {
-            setItems((prev) => [...prev, itemToRemove]);
-          }
+          setItems(itemsBackup);
+          setTotalPrice(priceBackup);
         }
       }
     },
-    [user?.basketId, items],
+    [user?.basketId, items, totalPrice],
   );
 
   const updateQuantity = useCallback(
     async (drugId: number, quantity: number) => {
-      const itemToUpdate = items.find((item) => item.drug.id === drugId);
-      const oldQuantity = itemToUpdate?.quantity || 0;
+      const itemsBackup = [...items];
+      const priceBackup = totalPrice;
 
       // Optimistic update
       if (quantity <= 0) {
@@ -158,50 +146,38 @@ export function BasketProvider({ children }: { children: ReactNode }) {
         );
       }
 
-      // Sync with backend
       if (user?.basketId) {
         try {
-          await basketApi.updateQuantity(user.basketId, drugId, quantity);
+          const res = await basketApi.updateQuantity(user.basketId, drugId, quantity);
+          applyResponse(res, setItems, setTotalPrice);
         } catch (error) {
           console.error("Failed to update quantity:", error);
-          // Revert on failure
-          if (itemToUpdate) {
-            if (quantity <= 0) {
-              setItems((prev) => [...prev, itemToUpdate]);
-            } else {
-              setItems((prev) =>
-                prev.map((item) =>
-                  item.drug.id === drugId
-                    ? { ...item, quantity: oldQuantity }
-                    : item,
-                ),
-              );
-            }
-          }
+          setItems(itemsBackup);
+          setTotalPrice(priceBackup);
         }
       }
     },
-    [user?.basketId, items],
+    [user?.basketId, items, totalPrice],
   );
 
   const clearBasket = useCallback(async () => {
     const itemsBackup = [...items];
+    const priceBackup = totalPrice;
 
     // Optimistic update
     setItems([]);
-    localStorage.removeItem("basket_items");
+    setTotalPrice(0);
 
-    // Sync with backend
     if (user?.basketId) {
       try {
         await basketApi.clearBasket(user.basketId);
       } catch (error) {
         console.error("Failed to clear basket:", error);
-        // Revert on failure
         setItems(itemsBackup);
+        setTotalPrice(priceBackup);
       }
     }
-  }, [user?.basketId, items]);
+  }, [user?.basketId, items, totalPrice]);
 
   const openBasket = useCallback(() => setIsOpen(true), []);
   const closeBasket = useCallback(() => setIsOpen(false), []);

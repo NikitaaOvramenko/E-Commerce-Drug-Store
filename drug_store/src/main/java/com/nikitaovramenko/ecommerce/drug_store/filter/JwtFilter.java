@@ -39,6 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Validate JWT and set authentication - only catch JWT-related exceptions
         try {
             final String jwt = authHeader.substring(7);
             final String userEmail = jwtService.extractUsername(jwt);
@@ -50,20 +51,20 @@ public class JwtFilter extends OncePerRequestFilter {
                         userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-
-            filterChain.doFilter(request, response);
-
         } catch (UsernameNotFoundException e) {
-            // User was deleted - return 401
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write("{\"status\": 401, \"message\": \"User not found\"}");
+            return;
         } catch (Exception e) {
-            // Invalid/expired token - return 401
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write("{\"status\": 401, \"message\": \"Invalid token: " + e.getMessage() + "\"}");
+            return;
         }
+
+        // Continue filter chain OUTSIDE try-catch so controller errors aren't caught as 401
+        filterChain.doFilter(request, response);
     }
 
 }

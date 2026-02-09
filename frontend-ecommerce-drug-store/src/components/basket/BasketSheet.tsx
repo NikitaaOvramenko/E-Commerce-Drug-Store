@@ -4,6 +4,7 @@ import { useBasket } from "../../context/BasketContext";
 import { useTelegramTheme } from "../../hooks/useTelegramTheme";
 import BottomSheet from "../ui/BottomSheet";
 import Button from "../ui/Button";
+import { orderApi } from "../../api/endpoints/order.api";
 
 export default function BasketSheet() {
   const {
@@ -15,11 +16,17 @@ export default function BasketSheet() {
     removeFromBasket,
   } = useBasket();
   const navigate = useNavigate();
-  const { textColor, hintColor, linkColor, secondaryBgColor } = useTelegramTheme();
+  const { textColor, hintColor, linkColor, secondaryBgColor } =
+    useTelegramTheme();
 
-  const handleCheckout = () => {
-    closeBasket();
-    navigate("/checkout");
+  const handleCheckout = async () => {
+    try {
+      await orderApi.checkout();
+      closeBasket();
+      navigate("/checkout");
+    } catch (error) {
+      console.error("Checkout failed:", error);
+    }
   };
 
   const handleQuantityChange = (drugId: number, delta: number) => {
@@ -70,7 +77,10 @@ export default function BasketSheet() {
               >
                 <ShoppingBag size={28} style={{ color: hintColor }} />
               </div>
-              <p className="text-lg font-medium mb-1" style={{ color: textColor }}>
+              <p
+                className="text-lg font-medium mb-1"
+                style={{ color: textColor }}
+              >
                 Your basket is empty
               </p>
               <p className="text-sm" style={{ color: hintColor }}>
@@ -110,7 +120,10 @@ export default function BasketSheet() {
                         {item.drug.brandName}
                       </p>
                     </div>
-                    <p className="font-bold text-sm" style={{ color: linkColor }}>
+                    <p
+                      className="font-bold text-sm"
+                      style={{ color: linkColor }}
+                    >
                       ${(item.drug.price * item.quantity).toFixed(2)}
                     </p>
                   </div>

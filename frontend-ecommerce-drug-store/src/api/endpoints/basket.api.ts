@@ -1,26 +1,25 @@
 import apiClient from "../apiClient";
-import type { AddToBasketRequest, BasketDrugDto } from "../types/basket.types";
+import type { AddToBasketRequest, BasketDto } from "../types/basket.types";
 
 export const basketApi = {
-  // Get all items in the basket
-  getBasket: async (basketId: number): Promise<BasketDrugDto[]> => {
-    const response = await apiClient.get<BasketDrugDto[]>(
+  // Get basket with items and total price
+  getBasket: async (basketId: number): Promise<BasketDto> => {
+    const response = await apiClient.get<BasketDto>(
       `/api/basket/${basketId}`
     );
     return response.data;
   },
 
   // Add item to basket
-  addItem: async (drugId: number, basketId: number): Promise<string> => {
+  addItem: async (drugId: number, basketId: number): Promise<BasketDto> => {
     const data: AddToBasketRequest = { drugId, basketId };
-    const response = await apiClient.post<string>("/api/basket/add", data);
-    console.log("added to basket !")
+    const response = await apiClient.post<BasketDto>("/api/basket/add", data);
     return response.data;
   },
 
   // Remove item from basket
-  removeItem: async (basketId: number, drugId: number): Promise<string> => {
-    const response = await apiClient.delete<string>(
+  removeItem: async (basketId: number, drugId: number): Promise<BasketDto> => {
+    const response = await apiClient.delete<BasketDto>(
       `/api/basket/${basketId}/item/${drugId}`
     );
     return response.data;
@@ -31,8 +30,8 @@ export const basketApi = {
     basketId: number,
     drugId: number,
     quantity: number
-  ): Promise<string> => {
-    const response = await apiClient.put<string>(
+  ): Promise<BasketDto> => {
+    const response = await apiClient.put<BasketDto>(
       `/api/basket/${basketId}/item/${drugId}`,
       { quantity }
     );
@@ -40,8 +39,8 @@ export const basketApi = {
   },
 
   // Clear all items from basket
-  clearBasket: async (basketId: number): Promise<string> => {
-    const response = await apiClient.delete<string>(
+  clearBasket: async (basketId: number): Promise<BasketDto> => {
+    const response = await apiClient.delete<BasketDto>(
       `/api/basket/${basketId}/clear`
     );
     return response.data;
