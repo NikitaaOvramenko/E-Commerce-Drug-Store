@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Package, ChevronDown, ChevronUp, Send } from "lucide-react";
 import type { orderDto, orderStatus } from "../../api/types/order.types";
 import { orderApi } from "../../api/endpoints/order.api";
@@ -33,8 +32,8 @@ export default function OrderCard({ order, onOrderUpdated }: OrderCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const { secondaryBgColor, textColor, hintColor, linkColor } = useTelegramTheme();
+  const { secondaryBgColor, textColor, hintColor, linkColor } =
+    useTelegramTheme();
 
   const statusColor = statusColors[order.orderStatus] || hintColor;
   const isCheckout = order.orderStatus === "CHECKOUT";
@@ -53,7 +52,10 @@ export default function OrderCard({ order, onOrderUpdated }: OrderCardProps) {
   };
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: secondaryBgColor }}>
+    <div
+      className="rounded-2xl overflow-hidden"
+      style={{ backgroundColor: secondaryBgColor }}
+    >
       {/* Header - clickable to expand */}
       <button
         className="w-full p-4 text-left"
@@ -99,7 +101,10 @@ export default function OrderCard({ order, onOrderUpdated }: OrderCardProps) {
 
       {/* Expanded items */}
       {expanded && (
-        <div className="px-4 pb-4" style={{ borderTop: `1px solid ${hintColor}30` }}>
+        <div
+          className="px-4 pb-4"
+          style={{ borderTop: `1px solid ${hintColor}30` }}
+        >
           {order.items.length > 0 && (
             <div className="pt-3 space-y-2">
               {order.items.map((item) => (
@@ -121,15 +126,21 @@ export default function OrderCard({ order, onOrderUpdated }: OrderCardProps) {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium line-clamp-1" style={{ color: textColor }}>
+                    <p
+                      className="text-sm font-medium line-clamp-1"
+                      style={{ color: textColor }}
+                    >
                       {item.drugName}
                     </p>
                     <p className="text-xs" style={{ color: hintColor }}>
                       Qty: {item.quantity}
                     </p>
                   </div>
-                  <span className="text-sm font-medium flex-shrink-0" style={{ color: textColor }}>
-                    ${(item.priceAtPurchase * item.quantity / 100).toFixed(2)}
+                  <span
+                    className="text-sm font-medium flex-shrink-0"
+                    style={{ color: textColor }}
+                  >
+                    ${((item.priceAtPurchase * item.quantity) / 100).toFixed(2)}
                   </span>
                 </div>
               ))}
