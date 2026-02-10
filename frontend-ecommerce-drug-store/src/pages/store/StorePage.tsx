@@ -17,7 +17,6 @@ import SearchBar from "./components/SearchBar";
 import FilterSheet from "./components/FilterSheet";
 import ProductGrid from "./components/ProductGrid";
 import BasketButton from "../../components/basket/BasketButton";
-import { useNavigate } from "react-router-dom";
 
 export default function StorePage() {
   const [drugs, setDrugs] = useState<Drug[]>([]);
@@ -35,8 +34,6 @@ export default function StorePage() {
   const { logout } = useAuth();
 
   const { bgColor, secondaryBgColor, hintColor } = useTelegramTheme();
-
-  const navigate = useNavigate();
 
   const hasMore = page < totalPages - 1;
 
@@ -137,12 +134,18 @@ export default function StorePage() {
             <LogOut size={20} style={{ color: "#ef4444" }} />
           </button>
 
-          <button onClick={() => navigate("/orders")}>
+          <button
+            onClick={() =>
+              window.Telegram?.WebApp?.openLink(
+                "https://buy.stripe.com/test_cNi3cu9wUaqG86a5MqbZe00",
+              )
+            }
+          >
             <ListOrdered size={20}></ListOrdered>
           </button>
         </div>
       </div>
-
+      {/*  */}
       {/* Product Grid */}
       <div className="flex-1 overflow-y-auto pb-safe">
         <ProductGrid
