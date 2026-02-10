@@ -23,7 +23,7 @@ public class BasketService {
 
     @Transactional
     public Basket createBasket(Basket basket) {
-        basket.setTotalPrice(0);
+        basket.setTotalPrice(0L);
         return basketRepository.save(basket);
     }
 
@@ -89,13 +89,13 @@ public class BasketService {
     @Transactional
     public void clearBasket(Basket basket) {
         basket.getBasketDrugs().clear();
-        basket.setTotalPrice(0);
+        basket.setTotalPrice(0L);
         basketRepository.save(basket);
     }
 
     private void recalculateTotalPrice(Basket basket) {
-        double sum = basket.getBasketDrugs().stream()
-                .mapToDouble(bd -> bd.getDrug().getPrice() * bd.getQuantity())
+        long sum = basket.getBasketDrugs().stream()
+                .mapToLong(bd -> bd.getDrug().getPrice() * bd.getQuantity())
                 .sum();
         basket.setTotalPrice(sum);
     }

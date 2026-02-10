@@ -26,7 +26,7 @@ public class Payment {
 
     private Integer transactionId;
 
-    private Double amount;
+    private Long amount;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
@@ -36,7 +36,7 @@ public class Payment {
 
     private LocalDateTime localDateTime;
 
-    public Payment(Long id, Order order, Integer transactionId, Double amount, PaymentMethod paymentMethod,
+    public Payment(Long id, Order order, Integer transactionId, Long amount, PaymentMethod paymentMethod,
             PaymentStatus paymentStatus, LocalDateTime localDateTime) {
         this.id = id;
         this.order = order;
@@ -71,11 +71,11 @@ public class Payment {
         this.transactionId = transactionId;
     }
 
-    public Double getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
 

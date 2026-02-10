@@ -4,7 +4,7 @@ public class BasketDto {
 
     private Long basketId;
     private Long drugId;
-    private double totalPrice;
+    private Long totalPrice;
     private java.util.List<BasketDrugDto> items;
 
     public BasketDto() {
@@ -26,11 +26,11 @@ public class BasketDto {
         this.drugId = drugId;
     }
 
-    public double getTotalPrice() {
+    public Long getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
+    public void setTotalPrice(Long totalPrice) {
         this.totalPrice = totalPrice;
     }
 

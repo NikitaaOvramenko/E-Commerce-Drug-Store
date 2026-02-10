@@ -62,7 +62,7 @@ export default function AdminDrugFormPage() {
         .then((drug) => {
           setForm({
             name: drug.name,
-            price: drug.price,
+            price: drug.price / 100,
             stock: drug.stock,
             img: drug.img,
             typeId: drug.typeId,
@@ -104,7 +104,11 @@ export default function AdminDrugFormPage() {
         imageUrl = presignedUrl.split("?")[0];
       }
 
-      const drugData = { ...form, img: imageUrl };
+      const drugData = {
+        ...form,
+        img: imageUrl,
+        price: Math.round(form.price * 100),
+      };
 
       if (isEdit) {
         await adminDrugsApi.update(Number(id), drugData);
@@ -204,13 +208,12 @@ export default function AdminDrugFormPage() {
               </label>
               <Input
                 type="number"
-                min="0"
-                step="0.01"
                 value={form.price}
                 onChange={(e) =>
                   handleChange("price", parseFloat(e.target.value))
                 }
-                placeholder="0.00"
+                placeholder="0"
+                step={"0.01"}
                 required
                 bgColor={bgColor}
                 textColor={textColor}

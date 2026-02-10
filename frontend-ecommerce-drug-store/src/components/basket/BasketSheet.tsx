@@ -21,9 +21,9 @@ export default function BasketSheet() {
 
   const handleCheckout = async () => {
     try {
-      await orderApi.checkout();
+      const order = await orderApi.checkout();
       closeBasket();
-      navigate("/checkout");
+      navigate("/checkout", { state: { orderId: order.id } });
     } catch (error) {
       console.error("Checkout failed:", error);
     }
@@ -124,7 +124,7 @@ export default function BasketSheet() {
                       className="font-bold text-sm"
                       style={{ color: linkColor }}
                     >
-                      ${(item.drug.price * item.quantity).toFixed(2)}
+                      ${(item.drug.price * item.quantity / 100).toFixed(2)}
                     </p>
                   </div>
 
@@ -180,7 +180,7 @@ export default function BasketSheet() {
             <div className="flex justify-between items-center">
               <span style={{ color: hintColor }}>Total</span>
               <span className="font-bold text-xl" style={{ color: textColor }}>
-                ${totalPrice.toFixed(2)}
+                ${(totalPrice / 100).toFixed(2)}
               </span>
             </div>
             <Button fullWidth size="lg" onClick={handleCheckout}>

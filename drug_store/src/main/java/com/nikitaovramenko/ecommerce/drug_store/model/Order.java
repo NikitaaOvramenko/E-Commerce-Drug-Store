@@ -33,7 +33,7 @@ public class Order {
 
     private LocalDateTime createdAt;
 
-    private Double totalPrice;
+    private Long totalPrice;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -50,7 +50,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long id, User user, LocalDateTime createdAt, Double totalPrice, OrderStatus orderStatus,
+    public Order(Long id, User user, LocalDateTime createdAt, Long totalPrice, OrderStatus orderStatus,
             OrderAddress orderAddress, Payment payment) {
         this.id = id;
         this.user = user;
@@ -109,11 +109,11 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public Double getTotalPrice() {
+    public Long getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(Double totalPrice) {
+    public void setTotalPrice(Long totalPrice) {
         this.totalPrice = totalPrice;
     }
 

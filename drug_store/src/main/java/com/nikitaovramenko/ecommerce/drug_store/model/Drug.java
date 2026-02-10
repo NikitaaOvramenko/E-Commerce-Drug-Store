@@ -20,7 +20,7 @@ public class Drug {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private Double price;
+    private Long price;
     private Integer stock;
     private String img;
 
@@ -47,7 +47,7 @@ public class Drug {
     public Drug() {
     }
 
-    public Drug(Long id, String name, Double price, Integer stock, String img, Type type, Brand brand) {
+    public Drug(Long id, String name, Long price, Integer stock, String img, Type type, Brand brand) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -57,7 +57,7 @@ public class Drug {
         this.brand = brand;
     }
 
-    public Drug(String name, Double price, Integer stock, String img, Type type, Brand brand) {
+    public Drug(String name, Long price, Integer stock, String img, Type type, Brand brand) {
         this.name = name;
         this.price = price;
         this.stock = stock;
@@ -82,11 +82,11 @@ public class Drug {
         this.name = name;
     }
 
-    public Double getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 

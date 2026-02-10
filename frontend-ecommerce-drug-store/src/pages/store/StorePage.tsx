@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { LogOut } from "lucide-react";
+import { LogOut, ListOrdered } from "lucide-react";
+
 import { drugsApi } from "../../api/endpoints/drugs.api";
 import type {
   Drug,
@@ -16,6 +17,7 @@ import SearchBar from "./components/SearchBar";
 import FilterSheet from "./components/FilterSheet";
 import ProductGrid from "./components/ProductGrid";
 import BasketButton from "../../components/basket/BasketButton";
+import { useNavigate } from "react-router-dom";
 
 export default function StorePage() {
   const [drugs, setDrugs] = useState<Drug[]>([]);
@@ -31,7 +33,10 @@ export default function StorePage() {
 
   const { basketCount } = useBasket();
   const { logout } = useAuth();
+
   const { bgColor, secondaryBgColor, hintColor } = useTelegramTheme();
+
+  const navigate = useNavigate();
 
   const hasMore = page < totalPages - 1;
 
@@ -130,6 +135,10 @@ export default function StorePage() {
             title="Logout"
           >
             <LogOut size={20} style={{ color: "#ef4444" }} />
+          </button>
+
+          <button onClick={() => navigate("/orders")}>
+            <ListOrdered size={20}></ListOrdered>
           </button>
         </div>
       </div>

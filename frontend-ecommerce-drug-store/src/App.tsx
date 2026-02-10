@@ -23,6 +23,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import BasketSheet from "./components/basket/BasketSheet";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
 import AdminRoute from "./components/shared/AdminRoute";
+import OrdersPage from "./pages/orders/OrdersPage";
 
 function App() {
   window.Telegram?.WebApp?.ready();
@@ -42,12 +43,16 @@ function App() {
               <Route element={<ProtectedRoute />}>
                 <Route path="store" element={<StorePage />} />
                 <Route path="checkout" element={<CheckoutPage />} />
+                <Route path="orders" element={<OrdersPage />} />
               </Route>
 
               {/* Admin Routes */}
               <Route element={<AdminRoute />}>
                 <Route path="admin" element={<AdminLayout />}>
-                  <Route index element={<Navigate to="/admin/drugs" replace />} />
+                  <Route
+                    index
+                    element={<Navigate to="/admin/drugs" replace />}
+                  />
                   <Route path="drugs" element={<AdminDrugsPage />} />
                   <Route path="drugs/new" element={<AdminDrugFormPage />} />
                   <Route path="drugs/:id" element={<AdminDrugFormPage />} />

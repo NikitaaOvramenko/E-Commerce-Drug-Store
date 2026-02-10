@@ -23,12 +23,12 @@ public class OrderDrug {
 
     private Integer quantity;
 
-    private Double priceAtPurchase;
+    private Long priceAtPurchase;
 
     public OrderDrug() {
     }
 
-    public OrderDrug(Long id, Order order, Integer quantity, Double priceAtPurchase) {
+    public OrderDrug(Long id, Order order, Integer quantity, Long priceAtPurchase) {
         this.id = id;
         this.order = order;
         this.quantity = quantity;
@@ -67,11 +67,11 @@ public class OrderDrug {
         this.quantity = quantity;
     }
 
-    public Double getPriceAtPurchase() {
+    public Long getPriceAtPurchase() {
         return priceAtPurchase;
     }
 
-    public void setPriceAtPurchase(Double priceAtPurchase) {
+    public void setPriceAtPurchase(Long priceAtPurchase) {
         this.priceAtPurchase = priceAtPurchase;
     }
 

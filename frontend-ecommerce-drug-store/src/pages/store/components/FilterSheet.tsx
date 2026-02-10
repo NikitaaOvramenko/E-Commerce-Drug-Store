@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import type { DrugType, Brand, Category, DrugFilters } from "../../../api/types/drug.types";
+import type {
+  DrugType,
+  Brand,
+  Category,
+  DrugFilters,
+} from "../../../api/types/drug.types";
 import { useTelegramTheme } from "../../../hooks/useTelegramTheme";
 import BottomSheet from "../../../components/ui/BottomSheet";
 import Button from "../../../components/ui/Button";
@@ -25,15 +30,25 @@ export default function FilterSheet({
   onApply,
 }: FilterSheetProps) {
   const [selectedType, setSelectedType] = useState(currentFilters.typeId || 0);
-  const [selectedBrand, setSelectedBrand] = useState(currentFilters.brandId || 0);
-  const [selectedCategory, setSelectedCategory] = useState(currentFilters.categoryId || 0);
+  const [selectedBrand, setSelectedBrand] = useState(
+    currentFilters.brandId || 0,
+  );
+  const [selectedCategory, setSelectedCategory] = useState(
+    currentFilters.categoryId || 0,
+  );
   const [sortBy, setSortBy] = useState(currentFilters.sortBy || "id");
   const [ascending, setAscending] = useState(currentFilters.ascending ?? true);
-  const { textColor, hintColor, buttonColor, buttonTextColor, secondaryBgColor } =
-    useTelegramTheme();
+  const {
+    textColor,
+    hintColor,
+    buttonColor,
+    buttonTextColor,
+    secondaryBgColor,
+  } = useTelegramTheme();
 
   // Reset local state when filters prop changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedType(currentFilters.typeId || 0);
     setSelectedBrand(currentFilters.brandId || 0);
     setSelectedCategory(currentFilters.categoryId || 0);
@@ -60,7 +75,10 @@ export default function FilterSheet({
   };
 
   const hasActiveFilters =
-    selectedType !== 0 || selectedBrand !== 0 || selectedCategory !== 0 || sortBy !== "id";
+    selectedType !== 0 ||
+    selectedBrand !== 0 ||
+    selectedCategory !== 0 ||
+    sortBy !== "id";
 
   return (
     <BottomSheet open={open} onClose={onClose} height="auto">
@@ -81,7 +99,10 @@ export default function FilterSheet({
         {/* Type Filter */}
         {types.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-sm font-medium mb-3" style={{ color: hintColor }}>
+            <h3
+              className="text-sm font-medium mb-3"
+              style={{ color: hintColor }}
+            >
               Type
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -113,7 +134,10 @@ export default function FilterSheet({
         {/* Brand Filter */}
         {brands.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-sm font-medium mb-3" style={{ color: hintColor }}>
+            <h3
+              className="text-sm font-medium mb-3"
+              style={{ color: hintColor }}
+            >
               Brand
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -145,7 +169,10 @@ export default function FilterSheet({
         {/* Category Filter */}
         {categories.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-sm font-medium mb-3" style={{ color: hintColor }}>
+            <h3
+              className="text-sm font-medium mb-3"
+              style={{ color: hintColor }}
+            >
               Category
             </h3>
             <div className="flex flex-wrap gap-2">

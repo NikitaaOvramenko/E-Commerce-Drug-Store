@@ -7,6 +7,7 @@ export type orderStatus = "CHECKOUT" |"PENDING_PAYMENT" | "PAID" | "SHIPPED" |"D
 export interface orderDrugDto{
     id:number
     drugName:string
+    drugImg:string | null
     quantity:number
     priceAtPurchase:number
 }

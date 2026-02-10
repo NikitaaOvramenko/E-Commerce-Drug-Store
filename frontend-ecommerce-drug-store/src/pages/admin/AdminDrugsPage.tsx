@@ -33,7 +33,7 @@ const column = [
   }),
   columnHelper.accessor("price", {
     header: () => "PRICE",
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue() / 100,
   }),
   columnHelper.accessor("stock", {
     header: () => "STOCK",

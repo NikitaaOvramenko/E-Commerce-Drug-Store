@@ -30,6 +30,13 @@ public class OrderService {
     }
 
     @Transactional
+    public List<OrderDto> getAllByUserEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        return user.getOrders().stream().map(orderMapper::toDto).toList();
+
+    }
+
+    @Transactional
     public OrderDto checkout(String email) {
         // Find user by email (from JWT authentication)
         User user = userRepository.findByEmail(email);
@@ -52,7 +59,7 @@ public class OrderService {
                 .toList();
         order.setOrderDrugs(orderDrugs);
 
-        double sum = 0;
+        long sum = 0L;
         for (OrderDrug orderDrug : orderDrugs) {
             sum += orderDrug.getPriceAtPurchase() * orderDrug.getQuantity();
         }

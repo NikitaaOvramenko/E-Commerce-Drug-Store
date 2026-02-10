@@ -10,7 +10,7 @@ public record OrderDto(
     Long tgUserId,
     Long tgChatId,
     LocalDateTime createdAt,
-    Double totalPrice,
+    Long totalPrice,
     OrderStatus orderStatus,
     List<OrderDrugDto> items
 ) {}

@@ -1,49 +1,47 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, CreditCard } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { ArrowLeft, Send } from "lucide-react";
 import { useBasket } from "../../context/BasketContext";
 import { useTelegramTheme } from "../../hooks/useTelegramTheme";
+import { orderApi } from "../../api/endpoints/order.api";
 import SafeArea from "../../components/ui/SafeArea";
 import Button from "../../components/ui/Button";
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearBasket } = useBasket();
   const navigate = useNavigate();
-  const [processing, setProcessing] = useState(false);
-  const {
-    bgColor,
-    secondaryBgColor,
-    textColor,
-    hintColor,
-    linkColor,
-  } = useTelegramTheme();
+  const location = useLocation();
+  const orderId = (location.state as { orderId?: number })?.orderId;
 
-  // Redirect if basket is empty
+  const [processing, setProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { bgColor, secondaryBgColor, textColor, hintColor, linkColor } =
+    useTelegramTheme();
+
   useEffect(() => {
-    if (items.length === 0) {
+    if (items.length === 0 || !orderId) {
       navigate("/store");
     }
-  }, [items.length, navigate]);
+  }, [items.length, orderId, navigate]);
 
-  const handlePayment = async () => {
+  const handlePlaceOrder = async () => {
+    if (!orderId) return;
     setProcessing(true);
+    setError(null);
 
     try {
-      // TODO: Implement payment integration
-      alert("Payment integration coming soon! Your order has been saved.");
+      await orderApi.placeOrder(orderId);
       clearBasket();
       navigate("/store");
-    } catch (error) {
-      console.error("Payment error:", error);
-      alert("Payment failed. Please try again.");
+    } catch (err) {
+      console.error("Place order failed:", err);
+      setError("Failed to place order. Please try again.");
     } finally {
       setProcessing(false);
     }
   };
 
-  if (items.length === 0) {
-    return null;
-  }
+  if (items.length === 0 || !orderId) return null;
 
   return (
     <SafeArea
@@ -67,10 +65,12 @@ export default function CheckoutPage() {
         </h1>
       </div>
 
-      {/* Content */}
+      {/* Order Summary */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* Order Summary */}
-        <div className="rounded-2xl p-4" style={{ backgroundColor: secondaryBgColor }}>
+        <div
+          className="rounded-2xl p-4"
+          style={{ backgroundColor: secondaryBgColor }}
+        >
           <h2 className="font-semibold mb-4" style={{ color: textColor }}>
             Order Summary
           </h2>
@@ -106,7 +106,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
                 <span className="font-medium" style={{ color: textColor }}>
-                  ${(item.drug.price * item.quantity).toFixed(2)}
+                  ${(item.drug.price * item.quantity / 100).toFixed(2)}
                 </span>
               </div>
             ))}
@@ -119,7 +119,7 @@ export default function CheckoutPage() {
           >
             <div className="flex justify-between text-sm">
               <span style={{ color: hintColor }}>Subtotal</span>
-              <span style={{ color: textColor }}>${totalPrice.toFixed(2)}</span>
+              <span style={{ color: textColor }}>${(totalPrice / 100).toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span style={{ color: hintColor }}>Delivery</span>
@@ -127,37 +127,25 @@ export default function CheckoutPage() {
             </div>
             <div className="flex justify-between text-lg font-bold pt-2">
               <span style={{ color: textColor }}>Total</span>
-              <span style={{ color: linkColor }}>${totalPrice.toFixed(2)}</span>
+              <span style={{ color: linkColor }}>${(totalPrice / 100).toFixed(2)}</span>
             </div>
           </div>
         </div>
 
-        {/* Payment Methods */}
-        <div className="rounded-2xl p-4" style={{ backgroundColor: secondaryBgColor }}>
-          <h2 className="font-semibold mb-4" style={{ color: textColor }}>
-            Payment Method
-          </h2>
-
-          {/* Card Option */}
-          <div
-            className="p-4 border rounded-xl"
-            style={{ borderColor: `${hintColor}40`, backgroundColor: `${hintColor}10` }}
-          >
-            <div className="flex items-center gap-3">
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: `${hintColor}30` }}
-              >
-                <CreditCard size={20} style={{ color: hintColor }} />
-              </div>
-              <div>
-                <p className="font-medium" style={{ color: hintColor }}>
-                  Credit/Debit Card
-                </p>
-                <p className="text-sm" style={{ color: hintColor, opacity: 0.7 }}>
-                  Coming soon
-                </p>
-              </div>
+        {/* Payment Info */}
+        <div
+          className="rounded-2xl p-4"
+          style={{ backgroundColor: secondaryBgColor }}
+        >
+          <div className="flex items-center gap-3">
+            <Send size={20} style={{ color: linkColor }} />
+            <div>
+              <p className="font-medium" style={{ color: textColor }}>
+                Telegram Payment
+              </p>
+              <p className="text-sm" style={{ color: hintColor }}>
+                Invoice will be sent to your Telegram chat
+              </p>
             </div>
           </div>
         </div>
@@ -168,12 +156,17 @@ export default function CheckoutPage() {
         className="p-4 border-t pb-safe"
         style={{ borderColor: `${hintColor}30` }}
       >
-        <Button fullWidth size="lg" loading={processing} onClick={handlePayment}>
-          Place Order
+        {error && (
+          <p className="text-red-400 text-sm text-center mb-3">{error}</p>
+        )}
+        <Button
+          fullWidth
+          size="lg"
+          loading={processing}
+          onClick={handlePlaceOrder}
+        >
+          Place Order - ${(totalPrice / 100).toFixed(2)}
         </Button>
-        <p className="text-center text-xs mt-3" style={{ color: hintColor }}>
-          Secure payment powered by Stripe
-        </p>
       </div>
     </SafeArea>
   );

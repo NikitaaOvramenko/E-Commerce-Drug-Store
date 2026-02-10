@@ -38,6 +38,7 @@ public class OrderMapper implements Mapper<Order, OrderDto> {
         return new OrderDrugDto(
                 orderDrug.getId(),
                 orderDrug.getDrug() != null ? orderDrug.getDrug().getName() : null,
+                orderDrug.getDrug() != null ? orderDrug.getDrug().getImg() : null,
                 orderDrug.getQuantity(),
                 orderDrug.getPriceAtPurchase()
         );

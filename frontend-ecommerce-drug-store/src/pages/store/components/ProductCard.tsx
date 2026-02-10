@@ -78,7 +78,7 @@ export default function ProductCard({ drug, secondaryBgColor }: ProductCardProps
         {/* Price & Add Button */}
         <div className="flex items-center justify-between pt-1">
           <span className="font-bold text-sm" style={{ color: linkColor }}>
-            ${drug.price.toFixed(2)}
+            ${(drug.price / 100).toFixed(2)}
           </span>
           <button
             onClick={handleAdd}
