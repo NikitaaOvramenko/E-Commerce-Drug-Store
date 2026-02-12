@@ -62,7 +62,10 @@ function Button({
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      className={cn(buttonVariants({ variant, size, className }), fullWidth && "w-full")}
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        fullWidth && "w-full",
+      )}
       disabled={disabled || loading}
       {...props}
     >
@@ -72,4 +75,5 @@ function Button({
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { Button, buttonVariants };
