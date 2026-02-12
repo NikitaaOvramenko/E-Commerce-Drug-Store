@@ -13,8 +13,13 @@ interface ProductCardProps {
 export default function ProductCard({ drug }: ProductCardProps) {
   const { addToBasket } = useBasket();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { buttonColor, buttonTextColor, hintColor, linkColor } =
-    useTelegramTheme();
+  const {
+    buttonColor,
+    buttonTextColor,
+    hintColor,
+    linkColor,
+    secondaryBgColor,
+  } = useTelegramTheme();
 
   const handleAdd = () => {
     addToBasket(drug);
@@ -28,7 +33,10 @@ export default function ProductCard({ drug }: ProductCardProps) {
   const favorite = isFavorite(drug.id);
 
   return (
-    <Card className="overflow-hidden gap-0 p-0 group relative">
+    <Card
+      style={{ backgroundColor: secondaryBgColor }}
+      className="overflow-hidden gap-0 p-0 group relative"
+    >
       {/* Favorite */}
       <button
         onClick={handleFavorite}
