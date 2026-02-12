@@ -35,7 +35,7 @@ export default function StorePage() {
   const { basketCount } = useBasket();
   const { logout } = useAuth();
 
-  const { bgColor, secondaryBgColor, hintColor } = useTelegramTheme();
+  const { bgColor, secondaryBgColor, hintColor, textColor } = useTelegramTheme();
 
   const hasMore = page < totalPages - 1;
 
@@ -117,8 +117,8 @@ export default function StorePage() {
     >
       {/* Top Bar */}
       <div
-        className="sticky top-0 z-20 backdrop-blur-sm border-b border-gray-800/50"
-        style={{ backgroundColor: `${secondaryBgColor}ee` }}
+        className="sticky top-0 z-20 backdrop-blur-sm border-b"
+        style={{ backgroundColor: `${secondaryBgColor}ee`, borderColor: `${hintColor}30` }}
       >
         <div className="px-3 py-3 flex items-center gap-2">
           <SearchBar
@@ -136,9 +136,8 @@ export default function StorePage() {
             <LogOut size={20} style={{ color: "#ef4444" }} />
           </button>
 
-          <button onClick={() => navigate("/orders")}>
-            <ListOrdered size={20}></ListOrdered>
-          </button>
+          <button onClick={() => navigate("/orders")} className="p-2.5 rounded-xl" style={{ backgroundColor: secondaryBgColor }}>
+            <ListOrdered size={20} style={{ color: textColor }} /></button>
         </div>
       </div>
       {/*  */}

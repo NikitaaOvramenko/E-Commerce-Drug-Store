@@ -18,6 +18,7 @@ export default function ProductCard({ drug }: ProductCardProps) {
     buttonTextColor,
     hintColor,
     linkColor,
+    textColor,
     secondaryBgColor,
   } = useTelegramTheme();
 
@@ -50,7 +51,7 @@ export default function ProductCard({ drug }: ProductCardProps) {
       </button>
 
       {/* Image */}
-      <div className="aspect-square bg-muted/50 p-2 overflow-hidden">
+      <div className="aspect-square p-2 overflow-hidden" style={{ backgroundColor: `${hintColor}15` }}>
         <img
           src={drug.img || "/placeholder-drug.png"}
           alt={drug.name}
@@ -67,22 +68,22 @@ export default function ProductCard({ drug }: ProductCardProps) {
         {/* Rating */}
         <div className="flex items-center gap-1">
           <Star size={12} className="text-yellow-400 fill-yellow-400" />
-          <span className="text-xs text-muted-foreground">4.5</span>
+          <span className="text-xs" style={{ color: hintColor }}>4.5</span>
         </div>
 
         {/* Name */}
-        <h3 className="text-xs font-medium line-clamp-2 leading-tight min-h-8">
+        <h3 className="text-xs font-medium line-clamp-2 leading-tight min-h-8" style={{ color: textColor }}>
           {drug.name}
         </h3>
 
         {/* Brand */}
         {drug.brandName && (
-          <p className="text-[10px] text-muted-foreground truncate">
+          <p className="text-[10px] truncate" style={{ color: hintColor }}>
             {drug.brandName}
           </p>
         )}
         {drug.typeName && (
-          <p className="text-[10px] text-muted-foreground truncate">
+          <p className="text-[10px] truncate" style={{ color: hintColor }}>
             {drug.typeName}
           </p>
         )}

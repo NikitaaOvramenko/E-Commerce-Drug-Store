@@ -64,13 +64,13 @@ export default function ProductGrid({
               className="rounded-2xl animate-pulse"
               style={{ backgroundColor: secondaryBgColor }}
             >
-              <div className="aspect-square bg-gray-800 rounded-t-2xl" />
+              <div className="aspect-square rounded-t-2xl" style={{ backgroundColor: `${hintColor}20` }} />
               <div className="p-2.5 space-y-2">
-                <div className="h-3 bg-gray-800 rounded w-10" />
-                <div className="h-8 bg-gray-800 rounded" />
+                <div className="h-3 rounded w-10" style={{ backgroundColor: `${hintColor}20` }} />
+                <div className="h-8 rounded" style={{ backgroundColor: `${hintColor}20` }} />
                 <div className="flex justify-between items-center">
-                  <div className="h-4 bg-gray-800 rounded w-12" />
-                  <div className="h-6 bg-gray-800 rounded w-10" />
+                  <div className="h-4 rounded w-12" style={{ backgroundColor: `${hintColor}20` }} />
+                  <div className="h-6 rounded w-10" style={{ backgroundColor: `${hintColor}20` }} />
                 </div>
               </div>
             </div>
