@@ -5,7 +5,7 @@ import { useBasket } from "../../context/BasketContext";
 import { useTelegramTheme } from "../../hooks/useTelegramTheme";
 import { orderApi } from "../../api/endpoints/order.api";
 import SafeArea from "../../components/ui/SafeArea";
-import Button from "../../components/ui/Button";
+import { Button } from "../../components/ui/Button";
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearBasket } = useBasket();

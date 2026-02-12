@@ -9,8 +9,8 @@ import type {
   Brand,
   CreateDrugRequest,
 } from "../../api/types/drug.types";
-import Button from "../../components/ui/Button";
-import Input from "../../components/ui/Input";
+import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
 
 export default function AdminDrugFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -338,7 +338,7 @@ export default function AdminDrugFormPage() {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3">
+        <div className="flex flex-col gap-3">
           <Button
             variant="outline"
             type="button"

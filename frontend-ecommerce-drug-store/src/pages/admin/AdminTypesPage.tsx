@@ -4,8 +4,8 @@ import Select from "react-select";
 import { useTelegramTheme } from "../../hooks/useTelegramTheme";
 import { adminBrandsApi, adminTypesApi } from "../../api/endpoints/admin";
 import type { DrugType, Brand } from "../../api/types/drug.types";
-import Button from "../../components/ui/Button";
-import Input from "../../components/ui/Input";
+import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
 
 interface SelectOption {
   value: number;

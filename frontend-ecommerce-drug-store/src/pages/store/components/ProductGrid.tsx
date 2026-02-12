@@ -51,7 +51,7 @@ export default function ProductGrid({
       {/* 3-Column Grid */}
       <div className="grid grid-cols-3 gap-2.5">
         {drugs.map((drug) => (
-          <ProductCard key={drug.id} drug={drug} secondaryBgColor={secondaryBgColor} />
+          <ProductCard key={drug.id} drug={drug} />
         ))}
       </div>
 

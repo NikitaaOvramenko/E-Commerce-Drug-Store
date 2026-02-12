@@ -3,8 +3,8 @@ import { Plus, Pencil, Trash2, Check, X } from "lucide-react";
 import { useTelegramTheme } from "../../hooks/useTelegramTheme";
 import { adminCategoriesApi } from "../../api/endpoints/admin";
 import type { Category } from "../../api/types/drug.types";
-import Button from "../../components/ui/Button";
-import Input from "../../components/ui/Input";
+import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
 
 export default function AdminCategoriesPage() {
   const { textColor, hintColor, secondaryBgColor, bgColor, buttonColor } = useTelegramTheme();

@@ -1,7 +1,28 @@
-import { Outlet, NavLink, useNavigate } from "react-router-dom";
-import { Package, Tags, Building2, FolderTree, ArrowLeft, LogOut } from "lucide-react";
-import { useTelegramTheme } from "../hooks/useTelegramTheme";
+import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
+import {
+  Package,
+  Tags,
+  Building2,
+  FolderTree,
+  ArrowLeft,
+  LogOut,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarInset,
+  SidebarTrigger,
+} from "../components/ui/sidebar";
 
 const navItems = [
   { to: "/admin/drugs", icon: Package, label: "Drugs" },
@@ -11,78 +32,77 @@ const navItems = [
 ];
 
 export default function AdminLayout() {
-  const { bgColor, secondaryBgColor, textColor, hintColor, buttonColor } = useTelegramTheme();
   const { logout } = useAuth();
   const navigate = useNavigate();
-
-  const handleBackToStore = () => {
-    navigate("/store");
-  };
+  const location = useLocation();
 
   return (
-    <div className="flex h-screen" style={{ backgroundColor: bgColor }}>
-      {/* Sidebar */}
-      <aside
-        className="w-64 flex flex-col border-r"
-        style={{ backgroundColor: secondaryBgColor, borderColor: `${hintColor}30` }}
-      >
-        {/* Header */}
-        <div className="p-4 border-b" style={{ borderColor: `${hintColor}30` }}>
-          <h1 className="text-xl font-bold" style={{ color: textColor }}>
-            Admin Panel
-          </h1>
-          <p className="text-sm mt-1" style={{ color: hintColor }}>
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader className="p-4">
+          <h1 className="text-xl font-bold">Admin Panel</h1>
+          <p className="text-sm text-sidebar-foreground/70">
             Inventory Management
           </p>
-        </div>
+        </SidebarHeader>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                  isActive ? "font-medium" : ""
-                }`
-              }
-              style={({ isActive }) => ({
-                backgroundColor: isActive ? buttonColor : "transparent",
-                color: isActive ? bgColor : textColor,
-              })}
-            >
-              <item.icon size={20} />
-              <span>{item.label}</span>
-            </NavLink>
-          ))}
-        </nav>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {navItems.map((item) => (
+                  <SidebarMenuItem key={item.to}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={location.pathname.startsWith(item.to)}
+                      tooltip={item.label}
+                    >
+                      <NavLink to={item.to}>
+                        <item.icon />
+                        <span>{item.label}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
 
-        {/* Footer Actions */}
-        <div className="p-4 space-y-2 border-t" style={{ borderColor: `${hintColor}30` }}>
-          <button
-            onClick={handleBackToStore}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl w-full transition-colors"
-            style={{ color: hintColor }}
-          >
-            <ArrowLeft size={20} />
-            <span>Back to Store</span>
-          </button>
-          <button
-            onClick={logout}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl w-full transition-colors"
-            style={{ color: "#ef4444" }}
-          >
-            <LogOut size={20} />
-            <span>Logout</span>
-          </button>
-        </div>
-      </aside>
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={() => navigate("/store")}
+                tooltip="Back to Store"
+              >
+                <ArrowLeft />
+                <span>Back to Store</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={logout}
+                className="text-red-500 hover:text-red-500"
+                tooltip="Logout"
+              >
+                <LogOut />
+                <span>Logout</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto p-6">
-        <Outlet />
-      </main>
-    </div>
+      <SidebarInset>
+        <header className="flex h-12 items-center gap-2 border-b px-4">
+          <SidebarTrigger />
+        </header>
+        <main className="flex-1 overflow-y-auto p-6">
+          <Outlet />
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

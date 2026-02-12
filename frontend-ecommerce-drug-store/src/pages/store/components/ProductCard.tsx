@@ -3,18 +3,18 @@ import type { Drug } from "../../../api/types/drug.types";
 import { useBasket } from "../../../context/BasketContext";
 import { useFavorites } from "../../../context/FavoritesContext";
 import { useTelegramTheme } from "../../../hooks/useTelegramTheme";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 interface ProductCardProps {
   drug: Drug;
-  secondaryBgColor?: string;
 }
 
-export default function ProductCard({ drug, secondaryBgColor }: ProductCardProps) {
+export default function ProductCard({ drug }: ProductCardProps) {
   const { addToBasket } = useBasket();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { buttonColor, buttonTextColor, textColor, hintColor, linkColor } = useTelegramTheme();
-
-  const cardBg = secondaryBgColor || "#1a1a1a";
+  const { buttonColor, buttonTextColor, hintColor, linkColor } =
+    useTelegramTheme();
 
   const handleAdd = () => {
     addToBasket(drug);
@@ -28,24 +28,21 @@ export default function ProductCard({ drug, secondaryBgColor }: ProductCardProps
   const favorite = isFavorite(drug.id);
 
   return (
-    <div
-      className="rounded-2xl overflow-hidden relative group"
-      style={{ backgroundColor: cardBg }}
-    >
-      {/* Favorite Button */}
+    <Card className="overflow-hidden gap-0 p-0 group relative">
+      {/* Favorite */}
       <button
         onClick={handleFavorite}
         className="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-black/50 backdrop-blur-sm transition-transform active:scale-90"
       >
         <Heart
-          size={16}
+          size={14}
           className={favorite ? "text-red-500 fill-red-500" : ""}
           style={{ color: favorite ? undefined : hintColor }}
         />
       </button>
 
       {/* Image */}
-      <div className="aspect-square bg-gray-800 p-2 overflow-hidden">
+      <div className="aspect-square bg-muted/50 p-2 overflow-hidden">
         <img
           src={drug.img || "/placeholder-drug.png"}
           alt={drug.name}
@@ -58,40 +55,45 @@ export default function ProductCard({ drug, secondaryBgColor }: ProductCardProps
       </div>
 
       {/* Details */}
-      <div className="p-2.5 space-y-1.5">
+      <CardContent className="p-2.5 space-y-1.5">
         {/* Rating */}
         <div className="flex items-center gap-1">
           <Star size={12} className="text-yellow-400 fill-yellow-400" />
-          <span className="text-xs" style={{ color: hintColor }}>
-            4.5
-          </span>
+          <span className="text-xs text-muted-foreground">4.5</span>
         </div>
 
         {/* Name */}
-        <h3
-          className="text-xs font-medium line-clamp-2 leading-tight min-h-[2rem]"
-          style={{ color: textColor }}
-        >
+        <h3 className="text-xs font-medium line-clamp-2 leading-tight min-h-8">
           {drug.name}
         </h3>
 
-        {/* Price & Add Button */}
-        <div className="flex items-center justify-between pt-1">
-          <span className="font-bold text-sm" style={{ color: linkColor }}>
-            ${(drug.price / 100).toFixed(2)}
-          </span>
-          <button
-            onClick={handleAdd}
-            className="font-semibold px-2.5 py-1 rounded-lg text-xs transition-colors active:scale-95"
-            style={{
-              backgroundColor: buttonColor,
-              color: buttonTextColor,
-            }}
-          >
-            Add
-          </button>
-        </div>
-      </div>
-    </div>
+        {/* Brand */}
+        {drug.brandName && (
+          <p className="text-[10px] text-muted-foreground truncate">
+            {drug.brandName}
+          </p>
+        )}
+        {drug.typeName && (
+          <p className="text-[10px] text-muted-foreground truncate">
+            {drug.typeName}
+          </p>
+        )}
+      </CardContent>
+
+      {/* Price & Add */}
+      <CardFooter className="px-2.5 pb-2.5 pt-0 flex justify-between items-center">
+        <span className="font-bold text-sm" style={{ color: linkColor }}>
+          ${(drug.price / 100).toFixed(2)}
+        </span>
+        <Button
+          onClick={handleAdd}
+          size="sm"
+          className="h-7 px-2.5 text-xs rounded-lg active:scale-95"
+          style={{ backgroundColor: buttonColor, color: buttonTextColor }}
+        >
+          Add
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

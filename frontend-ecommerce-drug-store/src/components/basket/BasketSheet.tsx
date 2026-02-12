@@ -1,10 +1,17 @@
 import { useNavigate } from "react-router-dom";
-import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useBasket } from "../../context/BasketContext";
 import { useTelegramTheme } from "../../hooks/useTelegramTheme";
-import BottomSheet from "../ui/BottomSheet";
-import Button from "../ui/Button";
+import { Button } from "../ui/Button";
 import { orderApi } from "../../api/endpoints/order.api";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerFooter,
+} from "../ui/drawer";
 
 export default function BasketSheet() {
   const {
@@ -16,8 +23,7 @@ export default function BasketSheet() {
     removeFromBasket,
   } = useBasket();
   const navigate = useNavigate();
-  const { textColor, hintColor, linkColor, secondaryBgColor } =
-    useTelegramTheme();
+  const { linkColor } = useTelegramTheme();
 
   const handleCheckout = async () => {
     try {
@@ -41,65 +47,42 @@ export default function BasketSheet() {
   };
 
   return (
-    <BottomSheet open={isOpen} onClose={closeBasket} height="75%">
-      <div className="flex flex-col h-full">
-        {/* Header */}
-        <div
-          className="flex items-center justify-between px-5 py-4 border-b"
-          style={{ borderColor: `${hintColor}30` }}
-        >
-          <div className="flex items-center gap-2">
-            <ShoppingBag size={20} style={{ color: linkColor }} />
-            <h2 className="text-lg font-bold" style={{ color: textColor }}>
-              Your Basket
-            </h2>
-            {items.length > 0 && (
-              <span className="text-sm" style={{ color: hintColor }}>
-                ({items.length})
-              </span>
-            )}
-          </div>
-          <button
-            onClick={closeBasket}
-            className="p-1 rounded-lg transition-colors"
-          >
-            <X size={22} style={{ color: hintColor }} />
-          </button>
-        </div>
+    <Drawer open={isOpen} onOpenChange={(open) => !open && closeBasket()}>
+      <DrawerContent className="max-h-[80vh]">
+        <DrawerHeader className="flex-row items-center gap-2 text-left">
+          <ShoppingBag size={20} style={{ color: linkColor }} />
+          <DrawerTitle>Your Basket</DrawerTitle>
+          {items.length > 0 && (
+            <DrawerDescription>({items.length})</DrawerDescription>
+          )}
+          {items.length === 0 && (
+            <DrawerDescription className="sr-only">Empty basket</DrawerDescription>
+          )}
+        </DrawerHeader>
 
         {/* Items */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto px-4">
           {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center px-6">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
-                style={{ backgroundColor: `${hintColor}20` }}
-              >
-                <ShoppingBag size={28} style={{ color: hintColor }} />
+            <div className="flex flex-col items-center justify-center py-12 text-center px-6">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-muted">
+                <ShoppingBag size={28} className="text-muted-foreground" />
               </div>
-              <p
-                className="text-lg font-medium mb-1"
-                style={{ color: textColor }}
-              >
+              <p className="text-lg font-medium mb-1">
                 Your basket is empty
               </p>
-              <p className="text-sm" style={{ color: hintColor }}>
+              <p className="text-sm text-muted-foreground">
                 Add some products to get started
               </p>
             </div>
           ) : (
-            <div className="p-4 space-y-3">
+            <div className="space-y-3">
               {items.map((item) => (
                 <div
                   key={item.drug.id}
-                  className="flex gap-3 rounded-xl p-3"
-                  style={{ backgroundColor: `${hintColor}15` }}
+                  className="flex gap-3 rounded-xl p-3 bg-muted/50"
                 >
                   {/* Image */}
-                  <div
-                    className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0"
-                    style={{ backgroundColor: `${hintColor}20` }}
-                  >
+                  <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-muted">
                     <img
                       src={item.drug.img || "/placeholder-drug.png"}
                       alt={item.drug.name}
@@ -110,21 +93,15 @@ export default function BasketSheet() {
                   {/* Details */}
                   <div className="flex-1 min-w-0 flex flex-col justify-between">
                     <div>
-                      <h3
-                        className="font-medium text-sm line-clamp-1"
-                        style={{ color: textColor }}
-                      >
+                      <h3 className="font-medium text-sm line-clamp-1">
                         {item.drug.name}
                       </h3>
-                      <p className="text-xs" style={{ color: hintColor }}>
+                      <p className="text-xs text-muted-foreground">
                         {item.drug.brandName}
                       </p>
                     </div>
-                    <p
-                      className="font-bold text-sm"
-                      style={{ color: linkColor }}
-                    >
-                      ${(item.drug.price * item.quantity / 100).toFixed(2)}
+                    <p className="font-bold text-sm" style={{ color: linkColor }}>
+                      ${((item.drug.price * item.quantity) / 100).toFixed(2)}
                     </p>
                   </div>
 
@@ -132,34 +109,25 @@ export default function BasketSheet() {
                   <div className="flex flex-col items-end justify-between">
                     <button
                       onClick={() => handleRemove(item.drug.id)}
-                      className="p-1.5 transition-colors hover:text-red-400"
-                      style={{ color: hintColor }}
+                      className="p-1.5 transition-colors text-muted-foreground hover:text-red-400"
                     >
                       <Trash2 size={16} />
                     </button>
 
                     {/* Quantity Controls */}
-                    <div
-                      className="flex items-center gap-1 rounded-lg"
-                      style={{ backgroundColor: secondaryBgColor }}
-                    >
+                    <div className="flex items-center gap-1 rounded-lg bg-secondary">
                       <button
                         onClick={() => handleQuantityChange(item.drug.id, -1)}
-                        className="p-1.5 transition-colors"
-                        style={{ color: hintColor }}
+                        className="p-1.5 transition-colors text-muted-foreground"
                       >
                         <Minus size={14} />
                       </button>
-                      <span
-                        className="text-sm w-6 text-center font-medium"
-                        style={{ color: textColor }}
-                      >
+                      <span className="text-sm w-6 text-center font-medium">
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => handleQuantityChange(item.drug.id, 1)}
-                        className="p-1.5 transition-colors"
-                        style={{ color: hintColor }}
+                        className="p-1.5 transition-colors text-muted-foreground"
                       >
                         <Plus size={14} />
                       </button>
@@ -173,22 +141,19 @@ export default function BasketSheet() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div
-            className="p-4 border-t space-y-3 pb-safe"
-            style={{ borderColor: `${hintColor}30` }}
-          >
-            <div className="flex justify-between items-center">
-              <span style={{ color: hintColor }}>Total</span>
-              <span className="font-bold text-xl" style={{ color: textColor }}>
+          <DrawerFooter className="border-t pt-4">
+            <div className="flex justify-between items-center w-full">
+              <span className="text-muted-foreground">Total</span>
+              <span className="font-bold text-xl">
                 ${(totalPrice / 100).toFixed(2)}
               </span>
             </div>
             <Button fullWidth size="lg" onClick={handleCheckout}>
               Checkout
             </Button>
-          </div>
+          </DrawerFooter>
         )}
-      </div>
-    </BottomSheet>
+      </DrawerContent>
+    </Drawer>
   );
 }

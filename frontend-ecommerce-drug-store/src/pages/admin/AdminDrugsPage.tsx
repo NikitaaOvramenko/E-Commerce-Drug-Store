@@ -1,14 +1,33 @@
 import { useCallback, useEffect, useState } from "react";
 import { drugsApi } from "../../api/endpoints/drugs.api";
 import type { Drug, DrugPage } from "../../api/types/drug.types";
+import { MoreHorizontalIcon } from "lucide-react";
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
+  type RowData,
 } from "@tanstack/react-table";
 import { Link, useNavigate } from "react-router-dom";
-import type { RowData } from "@tanstack/react-table";
+
+import { adminDrugsApi } from "../../api/endpoints/admin";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/Button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 // Extend TableMeta to include removeData
 declare module "@tanstack/react-table" {
@@ -17,16 +36,14 @@ declare module "@tanstack/react-table" {
     removeData?: (id: number) => void;
   }
 }
-import { adminDrugsApi } from "../../api/endpoints/admin";
 
 const columnHelper = createColumnHelper<Drug>();
 
-const column = [
+const columns = [
   columnHelper.accessor("id", {
     header: () => "ID",
     cell: (info) => info.getValue(),
   }),
-
   columnHelper.accessor("name", {
     header: () => "NAME",
     cell: (info) => info.getValue(),
@@ -41,11 +58,11 @@ const column = [
   }),
   columnHelper.accessor("img", {
     header: () => "IMAGE",
-    cell: (url) => (
+    cell: (info) => (
       <img
-        src={url.getValue()}
+        src={info.getValue()}
         alt="Drug"
-        className="w-20 h-20 m-auto object-cover"
+        className="w-20 h-20 object-cover rounded"
       />
     ),
   }),
@@ -58,32 +75,34 @@ const column = [
     cell: (info) => info.getValue(),
   }),
   columnHelper.display({
-    header: "EDIT",
-
-    cell: (prop) => {
-      const entry = prop.row.original;
+    id: "dropDown",
+    cell: (props) => {
+      const entry = props.row.original;
       return (
-        <Link className="h-full w-full" to={`/admin/drugs/${entry.id}`}>
-          Edit
-        </Link>
-      );
-    },
-  }),
-  columnHelper.display({
-    header: "REMOVE",
-
-    cell: (prop) => {
-      const entry = prop.row.original;
-
-      return (
-        <button
-          onClick={async () => {
-            prop.table.options.meta?.removeData?.(entry.id);
-          }}
-          className="h-full w-full text-red-600"
-        >
-          Remove
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant={"ghost"} size={"icon"}>
+              <MoreHorizontalIcon></MoreHorizontalIcon>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center">
+            <Link to={`/admin/drugs/${entry.id}`}>
+              <DropdownMenuItem>
+                <span className="w-full h-full text-center">edit</span>
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuItem
+              onClick={async () => {
+                const remove = props.table.options.meta?.removeData;
+                if (!remove) return;
+                remove(entry.id);
+              }}
+              variant={"destructive"}
+            >
+              <span className="w-full h-full text-center">delete</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   }),
@@ -98,67 +117,72 @@ function AdminDrugsPage() {
     setDrugs(response);
   }, []);
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: drugs?.content ?? [],
-    columns: column,
+    columns,
     getCoreRowModel: getCoreRowModel(),
     meta: {
-      removeData: async (i: number) => {
-        await adminDrugsApi.delete(i);
-        fetchDrugs();
+      removeData: async (id: number) => {
+        await adminDrugsApi.delete(id);
+        await fetchDrugs();
       },
     },
   });
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchDrugs();
   }, [fetchDrugs]);
 
   return (
-    <div className="flex flex-col gap-10">
-      <div className="top flex justify-between h-20 w-full">
-        <div className="left flex items-center">
-          <p className="font-bold text-3xl">Drugs</p>
-        </div>
-        <div className="right flex justify-center items-center">
-          {" "}
-          <button
-            onClick={() => navigate("/admin/drugs/new")}
-            className="add h-8 w-20 font-bold bg-green-500  rounded"
-          >
-            Add
-          </button>
-        </div>
+    <div className="flex flex-col gap-4">
+      <div className="head flex justify-between">
+        <p className="font-bold text-2xl">Drugs</p>{" "}
+        <Button
+          variant={"secondary"}
+          onClick={() => navigate("new")}
+          className="secondary"
+        >
+          Add
+        </Button>
       </div>
-      <table>
-        <thead>
+      <Table>
+        <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="">
+            <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-                </th>
+                <TableHead key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </TableHead>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="border text-center">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        </TableHeader>
+
+        <TableBody>
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="text-center">
+                No drugs found.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 }

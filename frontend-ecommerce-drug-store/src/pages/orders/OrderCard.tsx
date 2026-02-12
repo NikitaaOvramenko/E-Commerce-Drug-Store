@@ -3,7 +3,7 @@ import { Package, ChevronDown, ChevronUp, Send } from "lucide-react";
 import type { orderDto, orderStatus } from "../../api/types/order.types";
 import { orderApi } from "../../api/endpoints/order.api";
 import { useTelegramTheme } from "../../hooks/useTelegramTheme";
-import Button from "../../components/ui/Button";
+import { Button } from "../../components/ui/Button";
 
 const statusColors: Record<orderStatus, string> = {
   CHECKOUT: "#f59e0b",

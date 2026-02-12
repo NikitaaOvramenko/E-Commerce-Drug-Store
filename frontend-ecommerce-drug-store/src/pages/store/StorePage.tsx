@@ -17,6 +17,7 @@ import SearchBar from "./components/SearchBar";
 import FilterSheet from "./components/FilterSheet";
 import ProductGrid from "./components/ProductGrid";
 import BasketButton from "../../components/basket/BasketButton";
+import { useNavigate } from "react-router-dom";
 
 export default function StorePage() {
   const [drugs, setDrugs] = useState<Drug[]>([]);
@@ -30,6 +31,7 @@ export default function StorePage() {
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const navigate = useNavigate();
   const { basketCount } = useBasket();
   const { logout } = useAuth();
 
@@ -134,13 +136,7 @@ export default function StorePage() {
             <LogOut size={20} style={{ color: "#ef4444" }} />
           </button>
 
-          <button
-            onClick={() =>
-              window.Telegram?.WebApp?.openLink(
-                "https://buy.stripe.com/test_cNi3cu9wUaqG86a5MqbZe00",
-              )
-            }
-          >
+          <button onClick={() => navigate("/orders")}>
             <ListOrdered size={20}></ListOrdered>
           </button>
         </div>

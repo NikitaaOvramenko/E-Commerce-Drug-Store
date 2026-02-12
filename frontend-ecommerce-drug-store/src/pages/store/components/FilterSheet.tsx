@@ -8,7 +8,7 @@ import type {
 } from "../../../api/types/drug.types";
 import { useTelegramTheme } from "../../../hooks/useTelegramTheme";
 import BottomSheet from "../../../components/ui/BottomSheet";
-import Button from "../../../components/ui/Button";
+import { Button } from "../../../components/ui/Button";
 
 interface FilterSheetProps {
   open: boolean;

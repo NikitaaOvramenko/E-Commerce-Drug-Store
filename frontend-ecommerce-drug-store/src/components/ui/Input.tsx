@@ -1,77 +1,35 @@
-import { forwardRef, type InputHTMLAttributes, type ReactNode } from "react";
+import * as React from "react"
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  error?: boolean;
-  icon?: ReactNode;
-  rightIcon?: ReactNode;
+import { cn } from "@/lib/utils"
+
+interface InputProps extends React.ComponentProps<"input"> {
   bgColor?: string;
   textColor?: string;
   hintColor?: string;
   accentColor?: string;
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
-  (
-    {
-      error,
-      icon,
-      rightIcon,
-      className = "",
-      bgColor = "#1a1a1a",
-      textColor = "#ffffff",
-      hintColor = "#6b7280",
-      accentColor = "#22c55e",
-      ...props
-    },
-    ref,
-  ) => {
-    return (
-      <div className="relative">
-        {icon && (
-          <div
-            className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center"
-            style={{ color: hintColor }}
-          >
-            {icon}
-          </div>
-        )}
-        <input
-          ref={ref}
-          className={`w-full py-3.5 border-2 rounded-xl text-base outline-none transition-colors ${
-            icon ? "pl-12" : "pl-4"
-          } ${rightIcon ? "pr-12" : "pr-4"} ${className}`}
-          style={{
-            backgroundColor: bgColor,
-            color: textColor,
-            borderColor: error ? "#ef4444" : `${hintColor}40`,
-          }}
-          onFocus={(e) => {
-            if (!error) {
-              e.target.style.borderColor = accentColor;
-            }
-            props.onFocus?.(e);
-          }}
-          onBlur={(e) => {
-            if (!error) {
-              e.target.style.borderColor = `${hintColor}40`;
-            }
-            props.onBlur?.(e);
-          }}
-          {...props}
-        />
-        {rightIcon && (
-          <div
-            className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center"
-            style={{ color: hintColor }}
-          >
-            {rightIcon}
-          </div>
-        )}
-      </div>
-    );
-  },
-);
+function Input({ className, type, bgColor, textColor, hintColor, accentColor, style, ...props }: InputProps) {
+  return (
+    <input
+      type={type}
+      data-slot="input"
+      className={cn(
+        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+        className
+      )}
+      style={{
+        ...(bgColor && { backgroundColor: bgColor }),
+        ...(textColor && { color: textColor }),
+        ...(hintColor && { borderColor: `${hintColor}40` }),
+        ...(accentColor && { '--accent': accentColor } as React.CSSProperties),
+        ...style,
+      }}
+      {...props}
+    />
+  )
+}
 
-Input.displayName = "Input";
-
-export default Input;
+export { Input }

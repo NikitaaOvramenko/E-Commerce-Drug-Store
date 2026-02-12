@@ -28,7 +28,7 @@ export default function BottomSheet({
       document.body.style.overflow = "hidden";
       requestAnimationFrame(() => {
         if (overlayRef.current) overlayRef.current.style.opacity = "1";
-        if (sheetRef.current) sheetRef.current.style.transform = "translateY(0)";
+        if (sheetRef.current) sheetRef.current.style.translate = "0 0";
       });
     } else {
       document.body.style.overflow = "";
@@ -47,14 +47,14 @@ export default function BottomSheet({
     currentY.current = e.touches[0].clientY;
     const delta = currentY.current - startY.current;
     if (delta > 0 && sheetRef.current) {
-      sheetRef.current.style.transform = `translateY(${delta}px)`;
+      sheetRef.current.style.translate = `0 ${delta}px`;
     }
   };
 
   const handleTouchEnd = () => {
     const delta = currentY.current - startY.current;
     if (sheetRef.current) {
-      sheetRef.current.style.transform = "";
+      sheetRef.current.style.translate = "";
     }
     if (delta > 100) {
       onClose();
@@ -77,7 +77,7 @@ export default function BottomSheet({
       {/* Sheet */}
       <div
         ref={sheetRef}
-        className="fixed bottom-0 left-0 right-0 rounded-t-3xl z-50 transition-transform duration-300 ease-out translate-y-full"
+        className="fixed bottom-0 left-0 right-0 rounded-t-3xl z-50 transition-[translate] duration-300 ease-out translate-y-full"
         style={{ height, maxHeight: "90vh", backgroundColor: secondaryBgColor }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
