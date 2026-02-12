@@ -23,7 +23,8 @@ export default function BasketSheet() {
     removeFromBasket,
   } = useBasket();
   const navigate = useNavigate();
-  const { linkColor } = useTelegramTheme();
+  const { linkColor, buttonColor, buttonTextColor, bgColor, secondaryBgColor } =
+    useTelegramTheme();
 
   const handleCheckout = async () => {
     try {
@@ -48,7 +49,10 @@ export default function BasketSheet() {
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && closeBasket()}>
-      <DrawerContent className="max-h-[80vh]">
+      <DrawerContent
+        style={{ backgroundColor: bgColor }}
+        className=" max-h-[80vh]"
+      >
         <DrawerHeader className="flex-row items-center gap-2 text-left">
           <ShoppingBag size={20} style={{ color: linkColor }} />
           <DrawerTitle>Your Basket</DrawerTitle>
@@ -56,20 +60,20 @@ export default function BasketSheet() {
             <DrawerDescription>({items.length})</DrawerDescription>
           )}
           {items.length === 0 && (
-            <DrawerDescription className="sr-only">Empty basket</DrawerDescription>
+            <DrawerDescription className="sr-only">
+              Empty basket
+            </DrawerDescription>
           )}
         </DrawerHeader>
 
         {/* Items */}
-        <div className="flex-1 overflow-y-auto px-4">
+        <div className="flex-1  overflow-y-auto px-4">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center px-6">
               <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-muted">
                 <ShoppingBag size={28} className="text-muted-foreground" />
               </div>
-              <p className="text-lg font-medium mb-1">
-                Your basket is empty
-              </p>
+              <p className="text-lg font-medium mb-1">Your basket is empty</p>
               <p className="text-sm text-muted-foreground">
                 Add some products to get started
               </p>
@@ -79,6 +83,7 @@ export default function BasketSheet() {
               {items.map((item) => (
                 <div
                   key={item.drug.id}
+                  style={{ backgroundColor: secondaryBgColor }}
                   className="flex gap-3 rounded-xl p-3 bg-muted/50"
                 >
                   {/* Image */}
@@ -100,7 +105,10 @@ export default function BasketSheet() {
                         {item.drug.brandName}
                       </p>
                     </div>
-                    <p className="font-bold text-sm" style={{ color: linkColor }}>
+                    <p
+                      className="font-bold text-sm"
+                      style={{ color: linkColor }}
+                    >
                       ${((item.drug.price * item.quantity) / 100).toFixed(2)}
                     </p>
                   </div>
@@ -148,7 +156,15 @@ export default function BasketSheet() {
                 ${(totalPrice / 100).toFixed(2)}
               </span>
             </div>
-            <Button fullWidth size="lg" onClick={handleCheckout}>
+            <Button
+              style={{
+                backgroundColor: buttonColor,
+                color: buttonTextColor,
+              }}
+              fullWidth
+              size="lg"
+              onClick={handleCheckout}
+            >
               Checkout
             </Button>
           </DrawerFooter>
