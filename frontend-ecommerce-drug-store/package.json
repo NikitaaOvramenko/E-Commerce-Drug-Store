@@ -12,12 +12,15 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@gsap/react": "^2.1.2",
     "@mui/material": "^7.3.5",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "country-flag-icons": "^1.6.13",
+    "gsap": "^3.14.2",
     "liquid-glass-react": "^1.1.1",
     "lucide-react": "^0.555.0",
     "radix-ui": "^1.4.3",
@@ -27,6 +30,8 @@
     "react-select": "^5.10.2",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18",
+    "three": "^0.134.0",
+    "vanta": "^0.5.24",
     "vaul": "^1.1.2"
   },
   "devDependencies": {
@@ -34,6 +39,7 @@
     "@types/node": "^24.10.13",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.134.0",
     "@vitejs/plugin-react": "^5.1.1",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",

@@ -25,6 +25,8 @@ import ProtectedRoute from "./components/shared/ProtectedRoute";
 import AdminRoute from "./components/shared/AdminRoute";
 import OrdersPage from "./pages/orders/OrdersPage";
 import { LangContextProvider } from "./context/LangContext";
+import Background from "./components/ui/Background";
+
 
 function App() {
   window.Telegram?.WebApp?.ready();
@@ -66,6 +68,9 @@ function App() {
                     />
                   </Route>
                 </Route>
+
+                {/* Test Route */}
+                <Route path="test" element={<Background />} />
 
                 {/* Default Redirects */}
                 <Route path="/" element={<Navigate to="/store" replace />} />

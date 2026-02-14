@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Send } from "lucide-react";
 import { useBasket } from "../../context/BasketContext";
 import { useTelegramTheme } from "../../hooks/useTelegramTheme";
+import { useLang } from "../../context/LangContext";
+import { translations } from "../../i18n/translations";
 import { orderApi } from "../../api/endpoints/order.api";
 import SafeArea from "../../components/ui/SafeArea";
 import { Button } from "../../components/ui/Button";
@@ -17,6 +19,8 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
   const { bgColor, secondaryBgColor, textColor, hintColor, linkColor } =
     useTelegramTheme();
+  const { language } = useLang();
+  const t = translations[language].checkout;
 
   useEffect(() => {
     if (items.length === 0 || !orderId) {
@@ -35,7 +39,7 @@ export default function CheckoutPage() {
       navigate("/store");
     } catch (err) {
       console.error("Place order failed:", err);
-      setError("Failed to place order. Please try again.");
+      setError(t.placeOrderError);
     } finally {
       setProcessing(false);
     }
@@ -61,7 +65,7 @@ export default function CheckoutPage() {
           <ArrowLeft size={20} />
         </button>
         <h1 className="text-xl font-bold" style={{ color: textColor }}>
-          Checkout
+          {t.title}
         </h1>
       </div>
 
@@ -72,7 +76,7 @@ export default function CheckoutPage() {
           style={{ backgroundColor: secondaryBgColor }}
         >
           <h2 className="font-semibold mb-4" style={{ color: textColor }}>
-            Order Summary
+            {t.orderSummary}
           </h2>
 
           <div className="space-y-3">
@@ -101,7 +105,7 @@ export default function CheckoutPage() {
                       {item.drug.name}
                     </p>
                     <p className="text-xs" style={{ color: hintColor }}>
-                      Qty: {item.quantity}
+                      {t.qty} {item.quantity}
                     </p>
                   </div>
                 </div>
@@ -118,15 +122,15 @@ export default function CheckoutPage() {
             style={{ borderColor: `${hintColor}30` }}
           >
             <div className="flex justify-between text-sm">
-              <span style={{ color: hintColor }}>Subtotal</span>
+              <span style={{ color: hintColor }}>{t.subtotal}</span>
               <span style={{ color: textColor }}>${(totalPrice / 100).toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span style={{ color: hintColor }}>Delivery</span>
-              <span style={{ color: linkColor }}>Free</span>
+              <span style={{ color: hintColor }}>{t.delivery}</span>
+              <span style={{ color: linkColor }}>{t.free}</span>
             </div>
             <div className="flex justify-between text-lg font-bold pt-2">
-              <span style={{ color: textColor }}>Total</span>
+              <span style={{ color: textColor }}>{t.total}</span>
               <span style={{ color: linkColor }}>${(totalPrice / 100).toFixed(2)}</span>
             </div>
           </div>
@@ -141,10 +145,10 @@ export default function CheckoutPage() {
             <Send size={20} style={{ color: linkColor }} />
             <div>
               <p className="font-medium" style={{ color: textColor }}>
-                Telegram Payment
+                {t.telegramPayment}
               </p>
               <p className="text-sm" style={{ color: hintColor }}>
-                Invoice will be sent to your Telegram chat
+                {t.invoiceInfo}
               </p>
             </div>
           </div>
@@ -165,7 +169,7 @@ export default function CheckoutPage() {
           loading={processing}
           onClick={handlePlaceOrder}
         >
-          Place Order - ${(totalPrice / 100).toFixed(2)}
+          {t.placeOrder} - ${(totalPrice / 100).toFixed(2)}
         </Button>
       </div>
     </SafeArea>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { LogOut, ListOrdered } from "lucide-react";
+import { LogOut, MoreVertical } from "lucide-react";
 
 import { drugsApi } from "../../api/endpoints/drugs.api";
 import type {
@@ -8,6 +8,7 @@ import type {
   DrugType,
   Brand,
   Category,
+  CountryOfOrigin,
 } from "../../api/types/drug.types";
 import { useBasket } from "../../context/BasketContext";
 import { useAuth } from "../../context/AuthContext";
@@ -17,7 +18,31 @@ import SearchBar from "./components/SearchBar";
 import FilterSheet from "./components/FilterSheet";
 import ProductGrid from "./components/ProductGrid";
 import BasketButton from "../../components/basket/BasketButton";
-import { useNavigate } from "react-router-dom";
+import Navbar from "@/components/ui/Navbar";
+import { useLang } from "@/context/LangContext";
+import getUnicodeFlagIcon from "country-flag-icons/unicode";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
+import Background from "@/components/ui/Background";
+
+interface FlagType {
+  lang: CountryOfOrigin;
+  flag: string;
+}
+
+const flagsArr: FlagType[] = [
+  { lang: "ENG", flag: getUnicodeFlagIcon("US") },
+  { lang: "RUS", flag: getUnicodeFlagIcon("RU") },
+  { lang: "UKR", flag: getUnicodeFlagIcon("UA") },
+];
 
 export default function StorePage() {
   const [drugs, setDrugs] = useState<Drug[]>([]);
@@ -30,12 +55,15 @@ export default function StorePage() {
   const [filters, setFilters] = useState<DrugFilters>({});
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
-  const navigate = useNavigate();
+  const { language, changeLang } = useLang();
+  const initialFlag = flagsArr.find((l) => l.lang === language);
+  const [flag, setFlag] = useState<FlagType>(
+    initialFlag ?? { lang: "ENG", flag: getUnicodeFlagIcon("US") },
+  );
   const { basketCount } = useBasket();
   const { logout } = useAuth();
 
-  const { bgColor, secondaryBgColor, hintColor, textColor } = useTelegramTheme();
+  const { secondaryBgColor, hintColor } = useTelegramTheme();
 
   const hasMore = page < totalPages - 1;
 
@@ -110,59 +138,90 @@ export default function StorePage() {
     : drugs;
 
   return (
-    <SafeArea
-      className="min-h-screen flex flex-col"
-      style={{ backgroundColor: bgColor }}
-      bottom={false}
-    >
-      {/* Top Bar */}
-      <div
-        className="sticky top-0 z-20 backdrop-blur-sm border-b"
-        style={{ backgroundColor: `${secondaryBgColor}ee`, borderColor: `${hintColor}30` }}
-      >
-        <div className="px-3 py-3 flex items-center gap-2">
-          <SearchBar
-            value={searchQuery}
-            onChange={setSearchQuery}
-            onFilterClick={() => setShowFilters(true)}
-          />
-          <BasketButton count={basketCount} />
-          <button
-            onClick={logout}
-            className="p-2.5 rounded-xl"
-            style={{ backgroundColor: secondaryBgColor }}
-            title="Logout"
-          >
-            <LogOut size={20} style={{ color: "#ef4444" }} />
-          </button>
-
-          <button onClick={() => navigate("/orders")} className="p-2.5 rounded-xl" style={{ backgroundColor: secondaryBgColor }}>
-            <ListOrdered size={20} style={{ color: textColor }} /></button>
+    <SafeArea className="min-h-screen flex flex-col" bottom={false}>
+      <Background />
+      <div className="relative z-10 flex flex-col min-h-screen">
+        {/* Top Bar */}
+        <div
+          className="sticky top-0 z-20 backdrop-blur-sm border-b"
+          style={{
+            backgroundColor: `${secondaryBgColor}`,
+            borderColor: `${hintColor}30`,
+          }}
+        >
+          <div className="px-3 py-3 flex items-center gap-2 ">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              onFilterClick={() => setShowFilters(true)}
+            />
+            <BasketButton count={basketCount} />
+            {/* More menu: language + logout */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="p-2.5 rounded-xl flex-shrink-0"
+                  style={{ backgroundColor: secondaryBgColor }}
+                >
+                  <MoreVertical size={20} style={{ color: hintColor }} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel className="text-xs opacity-60">
+                  Language
+                </DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={flag.lang}>
+                  {flagsArr.map((f, key) => (
+                    <DropdownMenuRadioItem
+                      key={key}
+                      onClick={() => {
+                        setFlag({ lang: f.lang, flag: f.flag });
+                        changeLang(f.lang);
+                      }}
+                      value={f.lang}
+                    >
+                      {f.flag} {f.lang}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={logout}
+                  className="text-red-400 focus:text-red-400"
+                >
+                  <LogOut size={16} className="mr-2" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
-      {/*  */}
-      {/* Product Grid */}
-      <div className="flex-1 overflow-y-auto pb-safe">
-        <ProductGrid
-          drugs={filteredDrugs}
-          loading={loading}
-          hasMore={hasMore && !searchQuery}
-          onLoadMore={handleLoadMore}
-          hintColor={hintColor}
-          secondaryBgColor={secondaryBgColor}
-        />
-      </div>
+        {/*  */}
+        {/* Product Grid */}
+        <div className="flex-1 overflow-y-auto pb-safe">
+          <ProductGrid
+            drugs={filteredDrugs}
+            loading={loading}
+            hasMore={hasMore && !searchQuery}
+            onLoadMore={handleLoadMore}
+            hintColor={hintColor}
+            secondaryBgColor={secondaryBgColor}
+          />
+        </div>
 
-      {/* Filter Bottom Sheet */}
-      <FilterSheet
-        open={showFilters}
-        onClose={() => setShowFilters(false)}
-        types={types}
-        brands={brands}
-        categories={categories}
-        currentFilters={filters}
-        onApply={handleFilterChange}
-      />
+        {/* Filter Bottom Sheet */}
+        <FilterSheet
+          open={showFilters}
+          onClose={() => setShowFilters(false)}
+          types={types}
+          brands={brands}
+          categories={categories}
+          currentFilters={filters}
+          onApply={handleFilterChange}
+        />
+
+        <Navbar></Navbar>
+      </div>
     </SafeArea>
   );
 }

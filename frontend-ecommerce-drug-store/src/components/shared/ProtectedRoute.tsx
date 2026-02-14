@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Navbar from '../ui/Navbar';
 
 export default function ProtectedRoute() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -21,5 +22,10 @@ export default function ProtectedRoute() {
     return <Navigate to="/auth/login" state={{ from: location }} replace />;
   }
 
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <Navbar />
+    </>
+  );
 }

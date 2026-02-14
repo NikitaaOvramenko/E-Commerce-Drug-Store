@@ -3,6 +3,8 @@ import { Package, ChevronDown, ChevronUp, Send } from "lucide-react";
 import type { orderDto, orderStatus } from "../../api/types/order.types";
 import { orderApi } from "../../api/endpoints/order.api";
 import { useTelegramTheme } from "../../hooks/useTelegramTheme";
+import { useLang } from "../../context/LangContext";
+import { translations } from "../../i18n/translations";
 import { Button } from "../../components/ui/Button";
 
 const statusColors: Record<orderStatus, string> = {
@@ -12,15 +14,6 @@ const statusColors: Record<orderStatus, string> = {
   SHIPPED: "#8b5cf6",
   DELIVERED: "#10b981",
   CANCELLED: "#ef4444",
-};
-
-const statusLabels: Record<orderStatus, string> = {
-  CHECKOUT: "Checkout",
-  PENDING_PAYMENT: "Pending Payment",
-  PAID: "Paid",
-  SHIPPED: "Shipped",
-  DELIVERED: "Delivered",
-  CANCELLED: "Cancelled",
 };
 
 interface OrderCardProps {
@@ -34,6 +27,8 @@ export default function OrderCard({ order, onOrderUpdated }: OrderCardProps) {
   const [error, setError] = useState<string | null>(null);
   const { secondaryBgColor, textColor, hintColor, linkColor } =
     useTelegramTheme();
+  const { language } = useLang();
+  const t = translations[language].orderCard;
 
   const statusColor = statusColors[order.orderStatus] || hintColor;
   const isCheckout = order.orderStatus === "CHECKOUT";
@@ -45,7 +40,7 @@ export default function OrderCard({ order, onOrderUpdated }: OrderCardProps) {
       await orderApi.placeOrder(order.id);
       onOrderUpdated();
     } catch {
-      setError("Failed to place order");
+      setError(t.placeOrderError);
     } finally {
       setPlacing(false);
     }
@@ -65,14 +60,14 @@ export default function OrderCard({ order, onOrderUpdated }: OrderCardProps) {
           <div className="flex items-center gap-2">
             <Package size={18} style={{ color: hintColor }} />
             <span className="font-semibold" style={{ color: textColor }}>
-              Order #{order.id}
+              {t.order} #{order.id}
             </span>
           </div>
           <span
             className="text-xs font-medium px-2.5 py-1 rounded-full"
             style={{ backgroundColor: `${statusColor}20`, color: statusColor }}
           >
-            {statusLabels[order.orderStatus]}
+            {t.status[order.orderStatus]}
           </span>
         </div>
 
@@ -133,7 +128,7 @@ export default function OrderCard({ order, onOrderUpdated }: OrderCardProps) {
                       {item.drugName}
                     </p>
                     <p className="text-xs" style={{ color: hintColor }}>
-                      Qty: {item.quantity}
+                      {t.qty} {item.quantity}
                     </p>
                   </div>
                   <span
@@ -153,14 +148,14 @@ export default function OrderCard({ order, onOrderUpdated }: OrderCardProps) {
               <div className="flex items-center gap-2 mb-3">
                 <Send size={16} style={{ color: linkColor }} />
                 <p className="text-xs" style={{ color: hintColor }}>
-                  Invoice will be sent to your Telegram chat
+                  {t.invoiceInfo}
                 </p>
               </div>
               {error && (
                 <p className="text-red-400 text-xs text-center">{error}</p>
               )}
               <Button fullWidth loading={placing} onClick={handlePlaceOrder}>
-                Place Order - ${(order.totalPrice / 100).toFixed(2)}
+                {t.placeOrder} - ${(order.totalPrice / 100).toFixed(2)}
               </Button>
             </div>
           )}

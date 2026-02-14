@@ -6,6 +6,7 @@ import { useTelegramTheme } from "../../../hooks/useTelegramTheme";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useLang } from "@/context/LangContext";
+import { translations } from "@/i18n/translations";
 
 interface ProductCardProps {
   drug: Drug;
@@ -37,13 +38,13 @@ export default function ProductCard({ drug }: ProductCardProps) {
 
   return (
     <Card
-      style={{ backgroundColor: secondaryBgColor }}
-      className="overflow-hidden gap-0 p-0 group relative"
+      // style={{ backgroundColor: secondaryBgColor }}
+      className={`overflow-hidden gap-0 p-0 group bg-[${secondaryBgColor}]/50  backdrop-blur-xl relative`}
     >
       {/* Favorite */}
       <button
         onClick={handleFavorite}
-        className="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-black/50 backdrop-blur-sm transition-transform active:scale-90"
+        className="absolute top-2 right-2 z-10 p-1.5 rounded-full backdrop-blur-sm transition-transform active:scale-90"
       >
         <Heart
           size={14}
@@ -54,8 +55,8 @@ export default function ProductCard({ drug }: ProductCardProps) {
 
       {/* Image */}
       <div
-        className="aspect-square p-2 overflow-hidden"
-        style={{ backgroundColor: `${hintColor}15` }}
+        className="aspect-square  p-2 overflow-hidden"
+        // style={{ backgroundColor: `${hintColor}15` }}
       >
         <img
           src={drug.img || "/placeholder-drug.png"}

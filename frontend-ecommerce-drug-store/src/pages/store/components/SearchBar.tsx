@@ -1,5 +1,7 @@
 import { Search, SlidersHorizontal } from "lucide-react";
 import { useTelegramTheme } from "../../../hooks/useTelegramTheme";
+import { useLang } from "../../../context/LangContext";
+import { translations } from "../../../i18n/translations";
 
 interface SearchBarProps {
   value: string;
@@ -9,6 +11,8 @@ interface SearchBarProps {
 
 export default function SearchBar({ value, onChange, onFilterClick }: SearchBarProps) {
   const { secondaryBgColor, textColor, hintColor } = useTelegramTheme();
+  const { language } = useLang();
+  const t = translations[language].store;
 
   return (
     <div className="flex items-center gap-2 flex-1">
@@ -20,7 +24,7 @@ export default function SearchBar({ value, onChange, onFilterClick }: SearchBarP
         <Search size={18} className="flex-shrink-0" style={{ color: hintColor }} />
         <input
           type="text"
-          placeholder="Search products..."
+          placeholder={t.searchPlaceholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className="flex-1 bg-transparent outline-none text-sm min-w-0"

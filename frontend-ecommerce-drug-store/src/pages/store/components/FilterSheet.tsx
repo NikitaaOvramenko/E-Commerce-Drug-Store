@@ -7,7 +7,14 @@ import type {
   DrugFilters,
 } from "../../../api/types/drug.types";
 import { useTelegramTheme } from "../../../hooks/useTelegramTheme";
-import BottomSheet from "../../../components/ui/BottomSheet";
+import { useLang } from "../../../context/LangContext";
+import { translations } from "../../../i18n/translations";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "../../../components/ui/drawer";
 import { Button } from "../../../components/ui/Button";
 
 interface FilterSheetProps {
@@ -45,6 +52,8 @@ export default function FilterSheet({
     buttonTextColor,
     secondaryBgColor,
   } = useTelegramTheme();
+  const { language } = useLang();
+  const t = translations[language].filters;
 
   // Reset local state when filters prop changes
   useEffect(() => {
@@ -81,20 +90,15 @@ export default function FilterSheet({
     sortBy !== "id";
 
   return (
-    <BottomSheet open={open} onClose={onClose} height="auto">
-      <div className="p-5 pb-8 max-h-[80vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold" style={{ color: textColor }}>
-            Filters
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-1 rounded-lg transition-colors"
-          >
+    <Drawer open={open} onOpenChange={(o) => !o && onClose()}>
+      <DrawerContent className="max-h-[90vh]">
+        <DrawerHeader className="flex-row items-center justify-between text-left pb-2">
+          <DrawerTitle style={{ color: textColor }}>{t.title}</DrawerTitle>
+          <button onClick={onClose} className="p-1 rounded-lg">
             <X size={24} style={{ color: hintColor }} />
           </button>
-        </div>
+        </DrawerHeader>
+        <div className="px-5 pb-8 overflow-y-auto">
 
         {/* Type Filter */}
         {types.length > 0 && (
@@ -103,11 +107,11 @@ export default function FilterSheet({
               className="text-sm font-medium mb-3"
               style={{ color: hintColor }}
             >
-              Type
+              {t.type}
             </h3>
             <div className="flex flex-wrap gap-2">
               <Chip
-                label="All"
+                label={t.all}
                 selected={selectedType === 0}
                 onClick={() => setSelectedType(0)}
                 buttonColor={buttonColor}
@@ -138,11 +142,11 @@ export default function FilterSheet({
               className="text-sm font-medium mb-3"
               style={{ color: hintColor }}
             >
-              Brand
+              {t.brand}
             </h3>
             <div className="flex flex-wrap gap-2">
               <Chip
-                label="All"
+                label={t.all}
                 selected={selectedBrand === 0}
                 onClick={() => setSelectedBrand(0)}
                 buttonColor={buttonColor}
@@ -173,11 +177,11 @@ export default function FilterSheet({
               className="text-sm font-medium mb-3"
               style={{ color: hintColor }}
             >
-              Category
+              {t.category}
             </h3>
             <div className="flex flex-wrap gap-2">
               <Chip
-                label="All"
+                label={t.all}
                 selected={selectedCategory === 0}
                 onClick={() => setSelectedCategory(0)}
                 buttonColor={buttonColor}
@@ -204,11 +208,11 @@ export default function FilterSheet({
         {/* Sort Options */}
         <div className="mb-8">
           <h3 className="text-sm font-medium mb-3" style={{ color: hintColor }}>
-            Sort By
+            {t.sortBy}
           </h3>
           <div className="flex flex-wrap gap-2">
             <Chip
-              label="Default"
+              label={t.default}
               selected={sortBy === "id"}
               onClick={() => {
                 setSortBy("id");
@@ -220,7 +224,7 @@ export default function FilterSheet({
               textColor={textColor}
             />
             <Chip
-              label="Name A-Z"
+              label={t.nameAZ}
               selected={sortBy === "name" && ascending}
               onClick={() => {
                 setSortBy("name");
@@ -232,7 +236,7 @@ export default function FilterSheet({
               textColor={textColor}
             />
             <Chip
-              label="Name Z-A"
+              label={t.nameZA}
               selected={sortBy === "name" && !ascending}
               onClick={() => {
                 setSortBy("name");
@@ -244,7 +248,7 @@ export default function FilterSheet({
               textColor={textColor}
             />
             <Chip
-              label="Price: Low to High"
+              label={t.priceLow}
               selected={sortBy === "price" && ascending}
               onClick={() => {
                 setSortBy("price");
@@ -256,7 +260,7 @@ export default function FilterSheet({
               textColor={textColor}
             />
             <Chip
-              label="Price: High to Low"
+              label={t.priceHigh}
               selected={sortBy === "price" && !ascending}
               onClick={() => {
                 setSortBy("price");
@@ -278,14 +282,15 @@ export default function FilterSheet({
             disabled={!hasActiveFilters}
             className="flex-1"
           >
-            Reset
+            {t.reset}
           </Button>
           <Button onClick={handleApply} className="flex-1">
-            Apply Filters
+            {t.apply}
           </Button>
         </div>
-      </div>
-    </BottomSheet>
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
 }
 
