@@ -5,6 +5,7 @@ import { useFavorites } from "../../../context/FavoritesContext";
 import { useTelegramTheme } from "../../../hooks/useTelegramTheme";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { useLang } from "@/context/LangContext";
 
 interface ProductCardProps {
   drug: Drug;
@@ -12,6 +13,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ drug }: ProductCardProps) {
   const { addToBasket } = useBasket();
+  const { language, findByLang } = useLang();
   const { isFavorite, toggleFavorite } = useFavorites();
   const {
     buttonColor,
@@ -51,7 +53,10 @@ export default function ProductCard({ drug }: ProductCardProps) {
       </button>
 
       {/* Image */}
-      <div className="aspect-square p-2 overflow-hidden" style={{ backgroundColor: `${hintColor}15` }}>
+      <div
+        className="aspect-square p-2 overflow-hidden"
+        style={{ backgroundColor: `${hintColor}15` }}
+      >
         <img
           src={drug.img || "/placeholder-drug.png"}
           alt={drug.name}
@@ -68,14 +73,27 @@ export default function ProductCard({ drug }: ProductCardProps) {
         {/* Rating */}
         <div className="flex items-center gap-1">
           <Star size={12} className="text-yellow-400 fill-yellow-400" />
-          <span className="text-xs" style={{ color: hintColor }}>4.5</span>
+          <span className="text-xs" style={{ color: hintColor }}>
+            4.5
+          </span>
         </div>
 
         {/* Name */}
-        <h3 className="text-xs font-medium line-clamp-2 leading-tight min-h-8" style={{ color: textColor }}>
-          {drug.name}
+        <h3
+          className="text-xs font-medium line-clamp-2 leading-tight min-h-8"
+          style={{ color: textColor }}
+        >
+          {findByLang(language, drug.drugInfoDto)?.title}
         </h3>
 
+        {findByLang(language, drug.drugInfoDto)?.sm_description && (
+          <p
+            className="text-[10px] overflow-x-auto whitespace-nowrap text-clip "
+            style={{ color: hintColor }}
+          >
+            {findByLang(language, drug.drugInfoDto)?.sm_description}
+          </p>
+        )}
         {/* Brand */}
         {drug.brandName && (
           <p className="text-[10px] truncate" style={{ color: hintColor }}>

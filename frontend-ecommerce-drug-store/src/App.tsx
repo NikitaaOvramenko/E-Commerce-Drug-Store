@@ -24,59 +24,65 @@ import BasketSheet from "./components/basket/BasketSheet";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
 import AdminRoute from "./components/shared/AdminRoute";
 import OrdersPage from "./pages/orders/OrdersPage";
+import { LangContextProvider } from "./context/LangContext";
 
 function App() {
   window.Telegram?.WebApp?.ready();
   return (
-    <AuthProvider>
-      <BasketProvider>
-        <FavoritesProvider>
-          <BrowserRouter>
-            <Routes>
-              {/* Auth Routes (Public) */}
-              <Route path="auth">
-                <Route path="login" element={<LoginPage />} />
-                <Route path="sign_up" element={<RegisterPage />} />
-              </Route>
-
-              {/* Protected Routes */}
-              <Route element={<ProtectedRoute />}>
-                <Route path="store" element={<StorePage />} />
-                <Route path="checkout" element={<CheckoutPage />} />
-                <Route path="orders" element={<OrdersPage />} />
-              </Route>
-
-              {/* Admin Routes */}
-              <Route element={<AdminRoute />}>
-                <Route path="admin" element={<AdminLayout />}>
-                  <Route
-                    index
-                    element={<Navigate to="/admin/drugs" replace />}
-                  />
-                  <Route path="drugs" element={<AdminDrugsPage />} />
-                  <Route path="drugs/new" element={<AdminDrugFormPage />} />
-                  <Route path="drugs/:id" element={<AdminDrugFormPage />} />
-                  <Route path="types" element={<AdminTypesPage />} />
-                  <Route path="brands" element={<AdminBrandsPage />} />
-                  <Route path="categories" element={<AdminCategoriesPage />} />
+    <LangContextProvider>
+      <AuthProvider>
+        <BasketProvider>
+          <FavoritesProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* Auth Routes (Public) */}
+                <Route path="auth">
+                  <Route path="login" element={<LoginPage />} />
+                  <Route path="sign_up" element={<RegisterPage />} />
                 </Route>
-              </Route>
 
-              {/* Default Redirects */}
-              <Route path="/" element={<Navigate to="/store" replace />} />
-              <Route
-                path="/dashboard/*"
-                element={<Navigate to="/store" replace />}
-              />
-              <Route path="*" element={<Navigate to="/store" replace />} />
-            </Routes>
+                {/* Protected Routes */}
+                <Route element={<ProtectedRoute />}>
+                  <Route path="store" element={<StorePage />} />
+                  <Route path="checkout" element={<CheckoutPage />} />
+                  <Route path="orders" element={<OrdersPage />} />
+                </Route>
 
-            {/* Global Basket Sheet */}
-            <BasketSheet />
-          </BrowserRouter>
-        </FavoritesProvider>
-      </BasketProvider>
-    </AuthProvider>
+                {/* Admin Routes */}
+                <Route element={<AdminRoute />}>
+                  <Route path="admin" element={<AdminLayout />}>
+                    <Route
+                      index
+                      element={<Navigate to="/admin/drugs" replace />}
+                    />
+                    <Route path="drugs" element={<AdminDrugsPage />} />
+                    <Route path="drugs/new" element={<AdminDrugFormPage />} />
+                    <Route path="drugs/:id" element={<AdminDrugFormPage />} />
+                    <Route path="types" element={<AdminTypesPage />} />
+                    <Route path="brands" element={<AdminBrandsPage />} />
+                    <Route
+                      path="categories"
+                      element={<AdminCategoriesPage />}
+                    />
+                  </Route>
+                </Route>
+
+                {/* Default Redirects */}
+                <Route path="/" element={<Navigate to="/store" replace />} />
+                <Route
+                  path="/dashboard/*"
+                  element={<Navigate to="/store" replace />}
+                />
+                <Route path="*" element={<Navigate to="/store" replace />} />
+              </Routes>
+
+              {/* Global Basket Sheet */}
+              <BasketSheet />
+            </BrowserRouter>
+          </FavoritesProvider>
+        </BasketProvider>
+      </AuthProvider>
+    </LangContextProvider>
   );
 }
 
