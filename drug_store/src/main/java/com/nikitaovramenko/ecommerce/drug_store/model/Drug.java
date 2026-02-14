@@ -35,7 +35,7 @@ public class Drug {
     @OneToMany(mappedBy = "drug")
     private List<BasketDrug> basketDrugs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "drug", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "drug", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DrugInfo> drugInfos = new ArrayList<>();
 
     @OneToMany(mappedBy = "drug", cascade = CascadeType.ALL)

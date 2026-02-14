@@ -1,22 +1,24 @@
 package com.nikitaovramenko.ecommerce.drug_store.mapper;
 
-import java.util.List;
-
 import org.springframework.stereotype.Component;
 
 import com.nikitaovramenko.ecommerce.drug_store.dto.DrugDto;
-import com.nikitaovramenko.ecommerce.drug_store.model.Brand;
 import com.nikitaovramenko.ecommerce.drug_store.model.Drug;
-import com.nikitaovramenko.ecommerce.drug_store.model.Rating;
-import com.nikitaovramenko.ecommerce.drug_store.model.Type;
 
 @Component
 public class DrugMapper {
+
+    private final DrugInfoMapper drugInfoMapper;
+
+    public DrugMapper(DrugInfoMapper drugInfoMapper) {
+        this.drugInfoMapper = drugInfoMapper;
+    }
 
     public Drug toDrug(DrugDto drugDto) {
 
         Drug drug = new Drug();
 
+        drug.setDrugInfos(drugDto.getDrugInfoDto().stream().map(drugInfoMapper::toEntity).toList());
         drug.setName(drugDto.getName());
         drug.setPrice(drugDto.getPrice());
         drug.setStock(drugDto.getStock());
@@ -38,6 +40,7 @@ public class DrugMapper {
         dto.setTypeName(drug.getType().getName());
         dto.setBrandId(drug.getBrand().getId());
         dto.setTypeId(drug.getType().getId());
+        dto.setDrugInfoDto(drug.getDrugInfos().stream().map(drugInfoMapper::toDto).toList());
 
         return dto;
 

@@ -8,6 +8,8 @@ export interface Drug {
   brandId: number;
   typeName: string;
   brandName: string;
+  drugInfoDto:DrugInfo[]
+ 
 }
 
 export interface DrugPage {
@@ -55,6 +57,7 @@ export interface CreateDrugRequest {
   img: string;
   typeId: number;
   brandId: number;
+  drugInfoDto:DrugInfo[]
 }
 
 export interface UpdateDrugRequest {
@@ -64,6 +67,7 @@ export interface UpdateDrugRequest {
   img?: string;
   typeId?: number;
   brandId?: number;
+  drugInfoDto:DrugInfo[]
 }
 
 export interface CreateTypeRequest {
@@ -82,4 +86,24 @@ export interface CreateCategoryRequest {
 
 export interface UrlResponse {
   url:string
+}
+
+export type CountryOfOrigin = "ENG" | "UKR" | "RUS"
+
+export interface DrugInfo {
+  title:string
+  manufacturer:""
+  lang:CountryOfOrigin
+  description_md:string
+  sm_description:string
+  barcode:string
+  sku:string
+  dosageForm:string
+  volume:string
+  activeIngredient:string
+  strength:string
+  countryOfOrigin:""
+  storageCondition: string
+  ageRestriction:number
+  
 }

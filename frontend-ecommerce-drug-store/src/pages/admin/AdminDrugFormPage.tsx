@@ -8,9 +8,13 @@ import type {
   DrugType,
   Brand,
   CreateDrugRequest,
+  DrugInfo,
 } from "../../api/types/drug.types";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function AdminDrugFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -33,6 +37,56 @@ export default function AdminDrugFormPage() {
     img: "",
     typeId: 0,
     brandId: 0,
+    drugInfoDto: [
+      {
+        title: "",
+        manufacturer: "",
+        lang: "ENG",
+        description_md: "",
+        sm_description: "",
+        barcode: "",
+        sku: "",
+        dosageForm: "",
+        volume: "",
+        activeIngredient: "",
+        strength: "",
+        countryOfOrigin: "",
+        storageCondition: "",
+        ageRestriction: 0,
+      },
+      {
+        title: "",
+        manufacturer: "",
+        lang: "RUS",
+        description_md: "",
+        sm_description: "",
+        barcode: "",
+        sku: "",
+        dosageForm: "",
+        volume: "",
+        activeIngredient: "",
+        strength: "",
+        countryOfOrigin: "",
+        storageCondition: "",
+        ageRestriction: 0,
+      },
+      {
+        title: "",
+        manufacturer: "",
+        lang: "UKR",
+        description_md: "",
+        sm_description: "",
+        barcode: "",
+        sku: "",
+        dosageForm: "",
+        volume: "",
+        activeIngredient: "",
+        strength: "",
+        countryOfOrigin: "",
+        storageCondition: "",
+        ageRestriction: 0,
+      },
+    ],
   });
 
   // Load types and brands
@@ -67,6 +121,7 @@ export default function AdminDrugFormPage() {
             img: drug.img,
             typeId: drug.typeId,
             brandId: drug.brandId,
+            drugInfoDto: drug.drugInfoDto,
           });
         })
         .catch((error) => {
@@ -128,6 +183,21 @@ export default function AdminDrugFormPage() {
     value: string | number,
   ) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleInfoChange = (
+    field: keyof DrugInfo,
+    value: string | number,
+    lang: string,
+  ) => {
+    setForm((prev) => ({
+      ...prev,
+      drugInfoDto: prev.drugInfoDto.map((info) =>
+        info.lang === lang ? { ...info, [field]: value } : info,
+      ),
+    }));
+
+    console.log(form);
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -334,6 +404,67 @@ export default function AdminDrugFormPage() {
                 ))}
               </select>
             </div>
+          </div>
+
+          {/* Descriptions in different Languages */}
+          <div className="flex flex-col">
+            <Tabs className="self-center" defaultValue="USA">
+              <TabsList variant={"line"}>
+                {form.drugInfoDto.map((info) => (
+                  <TabsTrigger value={info.lang}>{info.lang}</TabsTrigger>
+                ))}
+              </TabsList>
+
+              {form.drugInfoDto.map((info) => (
+                <TabsContent value={info.lang}>
+                  <div className="flex flex-col gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                      {Object.entries(info)
+                        .filter(
+                          ([field]) =>
+                            field != "lang" && field != "description_md",
+                        )
+                        .map(([field, val]) => (
+                          <div className="flex flex-col gap-4">
+                            <Label>{field}</Label>
+                            <Input
+                              onChange={(e) => {
+                                if (field === "ageRestriction") {
+                                  handleInfoChange(
+                                    field as keyof DrugInfo,
+                                    Number(e.target.value),
+                                    info.lang,
+                                  );
+                                } else {
+                                  handleInfoChange(
+                                    field as keyof DrugInfo,
+                                    e.target.value,
+                                    info.lang,
+                                  );
+                                }
+                              }}
+                              value={val}
+                              placeholder={field}
+                              type="text"
+                            ></Input>
+                          </div>
+                        ))}
+                    </div>
+
+                    <div className="flex flex-col description gap-4">
+                      <Label>Description in: {info.lang}</Label>
+                      <Textarea
+                        value={info.description_md}
+                        onChange={(e) => {
+                          const key: keyof DrugInfo = "description_md";
+                          handleInfoChange(key, e.target.value, info.lang);
+                        }}
+                      ></Textarea>
+                    </div>
+                  </div>
+                </TabsContent>
+              ))}
+            </Tabs>
           </div>
         </div>
 

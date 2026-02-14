@@ -1,5 +1,7 @@
 package com.nikitaovramenko.ecommerce.drug_store.dto;
 
+import java.util.List;
+
 public class DrugDto {
     private Long id;
     private String name;
@@ -10,6 +12,7 @@ public class DrugDto {
     private Long brandId;
     private String typeName;
     private String brandName;
+    private List<DrugInfoDto> drugInfoDto;
 
     public DrugDto() {
     }
@@ -84,6 +87,14 @@ public class DrugDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<DrugInfoDto> getDrugInfoDto() {
+        return drugInfoDto;
+    }
+
+    public void setDrugInfoDto(List<DrugInfoDto> drugInfoDto) {
+        this.drugInfoDto = drugInfoDto;
     }
 
 }

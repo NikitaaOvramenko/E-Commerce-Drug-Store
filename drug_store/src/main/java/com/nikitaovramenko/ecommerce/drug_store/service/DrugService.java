@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import com.nikitaovramenko.ecommerce.drug_store.dto.BrandDto;
 import com.nikitaovramenko.ecommerce.drug_store.dto.DrugDto;
 import com.nikitaovramenko.ecommerce.drug_store.dto.TypeDto;
+import com.nikitaovramenko.ecommerce.drug_store.mapper.DrugInfoMapper;
 import com.nikitaovramenko.ecommerce.drug_store.mapper.DrugMapper;
 import com.nikitaovramenko.ecommerce.drug_store.model.Brand;
 import com.nikitaovramenko.ecommerce.drug_store.model.Drug;
+import com.nikitaovramenko.ecommerce.drug_store.model.DrugInfo;
 import com.nikitaovramenko.ecommerce.drug_store.model.Rating;
 import com.nikitaovramenko.ecommerce.drug_store.model.Type;
 import com.nikitaovramenko.ecommerce.drug_store.repository.BrandRepository;
@@ -28,14 +30,16 @@ public class DrugService {
     private final BrandRepository brandRepository;
     private final DrugMapper drugMapper;
     private final RatingService ratingService;
+    private final DrugInfoMapper drugInfoMapper;
 
     public DrugService(DrugRepository drugRepository, TypeRepository typeRepository, BrandRepository brandRepository,
-            DrugMapper drugMapper, RatingService ratingService) {
+            DrugMapper drugMapper, RatingService ratingService, DrugInfoMapper drugInfoMapper) {
         this.drugRepository = drugRepository;
         this.drugMapper = drugMapper;
         this.ratingService = ratingService;
         this.typeRepository = typeRepository;
         this.brandRepository = brandRepository;
+        this.drugInfoMapper = drugInfoMapper;
     }
 
     public DrugDto createDrug(DrugDto dto) {
@@ -44,12 +48,16 @@ public class DrugService {
 
         Type type = typeRepository.getReferenceById(dto.getTypeId());
         Brand brand = brandRepository.getReferenceById(dto.getBrandId());
-
         Drug drug = drugMapper.toDrug(dto);
 
         drug.setRatings(ratings);
         drug.setType(type);
         drug.setBrand(brand);
+
+        // Set back-reference on each DrugInfo
+        for (DrugInfo info : drug.getDrugInfos()) {
+            info.setDrug(drug);
+        }
 
         Drug saved = drugRepository.save(drug);
 
@@ -96,6 +104,18 @@ public class DrugService {
         existing.setPrice(dto.getPrice());
         existing.setStock(dto.getStock());
         existing.setImg(dto.getImg());
+
+        // Update drugInfos if provided
+        if (dto.getDrugInfoDto() != null) {
+            existing.getDrugInfos().clear();
+            List<DrugInfo> newInfos = dto.getDrugInfoDto().stream()
+                    .map(drugInfoMapper::toEntity)
+                    .toList();
+            for (DrugInfo info : newInfos) {
+                info.setDrug(existing);
+            }
+            existing.getDrugInfos().addAll(newInfos);
+        }
 
         // Update type and brand if provided
         if (dto.getTypeId() != null) {
