@@ -6,7 +6,6 @@ import { useTelegramTheme } from "../../../hooks/useTelegramTheme";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useLang } from "@/context/LangContext";
-import { translations } from "@/i18n/translations";
 
 interface ProductCardProps {
   drug: Drug;

@@ -110,7 +110,7 @@ export default function OrderCard({ order, onOrderUpdated }: OrderCardProps) {
                 >
                   {/* Drug image */}
                   <div
-                    className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0"
+                    className="w-10 h-10 rounded-lg overflow-hidden shrink-0"
                     style={{ backgroundColor: `${hintColor}20` }}
                   >
                     <img
@@ -132,7 +132,7 @@ export default function OrderCard({ order, onOrderUpdated }: OrderCardProps) {
                     </p>
                   </div>
                   <span
-                    className="text-sm font-medium flex-shrink-0"
+                    className="text-sm font-medium shrink-0"
                     style={{ color: textColor }}
                   >
                     ${((item.priceAtPurchase * item.quantity) / 100).toFixed(2)}

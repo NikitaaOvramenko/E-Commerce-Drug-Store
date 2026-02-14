@@ -9,7 +9,11 @@ interface SearchBarProps {
   onFilterClick: () => void;
 }
 
-export default function SearchBar({ value, onChange, onFilterClick }: SearchBarProps) {
+export default function SearchBar({
+  value,
+  onChange,
+  onFilterClick,
+}: SearchBarProps) {
   const { secondaryBgColor, textColor, hintColor } = useTelegramTheme();
   const { language } = useLang();
   const t = translations[language].store;
@@ -21,7 +25,11 @@ export default function SearchBar({ value, onChange, onFilterClick }: SearchBarP
         className="flex-1 flex items-center gap-2 rounded-xl px-3 py-2.5"
         style={{ backgroundColor: secondaryBgColor }}
       >
-        <Search size={18} className="flex-shrink-0" style={{ color: hintColor }} />
+        <Search
+          size={18}
+          className="flex-shrink-0"
+          style={{ color: hintColor }}
+        />
         <input
           type="text"
           placeholder={t.searchPlaceholder}
