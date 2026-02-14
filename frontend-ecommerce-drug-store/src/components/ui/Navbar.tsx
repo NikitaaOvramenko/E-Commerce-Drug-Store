@@ -21,9 +21,9 @@ const Navbar = () => {
   return (
     <div className="fixed bottom-0 left-0 w-full z-50 flex justify-center">
       <div
-        className={`w-[90%] mb-2 rounded-3xl overflow-hidden backdrop-blur-xl bg-[${secondaryBgColor}] border`}
+        className={`w-[90%] mb-2 rounded-3xl overflow-hidden backdrop-blur-xl  border`}
         style={{
-          // backgroundColor: `${secondaryBgColor}cc`,
+          backgroundColor: `${secondaryBgColor}30`,
           borderColor: `${hintColor}30`,
         }}
       >

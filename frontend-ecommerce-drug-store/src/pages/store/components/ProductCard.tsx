@@ -37,8 +37,8 @@ export default function ProductCard({ drug }: ProductCardProps) {
 
   return (
     <Card
-      // style={{ backgroundColor: secondaryBgColor }}
-      className={`overflow-hidden gap-0 p-0 group bg-[${secondaryBgColor}]/50  backdrop-blur-xl relative`}
+      style={{ backgroundColor: `${secondaryBgColor}50` }}
+      className={`overflow-hidden gap-0 p-0 group   backdrop-blur-xl relative`}
     >
       {/* Favorite */}
       <button

@@ -27,7 +27,7 @@ export default function Background() {
         minWidth: 200.0,
         scale: 1,
         scaleMobile: 1.0,
-        color: Number(bgColor),
+        color: parseInt(bgColor.replace("#", ""), 16),
         shininess: 20,
         waveHeight: 20,
         waveSpeed: 0.5,
@@ -40,7 +40,7 @@ export default function Background() {
     return () => {
       if (effectRef.current) effectRef.current.destroy();
     };
-  }, []);
+  }, [bgColor]);
 
   return <div ref={vantaRef} className="vanta z-10 fixed inset-0 " />;
 }
