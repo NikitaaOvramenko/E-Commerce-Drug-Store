@@ -8,6 +8,7 @@ import { translations } from "../../i18n/translations";
 import { orderApi } from "../../api/endpoints/order.api";
 import SafeArea from "../../components/ui/SafeArea";
 import { Button } from "../../components/ui/Button";
+import Background from "../../components/ui/Background";
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearBasket } = useBasket();
@@ -48,10 +49,9 @@ export default function CheckoutPage() {
   if (items.length === 0 || !orderId) return null;
 
   return (
-    <SafeArea
-      className="min-h-screen flex flex-col"
-      style={{ backgroundColor: bgColor }}
-    >
+    <SafeArea className="min-h-screen flex flex-col">
+      <Background />
+      <div className="relative z-10 flex flex-col min-h-screen">
       {/* Header */}
       <div
         className="px-4 py-4 border-b flex items-center gap-3"
@@ -171,6 +171,7 @@ export default function CheckoutPage() {
         >
           {t.placeOrder} - ${(totalPrice / 100).toFixed(2)}
         </Button>
+      </div>
       </div>
     </SafeArea>
   );

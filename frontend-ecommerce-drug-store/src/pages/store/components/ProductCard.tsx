@@ -6,6 +6,7 @@ import { useTelegramTheme } from "../../../hooks/useTelegramTheme";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useLang } from "@/context/LangContext";
+import { Separator } from "@/components/ui/separator";
 
 interface ProductCardProps {
   drug: Drug;
@@ -67,6 +68,7 @@ export default function ProductCard({ drug }: ProductCardProps) {
           }}
         />
       </div>
+      <Separator></Separator>
 
       {/* Details */}
       <CardContent className="p-2.5 space-y-1.5">

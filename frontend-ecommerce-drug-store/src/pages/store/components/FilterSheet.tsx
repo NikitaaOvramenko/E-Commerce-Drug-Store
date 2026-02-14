@@ -51,6 +51,7 @@ export default function FilterSheet({
     buttonColor,
     buttonTextColor,
     secondaryBgColor,
+    bgColor,
   } = useTelegramTheme();
   const { language } = useLang();
   const t = translations[language].filters;
@@ -91,7 +92,7 @@ export default function FilterSheet({
 
   return (
     <Drawer open={open} onOpenChange={(o) => !o && onClose()}>
-      <DrawerContent className="max-h-[90vh]">
+      <DrawerContent className="max-h-[90vh]" style={{ backgroundColor: bgColor }}>
         <DrawerHeader className="flex-row items-center justify-between text-left pb-2">
           <DrawerTitle style={{ color: textColor }}>{t.title}</DrawerTitle>
           <button onClick={onClose} className="p-1 rounded-lg">
