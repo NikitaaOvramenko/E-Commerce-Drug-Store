@@ -7,6 +7,11 @@ interface Translations {
     favorites: string;
     orders: string;
   };
+  favorites: {
+    title: string;
+    empty: string;
+    emptySubtitle: string;
+  };
   store: {
     searchPlaceholder: string;
     productsFound: string;
@@ -73,6 +78,11 @@ export const translations: Record<CountryOfOrigin, Translations> = {
       home: "Home",
       favorites: "Favorites",
       orders: "Orders",
+    },
+    favorites: {
+      title: "Favorites",
+      empty: "No favorites yet",
+      emptySubtitle: "Tap the heart on any product to save it here",
     },
     store: {
       searchPlaceholder: "Search products...",
@@ -147,6 +157,11 @@ export const translations: Record<CountryOfOrigin, Translations> = {
       favorites: "Избранное",
       orders: "Заказы",
     },
+    favorites: {
+      title: "Избранное",
+      empty: "Нет избранных товаров",
+      emptySubtitle: "Нажмите на сердечко на товаре, чтобы сохранить его",
+    },
     store: {
       searchPlaceholder: "Поиск товаров...",
       productsFound: "Найдено товаров",
@@ -219,6 +234,11 @@ export const translations: Record<CountryOfOrigin, Translations> = {
       home: "Головна",
       favorites: "Обране",
       orders: "Замовлення",
+    },
+    favorites: {
+      title: "Обране",
+      empty: "Немає обраних товарів",
+      emptySubtitle: "Натисніть серце на будь-якому товарі, щоб зберегти його",
     },
     store: {
       searchPlaceholder: "Пошук товарів...",

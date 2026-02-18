@@ -24,6 +24,7 @@ import BasketSheet from "./components/basket/BasketSheet";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
 import AdminRoute from "./components/shared/AdminRoute";
 import OrdersPage from "./pages/orders/OrdersPage";
+import FavoritesPage from "./pages/favorites/FavoritesPage";
 import { LangContextProvider } from "./context/LangContext";
 import Background from "./components/ui/Background";
 
@@ -48,6 +49,7 @@ function App() {
                   <Route path="store" element={<StorePage />} />
                   <Route path="checkout" element={<CheckoutPage />} />
                   <Route path="orders" element={<OrdersPage />} />
+                  <Route path="favorites" element={<FavoritesPage />} />
                 </Route>
 
                 {/* Admin Routes */}
