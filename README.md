@@ -1,9 +1,8 @@
-<!-- markdownlint-disable MD033 -->
 # Pharmacy Store — Telegram Mini App
 
 > A full-stack pharmacy e-commerce app built as a **Telegram Mini App**, featuring a real payment flow with Telegram invoices, live order-status sync, an admin panel, and support for three languages.
 
-<video src="readme-media/videos/background.mp4" autoplay loop muted playsinline></video>
+![Banner](readme-media/videos/background.webp)
 
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.7-6DB33F?style=flat&logo=springboot&logoColor=white)
 ![Java](https://img.shields.io/badge/Java-17-ED8B00?style=flat&logo=openjdk&logoColor=white)
@@ -26,7 +25,7 @@ A pharmacy e-commerce store that lives inside Telegram as a Mini App. Users log 
 
 First launch and login flow.
 
-<video src="readme-media/videos/open-app-and-login.mp4" autoplay loop muted playsinline></video>
+![Open app and login](readme-media/videos/open-app-and-login.webp)
 
 ---
 
@@ -34,7 +33,7 @@ First launch and login flow.
 
 Login to the client store and the admin panel simultaneously.
 
-<video src="readme-media/videos/showcasing-login-to-admin-panel-in-left-window-and-login-to-client's-store-account.mp4" autoplay loop muted playsinline></video>
+![Authentication showcase](readme-media/videos/showcasing-login-to-admin-panel-in-left-window-and-login-to-client's-store-account.webp)
 
 ---
 
@@ -42,7 +41,7 @@ Login to the client store and the admin panel simultaneously.
 
 Menus, page transitions, and the overall layout.
 
-<video src="readme-media/videos/opening-all-menus-and-navigating-to-other-pages.mp4" autoplay loop muted playsinline></video>
+![Navigation showcase](readme-media/videos/opening-all-menus-and-navigating-to-other-pages.webp)
 
 ---
 
@@ -50,7 +49,7 @@ Menus, page transitions, and the overall layout.
 
 Real-time search combined with filters for type, brand, and category.
 
-<video src="readme-media/videos/search-bar-and-filter-tab-showcase.mp4" autoplay loop muted playsinline></video>
+![Search and filter showcase](readme-media/videos/search-bar-and-filter-tab-showcase.webp)
 
 ---
 
@@ -58,7 +57,7 @@ Real-time search combined with filters for type, brand, and category.
 
 Save products to a personal favorites list.
 
-<video src="readme-media/videos/favorites-page-showcase.mp4" autoplay loop muted playsinline></video>
+![Favorites showcase](readme-media/videos/favorites-page-showcase.webp)
 
 ---
 
@@ -66,7 +65,7 @@ Save products to a personal favorites list.
 
 Add items to the basket, go through checkout, enter address and payment info, and receive an invoice directly in the Telegram chat.
 
-<video src="readme-media/videos/add-items-to-basket-then-checkout-then-place-order-then-invoice-sent-to-tg-and-showcase-of-credit-entry-and-address.mp4" autoplay loop muted playsinline></video>
+![Basket and checkout showcase](readme-media/videos/add-items-to-basket-then-checkout-then-place-order-then-invoice-sent-to-tg-and-showcase-of-credit-entry-and-address.webp)
 
 ---
 
@@ -74,7 +73,7 @@ Add items to the basket, go through checkout, enter address and payment info, an
 
 Order status shown in the app stays in sync with the Telegram chat — paying in the chat updates the app instantly.
 
-<video src="readme-media/videos/showcase-of-order-page-by-example-of-showing-sync-between-pending-payment-status-in-chat-and-in-the-app-and-also-showing-checkout-in-orders-page-and-showcase-of-placing-order-from-the-order-page.mp4" autoplay loop muted playsinline></video>
+![Orders and payment sync showcase](readme-media/videos/showcase-of-order-page-by-example-of-showing-sync-between-pending-payment-status-in-chat-and-in-the-app-and-also-showing-checkout-in-orders-page-and-showcase-of-placing-order-from-the-order-page.webp)
 
 ---
 
@@ -82,7 +81,7 @@ Order status shown in the app stays in sync with the Telegram chat — paying in
 
 Switch between English, Russian, and Ukrainian — the entire app updates instantly.
 
-<video src="readme-media/videos/showcasing-changing-language-affecting-whole-app.mp4" autoplay loop muted playsinline></video>
+![Language showcase](readme-media/videos/showcasing-changing-language-affecting-whole-app.webp)
 
 ---
 
@@ -90,7 +89,7 @@ Switch between English, Russian, and Ukrainian — the entire app updates instan
 
 The app reads Telegram's active color palette and adapts its theme automatically — light or dark.
 
-<video src="readme-media/videos/showcasing-theme-change-based-on-telegram-theme-colors.mp4" autoplay loop muted playsinline></video>
+![Theme sync showcase](readme-media/videos/showcasing-theme-change-based-on-telegram-theme-colors.webp)
 
 ---
 
@@ -98,7 +97,7 @@ The app reads Telegram's active color palette and adapts its theme automatically
 
 Add a new drug from the admin panel and watch it appear in the store in real time.
 
-<video src="readme-media/videos/showcasing-admin-panel-on-left-and-mini-app-on-the-right-and-demonstrating-flow-of-adding-new-drug-to-db-and-showing-update-in-the-mini-app%20%280%29.mp4" autoplay loop muted playsinline></video>
+![Admin drug management showcase](readme-media/videos/showcasing-admin-panel-on-left-and-mini-app-on-the-right-and-demonstrating-flow-of-adding-new-drug-to-db-and-showing-update-in-the-mini-app%20%280%29.webp)
 
 ---
 
@@ -106,7 +105,7 @@ Add a new drug from the admin panel and watch it appear in the store in real tim
 
 Edit or remove drug types, brands, and categories — updates reflect in the store immediately.
 
-<video src="readme-media/videos/showcasing-the-rest-of-admin-panel-capabilities-like-editing-types-brands-and-removing-drug-from-db-and-showed-changes-on-the-mini-app.mp4" autoplay loop muted playsinline></video>
+![Admin types and brands showcase](readme-media/videos/showcasing-the-rest-of-admin-panel-capabilities-like-editing-types-brands-and-removing-drug-from-db-and-showed-changes-on-the-mini-app.webp)
 
 ---
 
@@ -133,7 +132,7 @@ Edit or remove drug types, brands, and categories — updates reflect in the sto
 
 Backend (`drug_store/src/main/resources/application.properties` or env):
 
-```
+```env
 JWT_SECRET=<your_jwt_secret>
 EMAIL_USER=<your_gmail>
 EMAIL_PASSWORD=<your_gmail_app_password>
