@@ -1,8 +1,8 @@
-# Pharmacy Store — Telegram Mini App
+# E-Commerce Telegram Mini App
 
-> A full-stack pharmacy e-commerce app built as a **Telegram Mini App**, featuring a real payment flow with Telegram invoices, live order-status sync, an admin panel, and support for three languages.
+> A full-stack e-commerce app built as a **Telegram Mini App**, featuring a real payment flow with Telegram invoices, live order-status sync, an admin panel, and support for three languages.
 
-![Banner](readme-media/videos/background.webp)
+![Banner](readme-media/videos/opening-all-menus-and-navigating-to-other-pages.webp)
 
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.7-6DB33F?style=flat&logo=springboot&logoColor=white)
 ![Java](https://img.shields.io/badge/Java-17-ED8B00?style=flat&logo=openjdk&logoColor=white)
@@ -15,7 +15,7 @@
 
 ## What is this?
 
-A pharmacy e-commerce store that lives inside Telegram as a Mini App. Users log in, browse a product catalog, add items to their basket, and place orders — at which point a real Telegram invoice is sent to the chat and payment is processed through Telegram's payment system. Order status updates sync in real-time between the Telegram chat and the app. A separate admin panel lets store managers add, edit, and remove products, brands, and categories, with changes reflected immediately in the store.
+A full-stack e-commerce store that lives inside Telegram as a Mini App. Users log in, browse a product catalog, add items to their basket, and place orders — at which point a real Telegram invoice is sent to the chat and payment is processed through Telegram's payment system. Order status updates sync in real-time between the Telegram chat and the app. A separate admin panel lets store managers add, edit, and remove products, brands, and categories, with changes reflected immediately in the store.
 
 ---
 
